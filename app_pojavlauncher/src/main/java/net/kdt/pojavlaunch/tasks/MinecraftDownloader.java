@@ -1,11 +1,9 @@
 package net.kdt.pojavlaunch.tasks;
 
 import static net.kdt.pojavlaunch.PojavApplication.sExecutorService;
+import static net.kdt.pojavlaunch.Tools.dialogOnUiThread;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -67,7 +65,7 @@ public class MinecraftDownloader {
     /**
      * Start the game version download process on the global executor service.
      * @param activity Activity, used for automatic installation of JRE 17 if needed
-     * @param version The JMinecraftVersionList.Version from the version list, if available
+     * @param version The JMinecraftVersionList.Version from the version list, if available from Mojang releases
      * @param realVersion The version ID (necessary)
      * @param listener The download status listener
      */
@@ -85,33 +83,37 @@ public class MinecraftDownloader {
         }
 
         sExecutorService.execute(() -> {
-            try {
-                if(isLocalProfile || !isOnline) {
-                    String versionMessage = realVersion; // Use provided version unless we find its a modded instance
-
-                    // See if provided version is a modded version and if that version depends on another jar, check for presence of both jar's .json.
-                    try {
-                        // This reads the .json associated with the provided version. If it fails, we can assume it's not installed.
-                        File providedJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + realVersion + "/" + realVersion + ".json");
-                        JMinecraftVersionList.Version providedJson = Tools.GLOBAL_GSON.fromJson(Tools.read(providedJsonFile.getAbsolutePath()), JMinecraftVersionList.Version.class);
-
-                        // This checks if running modded version that depends on other jars, so we use that for the error message.
-                        File vanillaJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + providedJson.inheritsFrom + "/" + providedJson.inheritsFrom + ".json");
-                        versionMessage = providedJson.inheritsFrom != null ? providedJson.inheritsFrom : versionMessage;
-
-                        // Ensure they're both not some 0 byte corrupted json
-                        if (providedJsonFile.length() == 0 || vanillaJsonFile.exists() && vanillaJsonFile.length() == 0){
-                            throw new RuntimeException("Minecraft "+versionMessage+ " is needed by " +realVersion); }
-
-                        listener.onDownloadDone();
-                    } catch (Exception e) {
-                        String tryagain = !isOnline ? "Please ensure you have an internet connection" : "Please try again on your Microsoft Account";
-                        Tools.showErrorRemote(versionMessage + " is not currently installed. "+ tryagain, e);
+            try { // Check if the version being ran is installed properly
+                String vanillaVersion = realVersion;
+                try {
+                    JMinecraftVersionList.Version providedJsonVersion = Tools.GLOBAL_GSON.fromJson(Tools.read(
+                        new File(Tools.DIR_HOME_VERSION + "/" + realVersion + "/" + realVersion + ".json")
+                        .getAbsolutePath()), JMinecraftVersionList.Version.class);
+                    File vanillaJsonFile = new File(Tools.DIR_HOME_VERSION + "/"
+                        + providedJsonVersion.inheritsFrom + "/" + providedJsonVersion.inheritsFrom + ".json");
+                    // Check if modded, if yes, get the real vanilla version, else, assume it's vanilla
+                    vanillaVersion = providedJsonVersion.inheritsFrom != null ? providedJsonVersion.inheritsFrom : vanillaVersion;
+                    // Ensure its not some 0 byte corrupted json and that it exists
+                    if (!vanillaJsonFile.exists() || vanillaJsonFile.exists() && vanillaJsonFile.length() == 0) {
+                        throw new RuntimeException("Minecraft " + vanillaVersion + " is needed by " + realVersion);
                     }
-                }else {
-                downloadGame(activity, version, realVersion);
-                listener.onDownloadDone();
+                } catch (NullPointerException e) { // Happens if providedJsonVersion = null, which only happens if modded instance json is corrupt
+                    if (version == null && activity != null) {
+                        Tools.showErrorRemote(realVersion + " did not install properly, please reinstall", e);
+                        return;
+                    }
+                } catch (FileNotFoundException | RuntimeException e) { // Happens if no json for version is found or the vanilla version isn't installed
+                    if (isLocalProfile || !isOnline) { // Error out if local account, otherwise we download (if there's wifi ofc)
+                        String tryagain = !isOnline ? "Please ensure you have an internet connection" : "Please try again on your Microsoft Account";
+                        Tools.showErrorRemote(vanillaVersion + " is not currently installed. " + tryagain, e);
+                        return;
+                    }
                 }
+                // Only download if there's internet and not local account
+                if(!isLocalProfile && isOnline) {
+                    downloadGame(activity, version, realVersion);
+                }
+                listener.onDownloadDone();
             }catch (Exception e) {
                 listener.onDownloadFailed(e);
             }
@@ -266,7 +268,7 @@ public class MinecraftDownloader {
         });
         return Tools.GLOBAL_GSON.fromJson(Tools.read(targetFile), JAssets.class);
     }
-    
+
     private MinecraftClientInfo getClientInfo(JMinecraftVersionList.Version verInfo) {
         Map<String, MinecraftClientInfo> downloads = verInfo.downloads;
         if(downloads == null) return null;
@@ -396,7 +398,7 @@ public class MinecraftDownloader {
             );
         }
     }
-    
+
     private void scheduleAssetDownloads(JAssets assets) throws IOException {
         Map<String, JAssetInfo> assetObjects = assets.objects;
         if(assetObjects == null) return;
@@ -564,12 +566,12 @@ public class MinecraftDownloader {
                 verifyFileSha1();
             }else {
                 mTargetSha1 = null; // Nullify SHA1 as DownloadUtils.ensureSha1 only checks for null,
-                                    // not for string validity
+                // not for string validity
                 if(mTargetPath.exists()) finishWithoutDownloading();
                 else downloadFile();
             }
         }
-        
+
         private void verifyFileSha1() throws Exception {
             if(mTargetPath.isFile() && mTargetPath.canRead() && Tools.compareSHA1(mTargetPath, mTargetSha1)) {
                 finishWithoutDownloading();
@@ -579,7 +581,7 @@ public class MinecraftDownloader {
                 downloadFile();
             }
         }
-        
+
         private void downloadFile() throws Exception {
             try {
                 DownloadUtils.ensureSha1(mTargetPath, mTargetSha1, () -> {
