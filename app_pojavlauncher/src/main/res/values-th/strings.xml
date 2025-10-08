@@ -179,10 +179,10 @@
     <string name="preference_misc_title">การตั้งค่าเบ็ดเตล็ด</string>
     <string name="preference_misc_description">รายการเวอร์ชันและการตรวจสอบไลบรารี</string>
     <string name="preference_experimental_description">ใช้ของตรงนั้นโดยคำนึงถึงไม่สนับสนุน</string>
-    <string name="preference_sustained_performance_title">เปิดตัวควบคุมความสามารถ</string>
-    <string name="preference_sustained_performance_description">จำกัดการควบคุมปริมาณความร้อนโดยการจำกัดประสิทธิภาพสูงสุด</string>
+    <string name="preference_sustained_performance_title">เปิดโหมดควบคุมประสิทธิภาพ</string>
+    <string name="preference_sustained_performance_description">จำกัดประสิทธิภาพสูงสุดของอุปกรณ์เพื่อป้องกันเครื่องร้อนเกินไป</string>
     <string name="preference_force_vsync_title">บังคับให้เปิดใช้งาน VSync</string>
-    <string name="preference_force_vsync_description">จำกัดการควบคุมปริมาณความร้อนโดยการจำกัดประสิทธิภาพสูงสุด</string>
+    <string name="preference_force_vsync_description">จำกัดประสิทธิภาพสูงสุดของอุปกรณ์เพื่อป้องกันเครื่องร้อนเกินไป</string>
     <string name="preference_force_english_title">บังคับภาษาเป็น English</string>
     <string name="preference_force_english_description">ช่วยให้คุณเห็นสตริงต้นฉบับตามที่นักพัฒนาต้องการ จำเป็นต้องรีสตาร์ท</string>
     <string name="preference_edit_controls_title">เเก้ไขการควบคุมกำหนดเอง</string>
@@ -331,6 +331,13 @@
     <string name="newdl_downloading_metadata">กำลังดาวโหลดข้อมูลไฟล์เกม (%s)</string>
     <string name="newdl_downloading_game_files">กำลังดาวน์โหลดเกม… (%d/%d, %.2f เมกะไบต์/วินาที)</string>
     <string name="newdl_downloading_game_files_size">กำลังดาวน์โหลดเกม… (%.2f/%.2f เมกะไบต์, %.2f เมกะไบต์/วินาที)</string>
+    <string name="log_view_button_scroll_off">เลื่อนอัตโนมัติ\nปิด</string>
+    <string name="log_view_button_scroll_on">เลื่อนอัตโนมัติ\nเปิด</string>
+    <string name="log_view_button_output_off">แสดงผล\nปิด</string>
+    <string name="log_view_button_output_on">แสดงผล\nเปิด</string>
+    <string name="log_view_label_log_output">เอาต์พุต Log:</string>
+    <string name="execute_jar_failed_to_read_file">ไม่สามารถอ่าน .jar ไฟล์ได้</string>
+    <string name="execute_jar_incompatible_runtime">การรัน .jar ไม่รองรับกับจาวา %d</string>
     <string name="controller_button_select">เลือก</string>
     <string name="preference_experimental_title">การตั้งค่าที่ทดสอบ</string>
     <string name="app_short_name">อเมทิสต์</string>
