@@ -437,4 +437,8 @@
     <string name="oldL4JFound">Ви використовуєте версію Legacy4J без виправлень Android! Вам потрібно буде вручну ввімкнути SDL у налаштуваннях контролера, щоб отримати найкращий досвід!</string>
     <string name="global_warning">Попередження!</string>
     <string name="controllableFound">Наразі Controllable має випадкову ймовірність збою під час запуску. Або продовжуйте спроби та сподівайтеся, що він запуститься, або скористайтеся іншим модом, наприклад Controlify.</string>
+    <string name="mg_renderer_title_dsaExt">Рекламувати експериментальне розширення прямого доступу до стану</string>
+    <string name="mg_renderer_summary_dsaExt">Може допомогти з пакетами шейдерів Iris, необхідними для прискорення промальовування мода</string>
+    <string name="mg_renderer_title_fsr">Масштабування AMD FSR 1</string>
+    <string name="autorendererselectfailed">Помилка автовибору промальовування, скидання до HolyGL4ES</string>
 </resources>
