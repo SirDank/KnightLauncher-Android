@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- App name part -->
-    <string name="app_name">Amethyst</string>
+    <string name="app_name">KnightLauncher</string>
 
     <!-- Action bar part -->
 
@@ -12,7 +12,7 @@
     <string name="login_online_login_label">Login</string>
 
     <!-- Hint -->
-    <string name="hint_control_mapping">"Touch the top center cogwheel to open the context menu ⚙\nTap a button to customize: edit, resize, remove, or change its keybinds."</string>
+    <string name="hint_control_mapping">Touch the top center cogwheel to open the context menu ⚙\nTap a button to customize: edit, resize, remove, or change its keybinds.</string>
 
     <!-- Warnings -->
     <string name="warning_remove_account">This account will be removed!</string>
@@ -21,7 +21,7 @@
     <string name="alerttitle_installmod">Select a mod installer</string>
 
     <!-- Error messages -->
-    <string name="error_fatal">Amethyst has unexpectedly crashed</string>
+    <string name="error_fatal">KnightLauncher has unexpectedly crashed</string>
     <string name="error_no_version">No version!</string>
     <string name="error_show_more">Show more</string>
     <string name="error_show_less">Show less</string>
@@ -41,7 +41,7 @@
     <!-- MCLauncherActivity: Strings -->
     <string name="mcl_launch_cleancache">Cleaning cache files</string>
     <string name="mcl_launch_downloading">Downloading %s</string>
-    <string name="mcl_launch_downloading_progress">"Downloading %s (%.2f MB / %.2f MB)"</string>
+    <string name="mcl_launch_downloading_progress">Downloading %s (%.2f MB / %.2f MB)</string>
     <string name="mcl_launch_download_assets">Preparing to download resources</string>
 
     <string name="mcl_options">Options</string>
@@ -207,6 +207,7 @@
     <string name="preference_control_description">Gestures, buttons and scaling</string>
     <string name="preference_java_title">Java Tweaks</string>
     <string name="preference_java_description">Java Runtimes, JVM Arguments, RAM amount and sandbox</string>
+    <string name="preference_disable_autojre_title">Disable Auto JRE Selection</string>
     <string name="preference_misc_title">Miscellaneous settings</string>
     <string name="preference_misc_description">Version list and libraries check</string>
     <string name="preference_experimental_description">Use things there with consideration, no support</string>
@@ -243,7 +244,7 @@
     <string name="color_default_hex" translatable="false">FFFF0000</string>
     <string name="notif_channel_name">General</string>
     <string name="notif_channel_id" translatable="false">channel_id</string>
-    <string name="lazy_service_default_title">Amethyst Foreground Service</string>
+    <string name="lazy_service_default_title">KnightLauncher Foreground Service</string>
     <string name="mcl_setting_veroption_installed">Installed</string>
     <string name="use_global_default">(Use global default)</string>
     <string name="default_control">Default controlmap</string>
@@ -371,7 +372,7 @@
     <string name="preference_category_miscellaneous">Miscellaneous settings</string>
     <string name="preference_category_video">Video settings</string>
     <string name="notification_permission_dialog_title">Permission request</string>
-    <string name="notification_permission_dialog_text">PojavLauncher requires a permission to post notifications to prevent game/modpack downloads from stopping when you leave the app. Without this permission, Android may shut down your downloads when you put PojavLauncher in background mode.</string>
+    <string name="notification_permission_dialog_text">KnightLauncher requires a permission to post notifications to prevent game/modpack downloads from stopping when you leave the app. Without this permission, Android may shut down your downloads when you put KnightLauncher in background mode.</string>
     <string name="notification_permission_toast">You can always change your mind later by going into Settings</string>
     <string name="preference_ask_for_notification_title">Allow notifications</string>
     <string name="preference_ask_for_notification_description">Click to re-request the notification permission, required for game/modpack background downloads to work properly.</string>
@@ -426,7 +427,9 @@
     <string name="mcl_button_discord">Discord</string>
     <string name="ltw_render_distance_warning_msg">Your GPU is not capable of rendering above 7 render distance without Sodium or other similar mods. The render distance will be automatically reduced when you click "OK".</string>
     <string name="mcl_button_open_directory">Open game directory</string>
-    <string name="discord_invite" translatable="false">https://discord.gg/5ptqkyZxEy</string>
+    <string name="mcl_button_reset_game_files">RESET GAME FILES</string>
+    <string name="mcl_reset_game_files_confirmation">Are you sure you want to reset the game files? This will delete the current installation and re-download the game.</string>
+    <string name="discord_invite" translatable="false">https://discord.gg/8rE4GeAMza</string>
     <string name="local_login_bad_username_title">Unsuitable username</string>
     <string name="local_login_bad_username_text">The username must be between 3–16 characters long, and must only contain latin letters, numbers 0–9 and underscores.</string>
     <string name="quick_setting_title">Quick settings</string>
@@ -455,7 +458,7 @@
     <string name="mg_renderer_summary_computeShaderext">May help with shaderpack glitches. Disable if not needed, can cause crashes.</string>
     <string name="mg_renderer_title_multidrawCompute">Use Compute Multidraw Emulation</string>
     <string name="mg_renderer_summary_multidrawCompute">Uses compute shaders for multidraw emulation</string>
-    <string name="app_short_name">Amethyst</string>
+    <string name="app_short_name">KnightLauncher</string>
     <string name="demo_versions_supported">Only Vanilla 1.3.1 and above are supported on demo accounts</string>
     <string name="demo_unsupported">Demo Profile not supported</string>
     <string name="change_account">Please change accounts to use this function</string>

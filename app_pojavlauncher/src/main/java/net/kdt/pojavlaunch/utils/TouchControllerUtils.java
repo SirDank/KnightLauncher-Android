@@ -25,7 +25,7 @@ public class TouchControllerUtils {
     }
 
     public static LauncherProxyClient proxyClient;
-    private static final String socketName = "Amethyst";
+    private static final String socketName = "KnightLauncher";
 
     private static class VibrationHandler implements LauncherProxyClient.VibrationHandler {
         private final Vibrator vibrator;
@@ -53,13 +53,15 @@ public class TouchControllerUtils {
             case MotionEvent.ACTION_DOWN:
                 pointerId = nextPointerId++;
                 pointerIdMap.put(motionEvent.getPointerId(0), pointerId);
-                proxyClient.addPointer(pointerId, motionEvent.getX(0) / view.getWidth(), motionEvent.getY(0) / view.getHeight());
+                proxyClient.addPointer(pointerId, motionEvent.getX(0) / view.getWidth(),
+                        motionEvent.getY(0) / view.getHeight());
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 pointerId = nextPointerId++;
                 int actionIndex = motionEvent.getActionIndex();
                 pointerIdMap.put(motionEvent.getPointerId(actionIndex), pointerId);
-                proxyClient.addPointer(pointerId, motionEvent.getX(actionIndex) / view.getWidth(), motionEvent.getY(actionIndex) / view.getHeight());
+                proxyClient.addPointer(pointerId, motionEvent.getX(actionIndex) / view.getWidth(),
+                        motionEvent.getY(actionIndex) / view.getHeight());
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (int i = 0; i < motionEvent.getPointerCount(); i++) {
@@ -68,7 +70,8 @@ public class TouchControllerUtils {
                         Log.d("TouchController", "Move pointerId is 0");
                         continue;
                     }
-                    proxyClient.addPointer(pointerId, motionEvent.getX(i) / view.getWidth(), motionEvent.getY(i) / view.getHeight());
+                    proxyClient.addPointer(pointerId, motionEvent.getX(i) / view.getWidth(),
+                            motionEvent.getY(i) / view.getHeight());
                 }
                 break;
             case MotionEvent.ACTION_UP:

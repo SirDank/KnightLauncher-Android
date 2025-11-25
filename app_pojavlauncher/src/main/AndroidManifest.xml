@@ -27,6 +27,7 @@
         android:allowBackup="true"
         android:allowNativeHeapPointerTagging="false"
         android:appCategory="game"
+        android:usesCleartextTraffic="true"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"

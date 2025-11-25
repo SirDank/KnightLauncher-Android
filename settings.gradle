@@ -5,6 +5,10 @@ pluginManagement {
     }
 }
 
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -14,11 +18,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name='Amethyst'
+rootProject.name='KnightLauncher'
 include ':jre_lwjgl3glfw'
 include ':app_pojavlauncher'
-
 include ':arc_dns_injector'
 include ':lwjgl2_methods_injector'
-include ':forge_installer'
 include ':MobileGlues'

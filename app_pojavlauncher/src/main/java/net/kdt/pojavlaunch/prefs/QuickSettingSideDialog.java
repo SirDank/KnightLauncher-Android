@@ -34,9 +34,11 @@ public abstract class QuickSettingSideDialog extends com.kdt.SideDialogView {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch mGyroSwitch, mGyroXSwitch, mGyroYSwitch, mGestureSwitch, mMouseGrabSwitch;
     private CustomSeekbar mGyroSensitivityBar, mMouseSpeedBar, mGestureDelayBar, mResolutionBar;
-    private TextView mGyroSensitivityText, mGyroSensitivityDisplayText, mMouseSpeedText, mGestureDelayText, mGestureDelayDisplayText, mResolutionText;
+    private TextView mGyroSensitivityText, mGyroSensitivityDisplayText, mMouseSpeedText, mGestureDelayText,
+            mGestureDelayDisplayText, mResolutionText;
 
-    private boolean mOriginalGyroEnabled, mOriginalGyroXEnabled, mOriginalGyroYEnabled, mOriginalGestureDisabled, mOriginalMouseGrab;
+    private boolean mOriginalGyroEnabled, mOriginalGyroXEnabled, mOriginalGyroYEnabled, mOriginalGestureDisabled,
+            mOriginalMouseGrab;
     private float mOriginalGyroSensitivity, mOriginalMouseSpeed, mOriginalResolution;
     private int mOriginalGestureDelay;
 
@@ -156,14 +158,13 @@ public abstract class QuickSettingSideDialog extends com.kdt.SideDialogView {
         setSeekTextMillisecond(mGestureDelayText, mGestureDelayBar.getProgress());
 
         mResolutionBar.setOnSeekBarChangeListener((SimpleSeekBarListener) (seekBar, progress, fromUser) -> {
-            PREF_SCALE_FACTOR = progress/100f;
+            PREF_SCALE_FACTOR = progress / 100f;
             mEditor.putInt("resolutionRatio", progress);
             setSeekTextPercent(mResolutionText, progress);
             onResolutionChanged();
         });
         mResolutionBar.setProgress((int) (mOriginalResolution * 100));
         setSeekTextPercent(mResolutionText, mResolutionBar.getProgress());
-
 
         updateMouseGrabVisibility();
         updateGyroVisibility(mOriginalGyroEnabled);
@@ -182,8 +183,8 @@ public abstract class QuickSettingSideDialog extends com.kdt.SideDialogView {
         target.setText(target.getContext().getString(format, value));
     }
 
-    private void updateMouseGrabVisibility(){
-        mMouseGrabSwitch.setVisibility(Tools.isPointerDeviceConnected()? View.VISIBLE : View.GONE);
+    private void updateMouseGrabVisibility() {
+        mMouseGrabSwitch.setVisibility(View.VISIBLE);
     }
 
     private void updateGyroVisibility(boolean isEnabled) {
@@ -235,7 +236,7 @@ public abstract class QuickSettingSideDialog extends com.kdt.SideDialogView {
     /** Resets all settings to their original values */
     public void cancel() {
         // Reset all settings if we were editing
-        if(isDisplaying()) {
+        if (isDisplaying()) {
             PREF_ENABLE_GYRO = mOriginalGyroEnabled;
             PREF_GYRO_INVERT_X = mOriginalGyroXEnabled;
             PREF_GYRO_INVERT_Y = mOriginalGyroYEnabled;
@@ -254,10 +255,14 @@ public abstract class QuickSettingSideDialog extends com.kdt.SideDialogView {
         disappear(true);
     }
 
-    /** Called when the resolution is changed. Use {@link LauncherPreferences#PREF_SCALE_FACTOR} */
+    /**
+     * Called when the resolution is changed. Use
+     * {@link LauncherPreferences#PREF_SCALE_FACTOR}
+     */
     public abstract void onResolutionChanged();
 
-    /** Called when the gyro state is changed.
+    /**
+     * Called when the gyro state is changed.
      * Use {@link LauncherPreferences#PREF_ENABLE_GYRO}
      * Use {@link LauncherPreferences#PREF_GYRO_INVERT_X}
      * Use {@link LauncherPreferences#PREF_GYRO_INVERT_Y}

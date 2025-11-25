@@ -1,7 +1,5 @@
 package net.kdt.pojavlaunch.fragments;
 
-import static net.kdt.pojavlaunch.Tools.hasNoOnlineProfileDialog;
-import static net.kdt.pojavlaunch.Tools.hasOnlineProfile;
 import static net.kdt.pojavlaunch.Tools.openPath;
 import static net.kdt.pojavlaunch.Tools.shareLog;
 
@@ -15,8 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.kdt.mcgui.mcVersionSpinner;
 
 import net.kdt.pojavlaunch.CustomControlsActivity;
 import net.kdt.pojavlaunch.R;
@@ -33,76 +29,62 @@ import java.io.File;
 public class MainMenuFragment extends Fragment {
     public static final String TAG = "MainMenuFragment";
 
-    private mcVersionSpinner mVersionSpinner;
-
-    public MainMenuFragment(){
+    public MainMenuFragment() {
         super(R.layout.fragment_launcher);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button mNewsButton = view.findViewById(R.id.news_button);
         Button mDiscordButton = view.findViewById(R.id.discord_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
-        Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
-        Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_files_button);
+        Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
 
-        ImageButton mEditProfileButton = view.findViewById(R.id.edit_profile_button);
         Button mPlayButton = view.findViewById(R.id.play_button);
-        mVersionSpinner = view.findViewById(R.id.mc_version_spinner);
 
-        mNewsButton.setOnClickListener(v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
         mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
-        mCustomControlButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
-        if (hasOnlineProfile()) {
-            mInstallJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
-            mInstallJarButton.setOnLongClickListener(v -> {
-                runInstallerWithConfirmation(true);
-                return true;
-            });
-        } else mInstallJarButton.setOnClickListener(v -> hasNoOnlineProfileDialog(requireActivity()));
-        mEditProfileButton.setOnClickListener(v -> mVersionSpinner.openProfileEditor(requireActivity()));
+
+        if (mCustomControlButton != null) {
+            mCustomControlButton
+                    .setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
+        }
 
         mPlayButton.setOnClickListener(v -> ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true));
 
-        mShareLogsButton.setOnClickListener((v) -> shareLog(requireContext()));
+        if (mOpenDirectoryButton != null) {
+            mOpenDirectoryButton.setOnClickListener((v) -> {
+                openPath(v.getContext(), getCurrentProfileDirectory(), false);
+            });
+        }
 
-        mOpenDirectoryButton.setOnClickListener((v)-> {
-            if (Tools.isDemoProfile(v.getContext())){ // Say a different message when on demo profile since they might see the hidden demo folder
-                hasNoOnlineProfileDialog(getActivity(), getString(R.string.demo_unsupported), getString(R.string.change_account));
-            } else if (!hasOnlineProfile()) { // Otherwise display the generic pop-up to log in
-                hasNoOnlineProfileDialog(requireActivity());
-            } else openPath(v.getContext(), getCurrentProfileDirectory(), false);
+        if (mShareLogsButton != null) {
+            mShareLogsButton.setOnClickListener(v -> shareLog(requireContext()));
+        }
 
-        });
-
-
-        mNewsButton.setOnLongClickListener((v)->{
-            Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
-            return true;
-        });
+        Button mResetGameFilesButton = view.findViewById(R.id.reset_game_files_button);
+        if (mResetGameFilesButton != null) {
+            mResetGameFilesButton.setOnClickListener(v -> {
+                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.mcl_button_reset_game_files)
+                        .setMessage(R.string.mcl_reset_game_files_confirmation)
+                        .setPositiveButton(android.R.string.ok, (d, w) -> {
+                            if (requireActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
+                                ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).reinstallGame();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            });
+        }
     }
 
     private File getCurrentProfileDirectory() {
-        String currentProfile = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, null);
-        if(!Tools.isValidString(currentProfile)) return new File(Tools.DIR_GAME_NEW);
-        LauncherProfiles.load();
-        MinecraftProfile profileObject = LauncherProfiles.mainProfileJson.profiles.get(currentProfile);
-        if(profileObject == null) return new File(Tools.DIR_GAME_NEW);
-        return Tools.getGameDirPath(profileObject);
+        // For KnightLauncher/Spiral Knights, we might just return the game dir
+        return new File(Tools.DIR_GAME_NEW);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mVersionSpinner.reloadProfiles();
-    }
-
-    private void runInstallerWithConfirmation(boolean isCustomArgs) {
-        if (ProgressKeeper.getTaskCount() == 0)
-            Tools.installMod(requireActivity(), isCustomArgs);
-        else
-            Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_LONG).show();
     }
 }

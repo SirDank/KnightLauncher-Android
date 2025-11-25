@@ -23,23 +23,37 @@ public class PojavProfile {
 		return ctx.getSharedPreferences(PROFILE_PREF, Context.MODE_PRIVATE);
 	}
 
-    public static MinecraftAccount getCurrentProfileContent(@NonNull Context ctx, @Nullable String profileName) {
-        return MinecraftAccount.load(profileName == null ? getCurrentProfileName(ctx) : profileName);
-    }
+	public static MinecraftAccount getCurrentProfileContent(@NonNull Context ctx, @Nullable String profileName) {
+		MinecraftAccount account = MinecraftAccount
+				.load(profileName == null ? getCurrentProfileName(ctx) : profileName);
 
-    public static String getCurrentProfileName(Context ctx) {
-        String name = getPrefs(ctx).getString(PROFILE_PREF_FILE, "");
-        // A dirty fix
-        if (!name.isEmpty() && name.startsWith(Tools.DIR_ACCOUNT_NEW) && name.endsWith(".json")) {
-            name = name.substring(0, name.length() - 5).replace(Tools.DIR_ACCOUNT_NEW, "").replace(".json", "");
-            setCurrentProfile(ctx, name);
-        }
-        return name;
-    }
+		// Return a default account if profile doesn't exist or failed to load
+		if (account == null) {
+			account = new MinecraftAccount();
+			account.username = "Knight";
+			account.accessToken = "0";
+			account.clientToken = "0";
+			account.profileId = "00000000-0000-0000-0000-000000000000";
+			account.selectedVersion = "1.0.0";
+		}
 
-	public static List<MinecraftAccount> getAllProfiles(){
-		List<MinecraftAccount> mcAccountList = new ArrayList<>();;
-		for (String accountName : getAllProfilesList()){
+		return account;
+	}
+
+	public static String getCurrentProfileName(Context ctx) {
+		String name = getPrefs(ctx).getString(PROFILE_PREF_FILE, "");
+		// A dirty fix
+		if (!name.isEmpty() && name.startsWith(Tools.DIR_ACCOUNT_NEW) && name.endsWith(".json")) {
+			name = name.substring(0, name.length() - 5).replace(Tools.DIR_ACCOUNT_NEW, "").replace(".json", "");
+			setCurrentProfile(ctx, name);
+		}
+		return name;
+	}
+
+	public static List<MinecraftAccount> getAllProfiles() {
+		List<MinecraftAccount> mcAccountList = new ArrayList<>();
+		;
+		for (String accountName : getAllProfilesList()) {
 			if (MinecraftAccount.load(accountName) != null) {
 				mcAccountList.add(MinecraftAccount.load(accountName));
 			}
@@ -47,24 +61,25 @@ public class PojavProfile {
 		return mcAccountList;
 	}
 
-	public static List<String> getAllProfilesList(){
+	public static List<String> getAllProfilesList() {
 		List<String> accountList = new ArrayList<>();
 		File accountFolder = new File(Tools.DIR_ACCOUNT_NEW);
-		if(accountFolder.exists() && accountFolder.list() != null){
+		if (accountFolder.exists() && accountFolder.list() != null) {
 			for (String fileName : Objects.requireNonNull(accountFolder.list())) {
 				accountList.add(fileName.substring(0, fileName.length() - 5));
 			}
 		}
 		return accountList;
 	}
-	
-	public static void setCurrentProfile(@NonNull Context ctx, @Nullable  Object obj) {
+
+	public static void setCurrentProfile(@NonNull Context ctx, @Nullable Object obj) {
 		SharedPreferences.Editor pref = getPrefs(ctx).edit();
-		
-		try { if (obj instanceof String) {
-                String acc = (String) obj;
+
+		try {
+			if (obj instanceof String) {
+				String acc = (String) obj;
 				pref.putString(PROFILE_PREF_FILE, acc);
-                //MinecraftAccount.clearTempAccount();
+				// MinecraftAccount.clearTempAccount();
 			} else if (obj == null) {
 				pref.putString(PROFILE_PREF_FILE, "");
 			} else {

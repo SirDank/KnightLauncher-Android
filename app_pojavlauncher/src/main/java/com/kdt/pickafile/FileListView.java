@@ -11,19 +11,18 @@ import java.util.*;
 import net.kdt.pojavlaunch.*;
 import android.os.*;
 
-public class FileListView extends LinearLayout
-{
-    //For list view:
+public class FileListView extends LinearLayout {
+    // For list view:
     private File fullPath;
     private ListView mainLv;
     private Context context;
 
-    //For File selected listener:
+    // For File selected listener:
     private FileSelectedListener fileSelectedListener;
     private DialogTitleListener dialogTitleListener;
     private File lockPath = new File("/");
 
-    //For filtering by file types:
+    // For filtering by file types:
     private final String[] fileSuffixes;
     private boolean showFiles = true;
     private boolean showFolders = true;
@@ -34,20 +33,20 @@ public class FileListView extends LinearLayout
     }
 
     public FileListView(AlertDialog build, String fileSuffix) {
-        this(build.getContext(), null, new String[]{fileSuffix});
+        this(build.getContext(), null, new String[] { fileSuffix });
         dialogToTitleListener(build);
     }
 
-    public FileListView(AlertDialog build, String[] fileSuffixes){
+    public FileListView(AlertDialog build, String[] fileSuffixes) {
         this(build.getContext(), null, fileSuffixes);
         dialogToTitleListener(build);
     }
 
-    public FileListView(Context context){
+    public FileListView(Context context) {
         this(context, null);
     }
 
-    public FileListView(Context context, AttributeSet attrs){
+    public FileListView(Context context, AttributeSet attrs) {
         this(context, attrs, new String[0]);
     }
 
@@ -62,11 +61,12 @@ public class FileListView extends LinearLayout
     }
 
     private void dialogToTitleListener(AlertDialog dialog) {
-        if(dialog != null) dialogTitleListener = dialog::setTitle;
+        if (dialog != null)
+            dialogTitleListener = dialog::setTitle;
     }
 
     public void init(final Context context) {
-        //Main setup:
+        // Main setup:
         this.context = context;
 
         LayoutParams layParam = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -98,54 +98,58 @@ public class FileListView extends LinearLayout
 
         try {
             listFileAt(Environment.getExternalStorageDirectory());
-        } catch (NullPointerException e) {} // Android 10+ disallows access to sdcard
+        } catch (NullPointerException e) {
+        } // Android 10+ disallows access to sdcard
     }
-    public void setFileSelectedListener(FileSelectedListener listener)
-    {
+
+    public void setFileSelectedListener(FileSelectedListener listener) {
         this.fileSelectedListener = listener;
     }
+
     public void setDialogTitleListener(DialogTitleListener listener) {
         this.dialogTitleListener = listener;
     }
 
     public void listFileAt(final File path) {
-        try{
-            if(path.exists()){
-                if(path.isDirectory()){
+        try {
+            if (path.exists()) {
+                if (path.isDirectory()) {
                     fullPath = path;
 
                     File[] listFile = path.listFiles();
                     FileListAdapter fileAdapter = new FileListAdapter(context);
-                    if(!path.equals(lockPath)){
+                    if (!path.equals(lockPath)) {
                         fileAdapter.add(new File(path, ".."));
                     }
 
-                    if(listFile != null && listFile.length != 0){
+                    if (listFile != null && listFile.length != 0) {
                         Arrays.sort(listFile, new SortFileName());
 
-                        for(File file : listFile){
-                            if(file.isDirectory()){
-                                if(showFolders && ((!file.getName().startsWith(".")) || file.getName().equals(".minecraft")))
+                        for (File file : listFile) {
+                            if (file.isDirectory()) {
+                                if (showFolders
+                                        && ((!file.getName().startsWith(".")) || file.getName().equals("spiral")))
                                     fileAdapter.add(file);
                                 continue;
                             }
 
-                            if(showFiles){
-                                if(fileSuffixes.length > 0){
-                                    for(String suffix : fileSuffixes){
-                                        if(file.getName().endsWith("." + suffix)){
+                            if (showFiles) {
+                                if (fileSuffixes.length > 0) {
+                                    for (String suffix : fileSuffixes) {
+                                        if (file.getName().endsWith("." + suffix)) {
                                             fileAdapter.add(file);
                                             break;
                                         }
                                     }
-                                }else {
+                                } else {
                                     fileAdapter.add(file);
                                 }
                             }
                         }
                     }
                     mainLv.setAdapter(fileAdapter);
-                    if(dialogTitleListener != null) dialogTitleListener.onChangeDialogTitle(path.getAbsolutePath());
+                    if (dialogTitleListener != null)
+                        dialogTitleListener.onChangeDialogTitle(path.getAbsolutePath());
                 } else {
                     fileSelectedListener.onFileSelected(path, path.getAbsolutePath());
                 }
@@ -153,12 +157,12 @@ public class FileListView extends LinearLayout
                 Toast.makeText(context, "This folder (or file) doesn't exist", Toast.LENGTH_SHORT).show();
                 refreshPath();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Tools.showError(context, e);
         }
     }
 
-    public File getFullPath(){
+    public File getFullPath() {
         return fullPath;
     }
 
@@ -167,7 +171,7 @@ public class FileListView extends LinearLayout
     }
 
     public void parentDir() {
-        if(!fullPath.getAbsolutePath().equals("/")){
+        if (!fullPath.getAbsolutePath().equals("/")) {
             listFileAt(fullPath.getParentFile());
         }
     }
@@ -177,11 +181,11 @@ public class FileListView extends LinearLayout
         listFileAt(path);
     }
 
-    public void setShowFiles(boolean showFiles){
+    public void setShowFiles(boolean showFiles) {
         this.showFiles = showFiles;
     }
 
-    public void setShowFolders(boolean showFolders){
+    public void setShowFolders(boolean showFolders) {
         this.showFolders = showFolders;
     }
 }
