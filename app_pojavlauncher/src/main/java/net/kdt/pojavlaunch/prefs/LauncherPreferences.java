@@ -28,13 +28,13 @@ public class LauncherPreferences {
 
     public static SharedPreferences DEFAULT_PREF;
 
-	public static boolean PREF_IGNORE_NOTCH = false;
-	public static int PREF_NOTCH_SIZE = 0;
-	public static float PREF_BUTTONSIZE = 100f;
-	public static float PREF_MOUSESCALE = 1f;
-	public static int PREF_LONGPRESS_TRIGGER = 300;
-	public static String PREF_DEFAULTCTRL_PATH = Tools.CTRLDEF_FILE;
-	public static String PREF_CUSTOM_JAVA_ARGS;
+    public static boolean PREF_IGNORE_NOTCH = false;
+    public static int PREF_NOTCH_SIZE = 0;
+    public static float PREF_BUTTONSIZE = 100f;
+    public static float PREF_MOUSESCALE = 1f;
+    public static int PREF_LONGPRESS_TRIGGER = 300;
+    public static String PREF_DEFAULTCTRL_PATH = Tools.CTRLDEF_FILE;
+    public static String PREF_CUSTOM_JAVA_ARGS;
     public static boolean PREF_FORCE_ENGLISH = false;
     public static final String PREF_VERSION_REPOS = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     public static boolean PREF_CHECK_LIBRARY_SHA = true;
@@ -66,7 +66,7 @@ public class LauncherPreferences {
     public static float PREF_DEADZONE_SCALE = 1f;
     public static boolean PREF_BIG_CORE_AFFINITY = false;
     public static boolean PREF_ZINK_PREFER_SYSTEM_DRIVER = false;
-    
+
     public static boolean PREF_VERIFY_MANIFEST = true;
     public static String PREF_DOWNLOAD_SOURCE = "default";
     public static boolean PREF_SKIP_NOTIFICATION_PERMISSION_CHECK = false;
@@ -76,34 +76,33 @@ public class LauncherPreferences {
 
     public static boolean PREF_MOUSE_GRAB_FORCE = false;
 
-
     public static void loadPreferences(Context ctx) {
-        //Required for CTRLDEF_FILE and MultiRT
+        // Required for CTRLDEF_FILE and MultiRT
         Tools.initStorageConstants(ctx);
         boolean isDevicePowerful = isDevicePowerful(ctx);
 
         PREF_BUTTONSIZE = DEFAULT_PREF.getInt("buttonscale", 100);
-        PREF_MOUSESCALE = DEFAULT_PREF.getInt("mousescale", 100)/100f;
-        PREF_MOUSESPEED = ((float)DEFAULT_PREF.getInt("mousespeed",100))/100f;
+        PREF_MOUSESCALE = DEFAULT_PREF.getInt("mousescale", 100) / 100f;
+        PREF_MOUSESPEED = ((float) DEFAULT_PREF.getInt("mousespeed", 100)) / 100f;
         PREF_IGNORE_NOTCH = DEFAULT_PREF.getBoolean("ignoreNotch", false);
-		PREF_LONGPRESS_TRIGGER = DEFAULT_PREF.getInt("timeLongPressTrigger", 300);
-		PREF_DEFAULTCTRL_PATH = DEFAULT_PREF.getString("defaultCtrl", Tools.CTRLDEF_FILE);
+        PREF_LONGPRESS_TRIGGER = DEFAULT_PREF.getInt("timeLongPressTrigger", 300);
+        PREF_DEFAULTCTRL_PATH = DEFAULT_PREF.getString("defaultCtrl", Tools.CTRLDEF_FILE);
         PREF_FORCE_ENGLISH = DEFAULT_PREF.getBoolean("force_english", false);
-        PREF_CHECK_LIBRARY_SHA = DEFAULT_PREF.getBoolean("checkLibraries",true);
-        PREF_DISABLE_GESTURES = DEFAULT_PREF.getBoolean("disableGestures",false);
-        PREF_GAMEPAD_SDL_PASSTHRU = DEFAULT_PREF.getBoolean("gamepadPassthru",false);
-        PREF_GAMEPAD_FORCEDSDL_PASSTHRU = DEFAULT_PREF.getBoolean("gamepadPassthruForced",false);
-        PREF_DISABLE_SWAP_HAND = DEFAULT_PREF.getBoolean("disableDoubleTap", false);
+        PREF_CHECK_LIBRARY_SHA = DEFAULT_PREF.getBoolean("checkLibraries", true);
+        PREF_DISABLE_GESTURES = DEFAULT_PREF.getBoolean("disableGestures", true);
+        PREF_GAMEPAD_SDL_PASSTHRU = DEFAULT_PREF.getBoolean("gamepadPassthru", false);
+        PREF_GAMEPAD_FORCEDSDL_PASSTHRU = DEFAULT_PREF.getBoolean("gamepadPassthruForced", false);
+        PREF_DISABLE_SWAP_HAND = DEFAULT_PREF.getBoolean("disableDoubleTap", true);
         PREF_RAM_ALLOCATION = DEFAULT_PREF.getInt("allocation", findBestRAMAllocation(ctx));
         PREF_CUSTOM_JAVA_ARGS = DEFAULT_PREF.getString("javaArgs", "");
         PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", isDevicePowerful);
-        PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", false);
-        PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
+        PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", true);
+        PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes", false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);
         PREF_JAVA_SANDBOX = DEFAULT_PREF.getBoolean("java_sandbox", true);
-        PREF_SCALE_FACTOR = DEFAULT_PREF.getInt("resolutionRatio", findBestResolution(ctx, isDevicePowerful))/100f;
+        PREF_SCALE_FACTOR = DEFAULT_PREF.getInt("resolutionRatio", findBestResolution(ctx, isDevicePowerful)) / 100f;
         PREF_ENABLE_GYRO = DEFAULT_PREF.getBoolean("enableGyro", false);
-        PREF_GYRO_SENSITIVITY = ((float)DEFAULT_PREF.getInt("gyroSensitivity", 100))/100f;
+        PREF_GYRO_SENSITIVITY = ((float) DEFAULT_PREF.getInt("gyroSensitivity", 100)) / 100f;
         PREF_GYRO_SAMPLE_RATE = DEFAULT_PREF.getInt("gyroSampleRate", 16);
         PREF_GYRO_SMOOTHING = DEFAULT_PREF.getBoolean("gyroSmoothing", true);
         PREF_GYRO_INVERT_X = DEFAULT_PREF.getBoolean("gyroInvertX", false);
@@ -111,7 +110,7 @@ public class LauncherPreferences {
         PREF_FORCE_VSYNC = DEFAULT_PREF.getBoolean("force_vsync", isDevicePowerful);
         PREF_BUTTON_ALL_CAPS = DEFAULT_PREF.getBoolean("buttonAllCaps", true);
         PREF_DUMP_SHADERS = DEFAULT_PREF.getBoolean("dump_shaders", false);
-        PREF_DEADZONE_SCALE = ((float) DEFAULT_PREF.getInt("gamepad_deadzone_scale", 100))/100f;
+        PREF_DEADZONE_SCALE = ((float) DEFAULT_PREF.getInt("gamepad_deadzone_scale", 100)) / 100f;
         PREF_BIG_CORE_AFFINITY = DEFAULT_PREF.getBoolean("bigCoreAffinity", false);
         PREF_ZINK_PREFER_SYSTEM_DRIVER = DEFAULT_PREF.getBoolean("zinkPreferSystemDriver", false);
         PREF_DOWNLOAD_SOURCE = DEFAULT_PREF.getString("downloadSource", "default");
@@ -127,18 +126,19 @@ public class LauncherPreferences {
             if (arg.startsWith(argLwjglLibname)) {
                 // purge arg
                 DEFAULT_PREF.edit().putString("javaArgs",
-                    PREF_CUSTOM_JAVA_ARGS.replace(arg, "")).apply();
+                        PREF_CUSTOM_JAVA_ARGS.replace(arg, "")).apply();
             }
         }
-        if(DEFAULT_PREF.contains("defaultRuntime")) {
-            PREF_DEFAULT_RUNTIME = DEFAULT_PREF.getString("defaultRuntime","");
-        }else{
-            if(MultiRTUtils.getRuntimes().isEmpty()) {
+        if (DEFAULT_PREF.contains("defaultRuntime")) {
+            PREF_DEFAULT_RUNTIME = DEFAULT_PREF.getString("defaultRuntime", "");
+        } else {
+            if (MultiRTUtils.getRuntimes().isEmpty()) {
                 PREF_DEFAULT_RUNTIME = "";
                 return;
             }
             PREF_DEFAULT_RUNTIME = MultiRTUtils.getRuntimes().get(0).name;
-            LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
+            LauncherPreferences.DEFAULT_PREF.edit()
+                    .putString("defaultRuntime", LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
         }
     }
 
@@ -148,32 +148,43 @@ public class LauncherPreferences {
      * Put not enough RAM ? Minecraft will lag and crash.
      * Put too much RAM ?
      * The GC will lag, android won't be able to breathe properly.
+     * 
      * @param ctx Context needed to get the total memory of the device.
      * @return The best default value found.
      */
-    private static int findBestRAMAllocation(Context ctx){
+    private static int findBestRAMAllocation(Context ctx) {
         int deviceRam = Tools.getTotalDeviceMemory(ctx);
-        if (deviceRam < 1024) return 296;
-        if (deviceRam < 1536) return 448;
-        if (deviceRam < 2048) return 656;
+        if (deviceRam < 1024)
+            return 296;
+        if (deviceRam < 1536)
+            return 448;
+        if (deviceRam < 2048)
+            return 656;
         // Limit the max for 32 bits devices more harshly
-        if (is32BitsDevice()) return 696;
+        if (is32BitsDevice())
+            return 696;
 
-        if (deviceRam < 3064) return 936;
-        if (deviceRam < 4096) return 1144;
-        if (deviceRam < 6144) return 1536;
-        return 2048; //Default RAM allocation for 64 bits
+        if (deviceRam < 3064)
+            return 936;
+        if (deviceRam < 4096)
+            return 1144;
+        if (deviceRam < 6144)
+            return 1536;
+        return 2048; // Default RAM allocation for 64 bits
     }
 
     /// Find a correct resolution for the device
     ///
-    /// Some devices are shipped with a ridiculously high resolution, which can cause performance issues
-    /// This function will try to find a resolution that is good enough for the device
+    /// Some devices are shipped with a ridiculously high resolution, which can
+    /// cause performance issues
+    /// This function will try to find a resolution that is good enough for the
+    /// device
     private static int findBestResolution(Context context, boolean isDevicePowerful) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int minSide = Math.min(metrics.widthPixels, metrics.heightPixels);
         int targetSide = isDevicePowerful ? 1080 : 720;
-        if (minSide <= targetSide) return 100; // No need to scale down
+        if (minSide <= targetSide)
+            return 100; // No need to scale down
 
         float ratio = (100f * targetSide / minSide);
         // The value must match the seekbar values
@@ -184,12 +195,17 @@ public class LauncherPreferences {
     /// Check if the device is considered powerful.
     /// Powerful devices will have some energy saving tweaks enabled by default
     private static boolean isDevicePowerful(Context context) {
-        if (SDK_INT < Build.VERSION_CODES.Q) return false;
-        if (Tools.getTotalDeviceMemory(context) <= 4096) return false;
+        if (SDK_INT < Build.VERSION_CODES.Q)
+            return false;
+        if (Tools.getTotalDeviceMemory(context) <= 4096)
+            return false;
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        if (Math.min(metrics.widthPixels, metrics.heightPixels) < 1080) return false;
-        if (Runtime.getRuntime().availableProcessors() <= 4) return false;
-        if (hasAllCoreSameFreq()) return false;
+        if (Math.min(metrics.widthPixels, metrics.heightPixels) < 1080)
+            return false;
+        if (Runtime.getRuntime().availableProcessors() <= 4)
+            return false;
+        if (hasAllCoreSameFreq())
+            return false;
         return true;
     }
 
@@ -198,7 +214,8 @@ public class LauncherPreferences {
         try {
             String freq0 = Tools.read("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
             String freqX = Tools.read("/sys/devices/system/cpu/cpu" + (coreCount - 1) + "/cpufreq/cpuinfo_max_freq");
-            if(freq0.equals(freqX)) return true;
+            if (freq0.equals(freqX))
+                return true;
         } catch (IOException e) {
             Log.e("LauncherPreferences", "Failed to read CPU frequencies", e);
         }
@@ -207,41 +224,53 @@ public class LauncherPreferences {
 
     /** Compute the notch size to avoid being out of bounds */
     public static void computeNotchSize(Activity activity) {
-        if (Build.VERSION.SDK_INT < P) return;
+        if (Build.VERSION.SDK_INT < P)
+            return;
         try {
             final Rect cutout;
-            if(SDK_INT >= Build.VERSION_CODES.S){
-                cutout = activity.getWindowManager().getCurrentWindowMetrics().getWindowInsets().getDisplayCutout().getBoundingRects().get(0);
+            if (SDK_INT >= Build.VERSION_CODES.S) {
+                cutout = activity.getWindowManager().getCurrentWindowMetrics().getWindowInsets().getDisplayCutout()
+                        .getBoundingRects().get(0);
             } else {
-                cutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout().getBoundingRects().get(0);
+                cutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout().getBoundingRects()
+                        .get(0);
             }
 
             // Notch values are rotation sensitive, handle all cases
             int orientation = activity.getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) LauncherPreferences.PREF_NOTCH_SIZE = cutout.height();
-            else if (orientation == Configuration.ORIENTATION_LANDSCAPE) LauncherPreferences.PREF_NOTCH_SIZE = cutout.width();
-            else LauncherPreferences.PREF_NOTCH_SIZE = Math.min(cutout.width(), cutout.height());
+            if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                LauncherPreferences.PREF_NOTCH_SIZE = cutout.height();
+            else if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+                LauncherPreferences.PREF_NOTCH_SIZE = cutout.width();
+            else
+                LauncherPreferences.PREF_NOTCH_SIZE = Math.min(cutout.width(), cutout.height());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.i("NOTCH DETECTION", "No notch detected, or the device if in split screen mode");
             LauncherPreferences.PREF_NOTCH_SIZE = -1;
         }
         Tools.updateWindowSize(activity);
     }
+
     public static void writeMGRendererSettings() throws IOException {
         LinkedHashMap<String, Object> MGConfigJson = new LinkedHashMap<>();
         // Copying the defaultValues from pref_renderer.xml to use as defaults here too
 
-        // We need to get the string and convert it to int because the android:defaultValues only takes in string-arrays.
-        // Using .getInt() leads to a class cast exception and using integer-arrays will just crash the layout/fragment.
+        // We need to get the string and convert it to int because the
+        // android:defaultValues only takes in string-arrays.
+        // Using .getInt() leads to a class cast exception and using integer-arrays will
+        // just crash the layout/fragment.
         MGConfigJson.put("enableANGLE", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_angle", "0")));
-        MGConfigJson.put("enableNoError", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_errorSetting", "0")));
+        MGConfigJson.put("enableNoError",
+                Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_errorSetting", "0")));
         MGConfigJson.put("fsr1Setting", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_fsr", "0")));
 
-        // These guys are SwitchPreferences so they get special treatment, they need to be converted to ints
+        // These guys are SwitchPreferences so they get special treatment, they need to
+        // be converted to ints
         int gl43exts = DEFAULT_PREF.getBoolean("mg_renderer_setting_gl43ext", false) ? 1 : 0;
         int computeShaderext = DEFAULT_PREF.getBoolean("mg_renderer_computeShaderext", false) ? 1 : 0;
-        int angleDepthClearFixMode = DEFAULT_PREF.getBoolean("mg_renderer_setting_angleDepthClearFixMode", false) ? 1 : 0;
+        int angleDepthClearFixMode = DEFAULT_PREF.getBoolean("mg_renderer_setting_angleDepthClearFixMode", false) ? 1
+                : 0;
         int timerQueryExt = DEFAULT_PREF.getBoolean("mg_renderer_setting_timerQueryExt", false) ? 1 : 0;
         int dsaExt = DEFAULT_PREF.getBoolean("mg_renderer_dsaExt", false) ? 1 : 0;
         MGConfigJson.put("enableExtGL43", gl43exts);
@@ -251,12 +280,15 @@ public class LauncherPreferences {
         MGConfigJson.put("enableExtDirectStateAccess", dsaExt);
         if (DEFAULT_PREF.getBoolean("mg_renderer_multidrawCompute", false)) {
             MGConfigJson.put("multidrawMode", 5); // Special handling for the (special mayhaps) compute emulation
-        } else MGConfigJson.put("multidrawMode", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_multidraw", "0")));
-        MGConfigJson.put("maxGlslCacheSize", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_glsl_cache_size", "128")));
+        } else
+            MGConfigJson.put("multidrawMode",
+                    Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_multidraw", "0")));
+        MGConfigJson.put("maxGlslCacheSize",
+                Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_glsl_cache_size", "128")));
         File configFile = new File(Tools.DIR_DATA + "/MobileGlues", "config.json");
         FileUtils.ensureParentDirectory(configFile);
         try {
-            Tools.write(configFile.getAbsolutePath(),Tools.GLOBAL_GSON.toJson(MGConfigJson));
+            Tools.write(configFile.getAbsolutePath(), Tools.GLOBAL_GSON.toJson(MGConfigJson));
             Logger.appendToLog("Writing MG configs to " + configFile.getAbsolutePath());
             Logger.appendToLog("MG Config is " + Tools.GLOBAL_GSON.toJson(MGConfigJson));
         } catch (IOException e) {

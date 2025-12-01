@@ -3,6 +3,8 @@ package net.kdt.pojavlaunch.value.launcherprofiles;
 import net.kdt.pojavlaunch.Tools;
 import java.io.File;
 import java.util.HashMap;
+import java.io.IOException;
+import android.util.Log;
 
 public class LauncherProfiles {
     public static final File launcherProfilesFile = new File(Tools.DIR_GAME_HOME, "launcher_profiles.json");
@@ -23,7 +25,12 @@ public class LauncherProfiles {
     }
 
     public static void write() {
-        // No-op, we don't want to write to disk
+        try {
+            Tools.write(launcherProfilesFile.getAbsolutePath(), mainProfileJson.toJson());
+        } catch (IOException e) {
+            Log.e(LauncherProfiles.class.toString(), "Failed to write profile file", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public static MinecraftProfile getCurrentProfile() {
@@ -32,10 +39,17 @@ public class LauncherProfiles {
         return mainProfileJson.profiles.get("SpiralKnights");
     }
 
-    // Keep other methods if they are used elsewhere but make them safe or no-ops
     public static void updateProfile(String name, MinecraftProfile profile) {
+        if (mainProfileJson == null)
+            load();
+        mainProfileJson.profiles.put(name, profile);
+        write();
     }
 
     public static void deleteProfile(String name) {
+        if (mainProfileJson == null)
+            load();
+        mainProfileJson.profiles.remove(name);
+        write();
     }
 }

@@ -151,6 +151,8 @@
     <string name="customctrl_passthru">Převést pohyb myši</string>
     <string name="customctrl_swipeable">Povolit přejíždění</string>
     <string name="customctrl_forward_lock">Uzamknout dopředu</string>
+    <string name="customctrl_send_wasd">Poslat WASD</string>
+    <string name="customctrl_send_arrows">Poslat šipky</string>
     <string name="customctrl_absolute_tracking">Absolutní následování prstu</string>
     <string name="memory_warning_msg">Aktuální množství volné paměti RAM (%d) je nižší než přidělená paměť RAM (%d), což může vést k pádu. Spadne-li hra, snižte přidělení paměti.</string>
     <string name="address_memory_warning_msg">Aktuální množství volné přístupné paměti RAM (%d) je nižší než přidělená paměť RAM (%d), což povede k pádu. Spadne-li hra, sniž přidělení paměti.</string>

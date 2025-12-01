@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -318,6 +319,8 @@ public class LauncherActivity extends BaseActivity {
             return;
         }
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Installing Spiral Knights");
         pd.setMessage("Please wait...");
@@ -357,6 +360,7 @@ public class LauncherActivity extends BaseActivity {
                 Tools.runOnUiThread(() -> {
                     pd.setMessage(line);
                     if (th != null) {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         String errorMessage = "Error: " + th.getMessage() + "\n" + Tools.printToString(th);
                         new AlertDialog.Builder(LauncherActivity.this)
                                 .setTitle("Installation Error")
@@ -381,6 +385,7 @@ public class LauncherActivity extends BaseActivity {
             @Override
             public void unlockExit() {
                 Tools.runOnUiThread(() -> {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     pd.dismiss();
                     boolean getdownExists = new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists();
                     boolean jsonExists = new File(Tools.DIR_GAME_HOME, "versions/SpiralKnights/SpiralKnights.json")

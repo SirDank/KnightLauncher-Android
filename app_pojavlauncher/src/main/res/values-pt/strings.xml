@@ -124,6 +124,8 @@
     <string name="mcl_setting_subtitle_mousespeed">Muda a velocidade do rato virtual.</string>
     <string name="customctrl_passthru">Rato pode passar através</string>
     <string name="customctrl_swipeable">Deslizável</string>
+    <string name="customctrl_send_wasd">Enviar WASD</string>
+    <string name="customctrl_send_arrows">Enviar setas</string>
     <string name="customctrl_absolute_tracking">Rastreamento absoluto do dedo</string>
     <string name="memory_warning_msg">A quantidade atual de memória RAM livre (%d) é menor do que a memória RAM alocada (%d), o que pode levar a falhas. Altera a alocação se o jogo falhar.</string>
     <string name="mcl_memory_allocation">Alocação de memória</string>

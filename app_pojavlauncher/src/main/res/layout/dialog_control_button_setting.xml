@@ -325,12 +325,32 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
+        android:id="@+id/checkboxSendWasd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_36sdp"
+        android:text="@string/customctrl_send_wasd"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkboxForwardLock"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/checkboxSendArrows"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_36sdp"
+        android:text="@string/customctrl_send_arrows"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkboxSendWasd"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
         android:id="@+id/checkboxAbsoluteFingerTracking"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_36sdp"
         android:text="@string/customctrl_absolute_tracking"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkboxForwardLock"
+        app:layout_constraintTop_toBottomOf="@id/checkboxSendArrows"
         tools:ignore="UseSwitchCompatOrMaterialXml"/>
 
     <!-- BACKGROUND COLOR SECTION -->

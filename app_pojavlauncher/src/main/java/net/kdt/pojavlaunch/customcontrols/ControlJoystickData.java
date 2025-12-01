@@ -9,8 +9,10 @@ public class ControlJoystickData extends ControlData {
      * or relative (joystick stays in the center)
      */
     public boolean absolute = false;
+    public boolean sendWasd = true;
+    public boolean sendArrows = false;
 
-    public ControlJoystickData(){
+    public ControlJoystickData() {
         super();
     }
 
@@ -18,5 +20,7 @@ public class ControlJoystickData extends ControlData {
         super(properties);
         forwardLock = properties.forwardLock;
         absolute = properties.absolute;
+        sendWasd = properties.sendWasd;
+        sendArrows = properties.sendArrows;
     }
 }

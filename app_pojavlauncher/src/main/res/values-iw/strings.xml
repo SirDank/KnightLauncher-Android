@@ -145,6 +145,8 @@
     <string name="mcl_setting_subtitle_mousespeed">\"משנה את מהירות העכבר הוירטואלי</string>
     <string name="customctrl_passthru">עכבר עובר דרך</string>
     <string name="customctrl_swipeable">ניתן להחלקה</string>
+    <string name="customctrl_send_wasd">שלח WASD</string>
+    <string name="customctrl_send_arrows">שלח צעדים</string>
     <string name="customctrl_absolute_tracking">מעקב אצבעות מוחלט</string>
     <string name="memory_warning_msg">הכמות הנוכחית של RAM פנוי (%d) נמוכה מכמות ה-RAM שהוקצתה (%d), מה שעלול לגרום למשחק לקרוס. הנך מתבקש לשנות את ההקצאה במידה והמשחק קורס.</string>
     <string name="address_memory_warning_msg">כמות שטח ה-RAM הפנוי הנוכחית (%d) נמוכה משטח ה-RAM המוקצה (%d), מה שיגרום לקריסות. יש לשנות את ההקצאה אם המשחק קורס.</string>

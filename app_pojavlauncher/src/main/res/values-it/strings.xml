@@ -150,6 +150,8 @@
     <string name="customctrl_passthru">Bypassa mouse</string>
     <string name="customctrl_swipeable">Swipeabile</string>
     <string name="customctrl_forward_lock">Blocco in avanti</string>
+    <string name="customctrl_send_wasd">Invia WASD</string>
+    <string name="customctrl_send_arrows">Invia le frecce</string>
     <string name="customctrl_absolute_tracking">Tracciamento assoluto delle dita</string>
     <string name="memory_warning_msg">L\'attuale quantità di RAM libera (%d) è minore di quella allocata (%d), la quale potrebbe portare a crash inaspettati. Modifica la quantità di RAM allocata in caso di crash.</string>
     <string name="address_memory_warning_msg">L\'attuale quantità di spazio libero indirizzabile nella RAM (%d) è inferiore alla RAM allocata (%d), il che provoca un crash. Modificare l\'allocazione se il gioco si blocca.</string>

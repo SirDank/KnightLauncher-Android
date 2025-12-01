@@ -146,6 +146,8 @@
     <string name="mcl_setting_subtitle_grab_mouse">Assure que le curseur reste dans le jeu. Empêche la souris de cliquer sur la disposition du contrôle.</string>
     <string name="customctrl_passthru">Souris pass-thru</string>
     <string name="customctrl_swipeable">Balayable</string>
+    <string name="customctrl_send_wasd">Envoyer WASD</string>
+    <string name="customctrl_send_arrows">Envoyer les flèches</string>
     <string name="customctrl_absolute_tracking">Suivi absolu du doigt</string>
     <string name="memory_warning_msg">La quantité actuelle de RAM libre (%d) est inférieure à la RAM allouée (%d), ce qui peut entraîner des plantages. Changez l\'allocation si le jeu plante.</string>
     <string name="address_memory_warning_msg">La quantité actuelle d\'espace RAM allouable libre (%d) est inférieure à la RAM allouée (%d), ce qui entraînera des crashs. Modifiez l\'allocation de la RAM si le jeu crash.</string>

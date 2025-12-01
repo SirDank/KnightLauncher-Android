@@ -107,6 +107,8 @@
     <string name="mcl_setting_subtitle_mousespeed">Changes da speed of da virtual mouuse.</string>
     <string name="customctrl_passthru">Mouses pas-thur</string>
     <string name="customctrl_swipeable">Scratchable</string>
+    <string name="customctrl_send_wasd">Send WASD</string>
+    <string name="customctrl_send_arrows">Send arrows</string>
     <string name="customctrl_absolute_tracking">Absolute finger trackin\'</string>
     <string name="memory_warning_msg">WURNING: Catz iz becomin’ une of teh Memory Muncherz, wich may leid tu game crash! (Free %d, munch’d %d MB) Change teh allocasion if teh game crashez.</string>
     <string name="mcl_memory_allocation">RAM allocasion</string>

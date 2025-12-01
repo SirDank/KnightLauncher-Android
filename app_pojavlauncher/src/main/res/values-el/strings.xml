@@ -127,6 +127,8 @@
     <string name="mcl_setting_subtitle_mousespeed">Αλλάζει την ταχύτητα του εικονικού ποντικιού.</string>
     <string name="customctrl_passthru">Pass-thru ποντικιού</string>
     <string name="customctrl_swipeable">Ευέλικτο</string>
+    <string name="customctrl_send_wasd">Αποστολή WASD</string>
+    <string name="customctrl_send_arrows">Αποστολή Αριστερά</string>
     <string name="customctrl_absolute_tracking">Απόλυτη παρακολούθηση δακτύλων</string>
     <string name="memory_warning_msg">Το τρέχον ποσό της διαθέσιμης μνήμης RAM (%d) είναι μικρότερο από την κατανεμημένη RAM (%d), το οποίο μπορεί να οδηγήσει σε καταρρεύσεις. Αλλάξτε την κατανομή αν το παιχνίδι καταρρεύσει.</string>
     <string name="mcl_memory_allocation">Κατανομή μνήμης</string>

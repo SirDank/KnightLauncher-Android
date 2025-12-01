@@ -29,14 +29,20 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 public class ControlJoystick extends JoystickView implements ControlInterface {
     public final static int DIRECTION_FORWARD_LOCK = 8;
     // Directions keycode
-    private final int[] mDirectionForwardLock = new int[]{LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL};
-    private final int[] mDirectionForward = new int[]{LwjglGlfwKeycode.GLFW_KEY_W};
-    private final int[] mDirectionRight = new int[]{LwjglGlfwKeycode.GLFW_KEY_D};
-    private final int[] mDirectionBackward = new int[]{LwjglGlfwKeycode.GLFW_KEY_S};
-    private final int[] mDirectionLeft = new int[]{LwjglGlfwKeycode.GLFW_KEY_A};
+    private final int[] mDirectionForwardLock = new int[] { LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL };
+    private final int[] mDirectionForward = new int[] { LwjglGlfwKeycode.GLFW_KEY_W };
+    private final int[] mDirectionRight = new int[] { LwjglGlfwKeycode.GLFW_KEY_D };
+    private final int[] mDirectionBackward = new int[] { LwjglGlfwKeycode.GLFW_KEY_S };
+    private final int[] mDirectionLeft = new int[] { LwjglGlfwKeycode.GLFW_KEY_A };
+    private final int[] mDirectionUpArrow = new int[] { LwjglGlfwKeycode.GLFW_KEY_UP };
+    private final int[] mDirectionRightArrow = new int[] { LwjglGlfwKeycode.GLFW_KEY_RIGHT };
+    private final int[] mDirectionDownArrow = new int[] { LwjglGlfwKeycode.GLFW_KEY_DOWN };
+    private final int[] mDirectionLeftArrow = new int[] { LwjglGlfwKeycode.GLFW_KEY_LEFT };
+
     private ControlJoystickData mControlData;
     private int mLastDirectionInt = GamepadJoystick.DIRECTION_NONE;
     private int mCurrentDirectionInt = GamepadJoystick.DIRECTION_NONE;
+
     public ControlJoystick(ControlLayout parent, ControlJoystickData data) {
         super(parent.getContext());
         init(data, parent);
@@ -109,16 +115,17 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
         getControlLayoutParent().addJoystickButton(data);
     }
 
-
     @Override
     public void setBackground() {
-        setBorderWidth((int) Tools.dpToPx(getProperties().strokeWidth * (getControlLayoutParent().getLayoutScale()/100f)));
+        setBorderWidth(
+                (int) Tools.dpToPx(getProperties().strokeWidth * (getControlLayoutParent().getLayoutScale() / 100f)));
         setBorderColor(getProperties().strokeColor);
         setBackgroundColor(getProperties().bgColor);
     }
 
     @Override
-    public void sendKeyPresses(boolean isDown) {/*STUB since non swipeable*/ }
+    public void sendKeyPresses(boolean isDown) {
+        /* STUB since non swipeable */ }
 
     @Override
     public void loadEditValues(EditControlSideDialog editControlPopup) {
@@ -126,39 +133,76 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
     }
 
     private int getDirectionInt(int angle, int intensity) {
-        if (intensity == 0) return DIRECTION_NONE;
+        if (intensity == 0)
+            return DIRECTION_NONE;
         return (int) (((angle + 22.5) / 45) % 8);
     }
 
     private void sendDirectionalKeycode(int direction, boolean isDown) {
         switch (direction) {
             case DIRECTION_NORTH:
-                sendInput(mDirectionForward, isDown);
+                if (mControlData.sendWasd)
+                    sendInput(mDirectionForward, isDown);
+                if (mControlData.sendArrows)
+                    sendInput(mDirectionUpArrow, isDown);
                 break;
             case DIRECTION_NORTH_EAST:
-                sendInput(mDirectionForward, isDown);
-                sendInput(mDirectionRight, isDown);
+                if (mControlData.sendWasd) {
+                    sendInput(mDirectionForward, isDown);
+                    sendInput(mDirectionRight, isDown);
+                }
+                if (mControlData.sendArrows) {
+                    sendInput(mDirectionUpArrow, isDown);
+                    sendInput(mDirectionRightArrow, isDown);
+                }
                 break;
             case DIRECTION_EAST:
-                sendInput(mDirectionRight, isDown);
+                if (mControlData.sendWasd)
+                    sendInput(mDirectionRight, isDown);
+                if (mControlData.sendArrows)
+                    sendInput(mDirectionRightArrow, isDown);
                 break;
             case DIRECTION_SOUTH_EAST:
-                sendInput(mDirectionRight, isDown);
-                sendInput(mDirectionBackward, isDown);
+                if (mControlData.sendWasd) {
+                    sendInput(mDirectionRight, isDown);
+                    sendInput(mDirectionBackward, isDown);
+                }
+                if (mControlData.sendArrows) {
+                    sendInput(mDirectionRightArrow, isDown);
+                    sendInput(mDirectionDownArrow, isDown);
+                }
                 break;
             case DIRECTION_SOUTH:
-                sendInput(mDirectionBackward, isDown);
+                if (mControlData.sendWasd)
+                    sendInput(mDirectionBackward, isDown);
+                if (mControlData.sendArrows)
+                    sendInput(mDirectionDownArrow, isDown);
                 break;
             case DIRECTION_SOUTH_WEST:
-                sendInput(mDirectionBackward, isDown);
-                sendInput(mDirectionLeft, isDown);
+                if (mControlData.sendWasd) {
+                    sendInput(mDirectionBackward, isDown);
+                    sendInput(mDirectionLeft, isDown);
+                }
+                if (mControlData.sendArrows) {
+                    sendInput(mDirectionDownArrow, isDown);
+                    sendInput(mDirectionLeftArrow, isDown);
+                }
                 break;
             case DIRECTION_WEST:
-                sendInput(mDirectionLeft, isDown);
+                if (mControlData.sendWasd)
+                    sendInput(mDirectionLeft, isDown);
+                if (mControlData.sendArrows)
+                    sendInput(mDirectionLeftArrow, isDown);
                 break;
             case DIRECTION_NORTH_WEST:
-                sendInput(mDirectionForward, isDown);
-                sendInput(mDirectionLeft, isDown);
+                if (mControlData.sendWasd) {
+                    sendInput(mDirectionForward, isDown);
+                    sendInput(mDirectionLeft, isDown);
+                }
+                if (mControlData.sendArrows) {
+                    sendInput(mDirectionUpArrow, isDown);
+                    sendInput(mDirectionLeftArrow, isDown);
+                }
                 break;
             case DIRECTION_FORWARD_LOCK:
                 sendInput(mDirectionForwardLock, isDown);

@@ -200,7 +200,7 @@ public class KnightInstaller implements Runnable {
                 if (line.startsWith(CODE_LINE)) {
                     String codeJar = line.substring(CODE_LINE.length());
                     // Skip jinput and lwjgl as they're provided by PojavLauncher
-                    if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl")) {
+                    if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl") && !codeJar.contains("crucible")) {
                         codeJars.add(codeJar);
                     }
                 } else if (line.startsWith(ARG_LINE)) {
@@ -342,13 +342,14 @@ public class KnightInstaller implements Runnable {
                     version = line.substring("version = ".length()).trim();
                 } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
-                    if (!res.startsWith("[")) { // Ignore platform specific for now unless it matches our platform, but
+                    if (!res.startsWith("[")) { // Ignore platform specific for now unless
+                                                // it matches our platform, but
                                                 // simpler to ignore
                         resources.add(res);
                     }
                 } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
-                    if (!res.startsWith("[")) {
+                    if (!res.startsWith("[") && !res.contains("crucible")) {
                         uresources.add(res);
                     }
                 }
@@ -384,7 +385,7 @@ public class KnightInstaller implements Runnable {
                         }
                     } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                         String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[")) {
+                        if (!res.startsWith("[") && !res.contains("crucible")) {
                             uresources.add(res);
                         }
                     }

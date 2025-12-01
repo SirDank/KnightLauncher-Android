@@ -129,6 +129,8 @@
     <string name="mcl_setting_subtitle_mousespeed">سرعت جابه‌جایی موس مجازی را تغییر میدهد.</string>
     <string name="customctrl_passthru">ماوس از آن رد شود</string>
     <string name="customctrl_swipeable">قابل سوایپ</string>
+    <string name="customctrl_send_wasd">WASD را ارسال کنید</string>
+    <string name="customctrl_send_arrows">Arrow را ارسال کنید</string>
     <string name="customctrl_absolute_tracking">تشخیص دقیق انگشت</string>
     <string name="memory_warning_msg">میزان رم آزاد فعلی (%d) از میزان رم اختصاص یافته (%d) کمتر است، که ممکن است باعث کرش شود. رم اختصاص یافته را تغییر دهید اگر بازی کرش خورد.</string>
     <string name="mcl_memory_allocation">میزان رم اختصاص یافته</string>

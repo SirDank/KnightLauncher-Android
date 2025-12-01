@@ -129,6 +129,8 @@
     <string name="mcl_setting_subtitle_mousespeed">يغير سرعة مؤشر الفأرة الافتراضية.</string>
     <string name="customctrl_passthru">سماح تحريك الشاشة في أثناء استخدام الزر</string>
     <string name="customctrl_swipeable">قابل للسحب</string>
+    <string name="customctrl_send_wasd">إرسال WASD</string>
+    <string name="customctrl_send_arrows">إرسال الأزرار</string>
     <string name="customctrl_absolute_tracking">تتبع الأصابع بشكل مطلق</string>
     <string name="memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%d) أقل من ذاكرة الوصول العشوائي المحددة (%d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>
     <string name="address_memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%d) أقل من ذاكرة الوصول العشوائي المحددة (%d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>

@@ -151,6 +151,8 @@
     <string name="customctrl_passthru">穿透點擊</string>
     <string name="customctrl_swipeable">滑動點擊</string>
     <string name="customctrl_forward_lock">前進鎖定</string>
+    <string name="customctrl_send_wasd">發送 WASD</string>
+    <string name="customctrl_send_arrows">發送方向鍵</string>
     <string name="customctrl_absolute_tracking">絕對手指追蹤</string>
     <string name="memory_warning_msg">當前空閒 RAM（%d）低於分配值（%d），存在崩潰風險！若崩潰請調整 RAM 分配。</string>
     <string name="address_memory_warning_msg">當前可用 RAM（%d）低於分配值（%d）大概率會導致遊戲崩潰！若崩潰請調整 RAM 分配。</string>

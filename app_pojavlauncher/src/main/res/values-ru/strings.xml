@@ -148,6 +148,8 @@
     <string name="customctrl_passthru">Пропускать касание в игру</string>
     <string name="customctrl_swipeable">Пролистываемый</string>
     <string name="customctrl_forward_lock">Блокировка движения вперёд</string>
+    <string name="customctrl_send_wasd">Отправка WASD</string>
+    <string name="customctrl_send_arrows">Отправка стрелок</string>
     <string name="customctrl_absolute_tracking">Динамический центр</string>
     <string name="memory_warning_msg">Текущий объем свободной оперативной памяти (%d) меньше, чем выделенная (%d), что может привести к сбоям. Измените количество выделенной памяти при сбое игры.</string>
     <string name="address_memory_warning_msg">Текущий объём линейно адресуемой оперативной памяти (%d) меньше, чем выделенная (%d), что может привести к сбою. В случае сбоя игры измените количество выделенной памяти.</string>

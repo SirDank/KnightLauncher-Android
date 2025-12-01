@@ -130,6 +130,7 @@ public final class Tools {
     public static String OBSOLETE_RESOURCES_PATH;
     public static String CTRLMAP_PATH;
     public static String CTRLDEF_FILE;
+    public static String PROJECTX_PREFS_FILE;
     private static RenderersList sCompatibleRenderers;
 
     private static File getPojavStorageRoot(Context ctx) {
@@ -206,6 +207,7 @@ public final class Tools {
         OBSOLETE_RESOURCES_PATH = DIR_GAME_NEW + "/resources";
         CTRLMAP_PATH = DIR_GAME_HOME + "/controlmap";
         CTRLDEF_FILE = DIR_GAME_HOME + "/controlmap/default.json";
+        PROJECTX_PREFS_FILE = DIR_GAME_HOME + "/.java/.userPrefs/projectx/prefs.xml";
         GAME_PROFILES_FILE = Tools.DIR_GAME_NEW + "/launcher_profiles.json";
         // switchDemo(isDemoProfile(ctx)); // Removed
     }
@@ -785,7 +787,7 @@ public final class Tools {
         jvmArgs.add("-Dsun.java2d.d3d=false");
         jvmArgs.add("-Dappdir=" + Tools.DIR_GAME_HOME + "/spiral");
         jvmArgs.add("-Dresource_dir=" + Tools.DIR_GAME_HOME + "/spiral/rsrc");
-        jvmArgs.add("-Dcrucible.dir=" + Tools.DIR_GAME_HOME + "/spiral/crucible");
+        // jvmArgs.add("-Dcrucible.dir=" + Tools.DIR_GAME_HOME + "/spiral/crucible");
         jvmArgs.add("-Dorg.lwjgl.opengl.disableStaticInit=true");
         jvmArgs.add("-XX:+DisableExplicitGC");
         jvmArgs.add("-XX:+UseParallelGC");
