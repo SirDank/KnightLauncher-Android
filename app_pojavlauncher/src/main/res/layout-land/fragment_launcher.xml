@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,28 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.kdt.mcgui.LauncherMenuButton
-                android:id="@+id/discord_button"
-                style="@style/LauncherMenuButton.Universal"
-                android:layout_width="match_parent"
-                android:drawableStart="@drawable/ic_discord"
-                android:text="@string/mcl_button_discord"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/custom_control_button"
                 style="@style/LauncherMenuButton.Universal"
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_menu_custom_controls"
                 android:text="@string/mcl_option_customcontrol"
-                app:layout_constraintTop_toBottomOf="@id/discord_button"/>
-
-            <com.kdt.mcgui.LauncherMenuButton
-                android:id="@+id/share_logs_button"
-                style="@style/LauncherMenuButton.Universal"
-                android:layout_width="match_parent"
-                android:drawableStart="@android:drawable/ic_menu_share"
-                android:text="@string/main_share_logs"
-                app:layout_constraintTop_toBottomOf="@id/custom_control_button" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/open_files_button"
@@ -52,7 +36,15 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_folder"
                 android:text="@string/mcl_button_open_directory"
-                app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+                app:layout_constraintTop_toBottomOf="@id/custom_control_button" />
+
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/share_logs_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@android:drawable/ic_menu_share"
+                android:text="@string/main_share_logs"
+                app:layout_constraintTop_toBottomOf="@id/open_files_button" />
 
             <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/reset_game_files_button"
@@ -60,7 +52,23 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_menu_delete_forever"
                 android:text="@string/mcl_button_reset_game_files"
-                app:layout_constraintTop_toBottomOf="@id/open_files_button" />
+                app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/discord_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_discord"
+                android:text="@string/mcl_button_discord"
+                app:layout_constraintTop_toBottomOf="@id/reset_game_files_button"/>
+
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/player_count_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_menu_users"
+                android:text="@string/mcl_button_player_count"
+                app:layout_constraintTop_toBottomOf="@id/discord_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

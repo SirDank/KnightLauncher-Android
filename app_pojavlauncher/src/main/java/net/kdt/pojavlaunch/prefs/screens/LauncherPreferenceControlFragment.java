@@ -17,7 +17,6 @@ public class LauncherPreferenceControlFragment extends LauncherPreferenceFragmen
     @Override
     public void onCreatePreferences(Bundle b, String str) {
         // Get values
-        int longPressTrigger = LauncherPreferences.PREF_LONGPRESS_TRIGGER;
         int prefButtonSize = (int) LauncherPreferences.PREF_BUTTONSIZE;
         int mouseScale = (int) (LauncherPreferences.PREF_MOUSESCALE * 100);
         int gyroSampleRate = LauncherPreferences.PREF_GYRO_SAMPLE_RATE;
@@ -30,10 +29,7 @@ public class LauncherPreferenceControlFragment extends LauncherPreferenceFragmen
         //Triggers a write for some reason which resets the value
         addPreferencesFromResource(R.xml.pref_control);
 
-        CustomSeekBarPreference seek2 = requirePreference("timeLongPressTrigger",
-                CustomSeekBarPreference.class);
-        seek2.setValue(longPressTrigger);
-        seek2.setSuffix(" ms");
+
 
         CustomSeekBarPreference seek3 = requirePreference("buttonscale",
                 CustomSeekBarPreference.class);
@@ -90,7 +86,6 @@ public class LauncherPreferenceControlFragment extends LauncherPreferenceFragmen
     }
 
     private void computeVisibility() {
-        requirePreference("timeLongPressTrigger").setVisible(!LauncherPreferences.PREF_DISABLE_GESTURES);
         requirePreference("gyroSensitivity").setVisible(LauncherPreferences.PREF_ENABLE_GYRO);
         requirePreference("gyroSampleRate").setVisible(LauncherPreferences.PREF_ENABLE_GYRO);
         requirePreference("gyroInvertX").setVisible(LauncherPreferences.PREF_ENABLE_GYRO);

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE map SYSTEM "http://java.sun.com/dtd/preferences.dtd">
 <map MAP_XML_VERSION="1.0">
+  <entry key="action.keys" value="256, 44, 65797"/>
   <entry key="anonymous_logon" value="false"/>
-  <entry key="antialiasing_level" value="0"/>
   <entry key="chosen_control_scheme" value="true"/>
+  <entry key="compatibility_mode" value="true"/>
   <entry key="control_scheme" value="WASD_MOVE"/>
   <entry key="cull_transients_prod" value="true"/>
-  <entry key="effect_gain" value="1.0"/>
-  <entry key="interface_gain" value="1.0"/>
-  <entry key="language" value="en"/>
-  <entry key="menu_panels_out" value="true"/>
-  <entry key="music_gain" value="1.0"/>
-  <entry key="render_effects" value="true"/>
-  <entry key="startup_pcount" value="1"/>
+  <entry key="defend.keys" value="257, 45, 0"/>
+  <entry key="dodge.keys" value="268435713, 47, 0"/>
+  <entry key="party_with_any" value="true"/>
+  <entry key="render_effects" value="false"/>
+  <entry key="shield_bash.keys" value="268435712, 46, 65797"/>
   <entry key="username" value=""/>
 </map>

@@ -787,7 +787,7 @@ public final class Tools {
         jvmArgs.add("-Dsun.java2d.d3d=false");
         jvmArgs.add("-Dappdir=" + Tools.DIR_GAME_HOME + "/spiral");
         jvmArgs.add("-Dresource_dir=" + Tools.DIR_GAME_HOME + "/spiral/rsrc");
-        // jvmArgs.add("-Dcrucible.dir=" + Tools.DIR_GAME_HOME + "/spiral/crucible");
+        jvmArgs.add("-Dcrucible.dir=" + Tools.DIR_GAME_HOME + "/spiral/crucible");
         jvmArgs.add("-Dorg.lwjgl.opengl.disableStaticInit=true");
         jvmArgs.add("-XX:+DisableExplicitGC");
         jvmArgs.add("-XX:+UseParallelGC");

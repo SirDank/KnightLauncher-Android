@@ -394,7 +394,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     private void runCraft(String versionId, JMinecraftVersionList.Version version) throws Throwable {
         if (Tools.LOCAL_RENDERER == null) {
-            Tools.LOCAL_RENDERER = "opengles2"; // "opengles_mobileglues" // [TODO] Test both on spiral knights
+            Tools.LOCAL_RENDERER = "opengles2";
         }
         if (!Tools.checkRendererCompatible(this, Tools.LOCAL_RENDERER)) {
             Tools.RenderersList renderersList = Tools.getCompatibleRenderers(this);

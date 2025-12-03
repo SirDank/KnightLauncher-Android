@@ -200,7 +200,7 @@ public class KnightInstaller implements Runnable {
                 if (line.startsWith(CODE_LINE)) {
                     String codeJar = line.substring(CODE_LINE.length());
                     // Skip jinput and lwjgl as they're provided by PojavLauncher
-                    if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl") && !codeJar.contains("crucible")) {
+                    if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl")) {
                         codeJars.add(codeJar);
                     }
                 } else if (line.startsWith(ARG_LINE)) {
@@ -349,7 +349,7 @@ public class KnightInstaller implements Runnable {
                     }
                 } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
-                    if (!res.startsWith("[") && !res.contains("crucible")) {
+                    if (!res.startsWith("[")) {
                         uresources.add(res);
                     }
                 }
@@ -385,7 +385,7 @@ public class KnightInstaller implements Runnable {
                         }
                     } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                         String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[") && !res.contains("crucible")) {
+                        if (!res.startsWith("[")) {
                             uresources.add(res);
                         }
                     }

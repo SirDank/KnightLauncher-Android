@@ -164,7 +164,8 @@ android {
             useLegacyPackaging = true
         }
         doNotStrip += [
-                "**/libcutils.so"
+                "**/libcutils.so",
+                "**/libvulkan_freedreno.so"
         ]
         pickFirst '**/libbytehook.so'
     }

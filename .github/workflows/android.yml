@@ -51,6 +51,16 @@ jobs:
         with:
           validate-wrappers: false
           gradle-version: "8.11"
+          # Only write cache on primary branch to avoid cache pollution
+          cache-read-only: ${{ github.ref != 'refs/heads/v3_openjdk' }}
+          # Customize what gets cached
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+          gradle-home-cache-excludes: |
+            caches/build-cache-1
+            caches/*/gc.properties
 
       - name: Build JRE JAR files
         run: |
@@ -58,7 +68,7 @@ jobs:
 
           mkdir out
           # Build JRE JAR files (security manager, etc...)
-          gradle :jre_lwjgl3glfw:build --no-daemon --build-cache
+          gradle :jre_lwjgl3glfw:build --build-cache
 
       - name: Build Debug .apk
         run: |

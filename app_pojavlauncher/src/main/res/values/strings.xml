@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- App name part -->
     <string name="app_name">KnightLauncher</string>
@@ -429,9 +429,10 @@
     <string name="mcl_button_discord">Discord</string>
     <string name="ltw_render_distance_warning_msg">Your GPU is not capable of rendering above 7 render distance without Sodium or other similar mods. The render distance will be automatically reduced when you click "OK".</string>
     <string name="mcl_button_open_directory">Open game directory</string>
+    <string name="mcl_button_player_count">Player Count: 0</string>
     <string name="mcl_button_reset_game_files">RESET GAME FILES</string>
     <string name="mcl_reset_game_files_confirmation">Are you sure you want to reset the game files? This will delete the current installation and re-download the game.</string>
-    <string name="discord_invite" translatable="false">https://discord.gg/8rE4GeAMza</string>
+    <string name="discord_invite" translatable="false">https://sirdank.github.io/dankware-website/discord</string>
     <string name="local_login_bad_username_title">Unsuitable username</string>
     <string name="local_login_bad_username_text">The username must be between 3–16 characters long, and must only contain latin letters, numbers 0–9 and underscores.</string>
     <string name="quick_setting_title">Quick settings</string>

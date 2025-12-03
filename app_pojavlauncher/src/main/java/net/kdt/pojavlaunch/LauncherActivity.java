@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class LauncherActivity extends BaseActivity {
     private ProgressLayout mProgressLayout;
     private ProgressServiceKeeper mProgressServiceKeeper;
     private NotificationManager mNotificationManager;
+    private PowerManager.WakeLock mWakeLock;
 
     /* Allows to switch from one button "type" to another */
     private final FragmentManager.FragmentLifecycleCallbacks mFragmentCallbackListener = new FragmentManager.FragmentLifecycleCallbacks() {
@@ -314,12 +316,25 @@ public class LauncherActivity extends BaseActivity {
         installSpiralKnights();
     }
 
+    private void releaseWakeLock() {
+        if (mWakeLock != null && mWakeLock.isHeld()) {
+            mWakeLock.release();
+        }
+        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
     public void installSpiralKnights() {
         if (new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
             return;
         }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        // Acquire wake lock to prevent the device from sleeping during installation
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KnightLauncher:InstallWakeLock");
+        mWakeLock.acquire(60 * 60 * 1000L); // 1 hour max timeout
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Installing Spiral Knights");
@@ -360,6 +375,8 @@ public class LauncherActivity extends BaseActivity {
                 Tools.runOnUiThread(() -> {
                     pd.setMessage(line);
                     if (th != null) {
+                        // Release wake lock on error
+                        releaseWakeLock();
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         String errorMessage = "Error: " + th.getMessage() + "\n" + Tools.printToString(th);
                         new AlertDialog.Builder(LauncherActivity.this)
@@ -385,6 +402,8 @@ public class LauncherActivity extends BaseActivity {
             @Override
             public void unlockExit() {
                 Tools.runOnUiThread(() -> {
+                    // Release wake lock when installation is complete
+                    releaseWakeLock();
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     pd.dismiss();
                     boolean getdownExists = new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists();

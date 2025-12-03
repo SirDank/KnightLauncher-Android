@@ -41,6 +41,7 @@ public class MainMenuFragment extends Fragment {
         Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
 
         Button mPlayButton = view.findViewById(R.id.play_button);
+        Button mPlayerCountButton = view.findViewById(R.id.player_count_button);
 
         mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
 
@@ -61,6 +62,21 @@ public class MainMenuFragment extends Fragment {
             mShareLogsButton.setOnClickListener(v -> shareLog(requireContext()));
         }
 
+        // Player count button
+        if (mPlayerCountButton != null) {
+            mPlayerCountButton.setText("Loading...");
+            mPlayerCountButton.setEnabled(false);
+            // Initial load
+            loadPlayerCount(mPlayerCountButton);
+            
+            // Reload on click
+            mPlayerCountButton.setOnClickListener(v -> {
+                mPlayerCountButton.setEnabled(false);
+                mPlayerCountButton.setText("Loading...");
+                loadPlayerCount(mPlayerCountButton);
+            });
+        }
+
         Button mResetGameFilesButton = view.findViewById(R.id.reset_game_files_button);
         if (mResetGameFilesButton != null) {
             mResetGameFilesButton.setOnClickListener(v -> {
@@ -78,8 +94,20 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
+    private void loadPlayerCount(Button button) {
+        new Thread(() -> {
+            int playerCount = net.kdt.pojavlaunch.SteamUtil.getOfficialApproxPlayerCount();
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    button.setText("Players Online: " + playerCount);
+                    button.setEnabled(true);
+                });
+            }
+        }).start();
+    }
+
     private File getCurrentProfileDirectory() {
-        // For KnightLauncher/Spiral Knights, we might just return the game dir
+        // For Spiral Knights, we might just return the game dir
         return new File(Tools.DIR_GAME_NEW);
     }
 
