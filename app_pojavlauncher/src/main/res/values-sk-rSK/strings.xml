@@ -124,6 +124,7 @@
     <string name="customctrl_swipeable">Posunovateľné</string>
     <string name="customctrl_send_wasd">Poslať WASD</string>
     <string name="customctrl_send_arrows">Poslať strílenky</string>
+    <string name="customctrl_send_mouse">Poslať myš</string>
     <string name="customctrl_absolute_tracking">Absolútne nasledovanie prsta</string>
     <string name="memory_warning_msg">Aktuálne množstvo voľnej RAM (%d) je nižšia ako pridelená RAM (%d), čo môže viesť k pádu. Zmeňte alokáciu, ak hra spadne.</string>
     <string name="mcl_memory_allocation">Pridelenie pamäte</string>

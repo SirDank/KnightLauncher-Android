@@ -155,6 +155,7 @@
     <string name="customctrl_forward_lock">Blokada przodu</string>
     <string name="customctrl_send_wasd">Wysyłaj WASD</string>
     <string name="customctrl_send_arrows">Wysyłaj strzalki</string>
+    <string name="customctrl_send_mouse">Wysyłaj mysz</string>
     <string name="customctrl_absolute_tracking">Bezwzględne śledzenie palców</string>
     <string name="memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%d) jest mniejsza od przydzielonej pamięci RAM (%d), co może prowadzić do awarii. Zmień ilość, jeśli gra ulegnie awarii.</string>
     <string name="address_memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%d) jest niższa od przydzielonej pamięci, (%d), co może prowadzić do awarii. Zmień przydzielenie, jeśli gra ulegnie awarii.</string>

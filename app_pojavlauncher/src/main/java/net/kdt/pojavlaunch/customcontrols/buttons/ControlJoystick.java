@@ -9,6 +9,7 @@ import static net.kdt.pojavlaunch.customcontrols.gamepad.GamepadJoystick.DIRECTI
 import static net.kdt.pojavlaunch.customcontrols.gamepad.GamepadJoystick.DIRECTION_SOUTH_EAST;
 import static net.kdt.pojavlaunch.customcontrols.gamepad.GamepadJoystick.DIRECTION_SOUTH_WEST;
 import static net.kdt.pojavlaunch.customcontrols.gamepad.GamepadJoystick.DIRECTION_WEST;
+import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
 
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -28,6 +29,8 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 @SuppressLint("ViewConstructor")
 public class ControlJoystick extends JoystickView implements ControlInterface {
     public final static int DIRECTION_FORWARD_LOCK = 8;
+    // Fixed radius in pixels for mouse movement from screen center
+    private static final float MOUSE_RADIUS = 100f;
     // Directions keycode
     private final int[] mDirectionForwardLock = new int[] { LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL };
     private final int[] mDirectionForward = new int[] { LwjglGlfwKeycode.GLFW_KEY_W };
@@ -72,6 +75,11 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
                 if (mLastDirectionInt != mCurrentDirectionInt) {
                     sendDirectionalKeycode(mLastDirectionInt, false);
                     sendDirectionalKeycode(mCurrentDirectionInt, true);
+                }
+
+                // Handle mouse movement for sendMouse mode
+                if (mControlData.sendMouse) {
+                    sendMousePosition(angle, strength);
                 }
             }
 
@@ -136,6 +144,39 @@ public class ControlJoystick extends JoystickView implements ControlInterface {
         if (intensity == 0)
             return DIRECTION_NONE;
         return (int) (((angle + 22.5) / 45) % 8);
+    }
+
+    /**
+     * Send mouse position based on joystick angle and strength.
+     * The mouse moves within a fixed radius from the screen center.
+     * 
+     * @param angle    The joystick angle in degrees (0-360, 0 = right, 90 = up)
+     * @param strength The joystick strength (0-100)
+     */
+    private void sendMousePosition(int angle, int strength) {
+
+        // Don't send mouse position if joystick is released (strength == 0)
+        if (strength == 0) {
+            return;
+        }
+        // Get screen center
+        float centerX = currentDisplayMetrics.widthPixels / 2f;
+        float centerY = currentDisplayMetrics.heightPixels / 2f;
+
+        // Convert angle to radians (joystick uses 0=right, 90=up, counter-clockwise)
+        // Note: Screen Y is inverted (positive is down)
+        double radians = Math.toRadians(angle);
+
+        // Calculate offset based on strength (0-100) and fixed radius
+        float distance = (strength / 100f) * MOUSE_RADIUS;
+        float offsetX = (float) (Math.cos(radians) * distance);
+        float offsetY = (float) (-Math.sin(radians) * distance); // Negative because screen Y is inverted
+
+        // Calculate final position
+        float mouseX = centerX + offsetX;
+        float mouseY = centerY + offsetY;
+
+        CallbackBridge.sendCursorPos(mouseX, mouseY);
     }
 
     private void sendDirectionalKeycode(int direction, boolean isDown) {

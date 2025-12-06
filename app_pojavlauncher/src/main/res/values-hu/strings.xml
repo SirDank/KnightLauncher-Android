@@ -155,6 +155,7 @@ mcl_indítás_letöltés_folyamatban"</string>
     <string name="customctrl_forward_lock">Előre zár</string>
     <string name="customctrl_send_wasd">WASD küldése</string>
     <string name="customctrl_send_arrows">Nyilak küldése</string>
+    <string name="customctrl_send_mouse">Egér küldése</string>
     <string name="customctrl_absolute_tracking">Abszolút ujj-lekövetés</string>
     <string name="memory_warning_msg">A jelenlegi szabad memória (%d) kevesebb a kiosztottnál (%d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>
     <string name="address_memory_warning_msg">A jelenlegi szabad memória (%d) kevesebb a kiosztottnál (%d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>

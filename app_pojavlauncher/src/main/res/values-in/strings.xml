@@ -153,6 +153,7 @@
     <string name="customctrl_forward_lock">Kunci ke depan</string>
     <string name="customctrl_send_wasd">Kirim WASD</string>
     <string name="customctrl_send_arrows">Kirim panah</string>
+    <string name="customctrl_send_mouse">Kirim mouse</string>
     <string name="customctrl_absolute_tracking">Pelacakan jari absolut</string>
     <string name="memory_warning_msg">Jumlah RAM kosong saat ini (%d) lebih rendah dari RAM yang dialokasikan (%d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>
     <string name="address_memory_warning_msg">Jumlah RAM kosong saat ini (%d) lebih rendah dari RAM yang dialokasikan (%d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>

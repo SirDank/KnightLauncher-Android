@@ -104,6 +104,7 @@
     <string name="customctrl_passthru">Siçan keçidi</string>
     <string name="customctrl_send_wasd">WASD göndərmə</string>
     <string name="customctrl_send_arrows">Qısaq göndərmə</string>
+    <string name="customctrl_send_mouse">Siçan göndərmə</string>
     <string name="customctrl_absolute_tracking">Mütləq barmaq izləmə</string>
     <string name="memory_warning_msg">Boş RAM-ın cari miqdarı (%d) ayrılmış RAM-dan (%d) azdır və bu, çökmələrə səbəb ola bilər. Oyun qəzaya uğrayarsa, yeri dəyişdirin.</string>
     <string name="mcl_memory_allocation">Yaddaşın ayrılması</string>

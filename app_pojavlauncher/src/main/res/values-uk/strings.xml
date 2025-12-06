@@ -155,6 +155,7 @@
     <string name="customctrl_forward_lock">Передній замок</string>
     <string name="customctrl_send_wasd">WASD</string>
     <string name="customctrl_send_arrows">Стрілки</string>
+    <string name="customctrl_send_mouse">Миша</string>
     <string name="customctrl_absolute_tracking">Абсолютне відстеження пальців</string>
     <string name="memory_warning_msg">Поточна кількість вільної оперативної пам\'яті (%d) менша, ніж виділена оперативна пам\'ять (%d), що може призвести до збоїв. Змініть кількість вільної оперативної пам\'яті, якщо гра виходить з ладу.</string>
     <string name="address_memory_warning_msg">Поточний обсяг вільного адресного простору оперативної пам’яті (%d) менший за виділену оперативну пам’ять (%d), що призведе до збоїв. Змініть розподіл, якщо гра виходить з ладу.</string>

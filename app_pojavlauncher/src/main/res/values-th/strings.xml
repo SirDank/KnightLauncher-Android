@@ -131,6 +131,7 @@
     <string name="customctrl_swipeable">ลากได้</string>
     <string name="customctrl_send_wasd">ส่ง WASD</string>
     <string name="customctrl_send_arrows">ส่งปุ่มลูกศร</string>
+    <string name="customctrl_send_mouse">ส่งเมาส์</string>
     <string name="customctrl_absolute_tracking">การตรวจจับนั้วเเบบสมบูรณ์</string>
     <string name="memory_warning_msg">ขณะนี้เเรมที่เหลือในเครืองของคุณ (%d) น้อยกว่าเเรมที่ตั้งไว้ (%d) อาจะทำให้เด้งได้ ปรับค่าเเรมที่ต้องการเมื่อเกมเด้ง</string>
     <string name="mcl_memory_allocation">การจัดสรรหน่วยความจำ</string>

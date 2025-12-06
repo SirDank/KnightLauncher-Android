@@ -153,6 +153,7 @@
     <string name="customctrl_forward_lock">Kunci ke hadapan</string>
     <string name="customctrl_send_wasd">Kirim WASD</string>
     <string name="customctrl_send_arrows">Kirim panah</string>
+    <string name="customctrl_send_mouse">Kirim mouse</string>
     <string name="customctrl_absolute_tracking">Penjejakan jari mutlak</string>
     <string name="memory_warning_msg">Bilangan RAM yang ada (%d) lebih rendah daripada RAM yang diperuntuk (%d), yang mungkin akan menyebabkan ranap. Tukar peruntukan jikalau permainan ranap.</string>
     <string name="address_memory_warning_msg">Jumlah semasa ruang RAM bebas yang boleh dialamatkan (%d) adalah lebih rendah daripada RAM yang diperuntukkan (%d), yang akan menyebabkan ranap sistem. Ubah peruntukan jika permainan ranap.</string>

@@ -155,6 +155,7 @@
     <string name="customctrl_forward_lock">前进锁定</string>
     <string name="customctrl_send_wasd">发送 WASD</string>
     <string name="customctrl_send_arrows">发送方向键</string>
+    <string name="customctrl_send_mouse">发送鼠标</string>
     <string name="customctrl_absolute_tracking">绝对手指跟踪</string>
     <string name="memory_warning_msg">当前空闲内存（%d）低于分配值（%d），存在崩溃风险！若崩溃请调整内存分配。</string>
     <string name="address_memory_warning_msg">当前可用内存（%d）低于分配值（%d），大概率会导致崩溃！若崩溃请调整内存分配。</string>

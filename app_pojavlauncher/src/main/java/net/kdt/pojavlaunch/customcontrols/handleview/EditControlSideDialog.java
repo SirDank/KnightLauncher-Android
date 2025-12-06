@@ -64,7 +64,7 @@ public class EditControlSideDialog extends SideDialogView {
     private EditText mNameEditText, mWidthEditText, mHeightEditText;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch mToggleSwitch, mPassthroughSwitch, mSwipeableSwitch, mForwardLockSwitch, mAbsoluteTrackingSwitch,
-            mSendWasdSwitch, mSendArrowsSwitch;
+            mSendWasdSwitch, mSendArrowsSwitch, mSendMouseSwitch;
     private Spinner mOrientationSpinner;
     private final TextView[] mKeycodeTextviews = new TextView[4];
     private SeekBar mStrokeWidthSeekbar, mCornerRadiusSeekbar, mAlphaSeekbar;
@@ -164,6 +164,7 @@ public class EditControlSideDialog extends SideDialogView {
         mAbsoluteTrackingSwitch.setVisibility(GONE);
         mSendWasdSwitch.setVisibility(GONE);
         mSendArrowsSwitch.setVisibility(GONE);
+        mSendMouseSwitch.setVisibility(GONE);
 
         mNameEditText.setText(data.name);
         mWidthEditText.setText(String.valueOf(data.getWidth()));
@@ -251,6 +252,9 @@ public class EditControlSideDialog extends SideDialogView {
 
         mSendArrowsSwitch.setVisibility(VISIBLE);
         mSendArrowsSwitch.setChecked(data.sendArrows);
+
+        mSendMouseSwitch.setVisibility(VISIBLE);
+        mSendMouseSwitch.setChecked(data.sendMouse);
     }
 
     /**
@@ -315,6 +319,7 @@ public class EditControlSideDialog extends SideDialogView {
         mAbsoluteTrackingSwitch = mDialogContent.findViewById(R.id.checkboxAbsoluteFingerTracking);
         mSendWasdSwitch = mDialogContent.findViewById(R.id.checkboxSendWasd);
         mSendArrowsSwitch = mDialogContent.findViewById(R.id.checkboxSendArrows);
+        mSendMouseSwitch = mDialogContent.findViewById(R.id.checkboxSendMouse);
         mKeycodeSpinners[0] = mDialogContent.findViewById(R.id.editMapping_spinner_1);
         mKeycodeSpinners[1] = mDialogContent.findViewById(R.id.editMapping_spinner_2);
         mKeycodeSpinners[2] = mDialogContent.findViewById(R.id.editMapping_spinner_3);
@@ -442,13 +447,37 @@ public class EditControlSideDialog extends SideDialogView {
                 return;
             if (mCurrentlyEditedButton.getProperties() instanceof ControlJoystickData) {
                 ControlJoystickData data = (ControlJoystickData) mCurrentlyEditedButton.getProperties();
-                if (!isChecked && !data.sendWasd) {
+                // Check that at least one of sendWasd, sendArrows, or sendMouse is active
+                if (!isChecked && !data.sendWasd && !data.sendMouse) {
                     internalChanges = true;
                     mSendArrowsSwitch.setChecked(true);
                     internalChanges = false;
                     return;
                 }
                 data.sendArrows = isChecked;
+                // Mutual exclusion: if sendArrows is enabled, disable sendMouse
+                if (isChecked && data.sendMouse) {
+                    internalChanges = true;
+                    data.sendMouse = false;
+                    mSendMouseSwitch.setChecked(false);
+                    internalChanges = false;
+                }
+            }
+        });
+
+        mSendMouseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (internalChanges)
+                return;
+            if (mCurrentlyEditedButton.getProperties() instanceof ControlJoystickData) {
+                ControlJoystickData data = (ControlJoystickData) mCurrentlyEditedButton.getProperties();
+                data.sendMouse = isChecked;
+                // Mutual exclusion: if sendMouse is enabled, disable sendArrows
+                if (isChecked && data.sendArrows) {
+                    internalChanges = true;
+                    data.sendArrows = false;
+                    mSendArrowsSwitch.setChecked(false);
+                    internalChanges = false;
+                }
             }
         });
 

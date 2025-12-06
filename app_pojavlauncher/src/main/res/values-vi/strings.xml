@@ -153,6 +153,7 @@
     <string name="customctrl_forward_lock">Khóa tiến về trước</string>
     <string name="customctrl_send_wasd">Gửi WASD</string>
     <string name="customctrl_send_arrows">Gửi phím mũi tên</string>
+    <string name="customctrl_send_mouse">Gửi chuột</string>
     <string name="customctrl_absolute_tracking">Theo dõi vị trí tuyệt đối của ngón</string>
     <string name="memory_warning_msg">Lượng RAM trống hiện tại (%d) thấp hơn hơn lượng RAM đã phân bổ (%d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>
     <string name="address_memory_warning_msg">Lượng RAM trống khả định hiện tại (%d) thấp hơn hơn lượng RAM đã phân bổ (%d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>

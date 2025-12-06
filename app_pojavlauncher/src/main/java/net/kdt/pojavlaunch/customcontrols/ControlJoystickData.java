@@ -11,6 +11,7 @@ public class ControlJoystickData extends ControlData {
     public boolean absolute = false;
     public boolean sendWasd = true;
     public boolean sendArrows = false;
+    public boolean sendMouse = true;
 
     public ControlJoystickData() {
         super();
@@ -22,5 +23,6 @@ public class ControlJoystickData extends ControlData {
         absolute = properties.absolute;
         sendWasd = properties.sendWasd;
         sendArrows = properties.sendArrows;
+        sendMouse = properties.sendMouse;
     }
 }

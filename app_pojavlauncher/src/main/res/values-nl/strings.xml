@@ -113,6 +113,7 @@
     <string name="customctrl_passthru">Muis pass-thru</string>
     <string name="customctrl_send_wasd">WASD versturen</string>
     <string name="customctrl_send_arrows">Pijlen versturen</string>
+    <string name="customctrl_send_mouse">Muis versturen</string>
     <string name="customctrl_absolute_tracking">Absolute vingertracking</string>
     <string name="memory_warning_msg">De huidige hoeveelheid vrije RAM (%d) is lager dan toegewezen RAM (%d), wat kan leiden tot crashes. Verander de toewijzing als het spel crasht.</string>
     <string name="mcl_memory_allocation">Geheugen toewijzen</string>

@@ -141,6 +141,7 @@
     <string name="customctrl_swipeable">Deslizable</string>
     <string name="customctrl_send_wasd">Enviar WASD</string>
     <string name="customctrl_send_arrows">Enviar flechas</string>
+    <string name="customctrl_send_mouse">Enviar ratón</string>
     <string name="customctrl_absolute_tracking">Seguimiento absoluto del dedo</string>
     <string name="memory_warning_msg">La cantidad actual de memoria RAM libre (%d) es menor que la memoria RAM asignada (%d), lo que puede provocar cierres forzados. Cambia la asignación si el juego se cierra.</string>
     <string name="address_memory_warning_msg">La cantidad actual de RAM libre (%d) es menor que la RAM asignada (%d), lo cual puede causar cierres forzados. Cambie la cantidad asignada si el juego se cierra.</string>

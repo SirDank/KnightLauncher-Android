@@ -318,8 +318,9 @@
     {
       "absolute": false,
       "forwardLock": false,
-      "sendArrows": true,
+      "sendArrows": false,
       "sendWasd": true,
+      "sendMouse": true,
       "bgColor": 1291845632,
       "cornerRadius": 0.0,
       "displayInGame": true,

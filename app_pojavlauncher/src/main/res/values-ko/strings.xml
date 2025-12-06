@@ -151,6 +151,7 @@
     <string name="customctrl_swipeable">끌어당기기</string>
     <string name="customctrl_send_wasd">WASD 보내기</string>
     <string name="customctrl_send_arrows">화살표 보내기</string>
+    <string name="customctrl_send_mouse">마우스 보내기</string>
     <string name="customctrl_absolute_tracking">절대 위치 기반 손 추적</string>
     <string name="memory_warning_msg">현재 사용 가능한 RAM 크기(%d) 가 할당된 RAM 크기(%d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>
     <string name="address_memory_warning_msg">현재 사용 가능한 RAM 크기(%d) 가 할당된 RAM 크기(%d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>

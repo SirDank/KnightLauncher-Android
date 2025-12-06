@@ -345,12 +345,22 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
+        android:id="@+id/checkboxSendMouse"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_36sdp"
+        android:text="@string/customctrl_send_mouse"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkboxSendArrows"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
         android:id="@+id/checkboxAbsoluteFingerTracking"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_36sdp"
         android:text="@string/customctrl_absolute_tracking"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkboxSendArrows"
+        app:layout_constraintTop_toBottomOf="@id/checkboxSendMouse"
         tools:ignore="UseSwitchCompatOrMaterialXml"/>
 
     <!-- BACKGROUND COLOR SECTION -->
