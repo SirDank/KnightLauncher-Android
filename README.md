@@ -1,6 +1,6 @@
 <h1 align="center">KnightLauncher (Android)</h1>
 
-KnightLauncher is a launcher that allows you to play **Spiral Knights** on your Android device. It is a fork of [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) and [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android).
+KnightLauncher is a launcher that allows you to play **Spiral Knights** on your Android device. It is a fork of [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android)
 
 ## Introduction
 
@@ -9,6 +9,43 @@ KnightLauncher is a launcher that allows you to play **Spiral Knights** on your 
 * [x] OpenJDK 8/11/17/21 Support
 * [x] Virtual Controls
 * [ ] Optimization for Touch Screens
+
+## Building
+
+### Quick Build (Recommended)
+
+The easiest way to build KnightLauncher is to use the pre-built JREs provided by our CI.
+
+1. Clone the repository: `git clone --recursive https://github.com/SirDank/KnightLauncher-Android.git`
+2. Build the launcher: `./gradlew :app_pojavlauncher:assembleDebug` (Use `gradlew.bat` on Windows)
+
+The built APK will be located in `app_pojavlauncher/build/outputs/apk/debug/`.
+
+### Detailed Build
+
+If you need more control over the build process, follow these steps:
+
+1. **Java Runtime Environment (JRE):** Download the `jre8-pojav` artifact from our [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions). This package contains pre-built JREs for all supported architectures. If you need to build the JRE yourself, follow the instructions in the [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch) repository.
+
+2. **LWJGL:** The build instructions for the custom LWJGL are available over the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
+
+3. **Language List:** Because languages are auto-added by Crowdin, you need to run the language list generator before building. In the project directory, run:
+    * Linux/macOS:
+
+        ```bash
+        chmod +x scripts/languagelist_updater.sh
+        bash scripts/languagelist_updater.sh
+        ```
+
+    * Windows:
+
+        ```batch
+        scripts\languagelist_updater.bat
+        ```
+
+4. **Build GLFW stub:** `./gradlew :jre_lwjgl3glfw:build`
+
+5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug` (Replace `gradlew` with `gradlew.bat` on Windows).
 
 ## Credits & Dependencies
 

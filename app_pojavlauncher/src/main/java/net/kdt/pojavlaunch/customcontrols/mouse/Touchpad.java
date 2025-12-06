@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import net.kdt.pojavlaunch.GrabListener;
+import net.kdt.pojavlaunch.MinecraftGLSurface;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
@@ -28,6 +29,7 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
     /* Mouse pointer icon used by the touchpad */
     private Drawable mMousePointerDrawable;
     private float mMouseX, mMouseY;
+    private MinecraftGLSurface mMinecraftGLSurface;
     public Touchpad(@NonNull Context context) {
         this(context, null);
     }
@@ -51,11 +53,20 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
     /** @return The new state, enabled or disabled */
     public boolean switchState(){
         mDisplayState = !mDisplayState;
-        if(!CallbackBridge.isGrabbing()) {
-            if(mDisplayState) _enable();
-            else _disable();
+        // Always apply state change - user controls visibility via touch UI button
+        if(mDisplayState) _enable();
+        else _disable();
+        
+        // Trigger re-evaluation of touch processor when state changes
+        if(mMinecraftGLSurface != null) {
+            mMinecraftGLSurface.refreshTouchProcessor();
         }
+        
         return mDisplayState;
+    }
+
+    public void setMinecraftGLSurface(MinecraftGLSurface minecraftGLSurface) {
+        mMinecraftGLSurface = minecraftGLSurface;
     }
 
     public void placeMouseAt(float x, float y) {
@@ -108,12 +119,10 @@ public class Touchpad extends View implements GrabListener, AbstractTouchpad {
         post(()->updateGrabState(isGrabbing));
     }
     private void updateGrabState(boolean isGrabbing) {
-        if(!isGrabbing) {
-            if(mDisplayState && getVisibility() != VISIBLE) _enable();
-            if(!mDisplayState && getVisibility() == VISIBLE) _disable();
-        }else{
-            if(getVisibility() != View.GONE) _disable();
-        }
+        // Mouse visibility is now controlled by touch UI button (mDisplayState) only,
+        // not by the game's grab state for camera control
+        if(mDisplayState && getVisibility() != VISIBLE) _enable();
+        if(!mDisplayState && getVisibility() == VISIBLE) _disable();
     }
 
     @Override

@@ -10,6 +10,4 @@ app_pojavlauncher/.cxx/
 .vs/
 /curseforge_key.txt
 /app_pojavlauncher/libs/ltw-release.aar
-build_log.txt
-build_log_utf8.txt
 *.class

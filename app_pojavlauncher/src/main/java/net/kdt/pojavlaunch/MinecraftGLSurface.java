@@ -39,6 +39,7 @@ import net.kdt.pojavlaunch.customcontrols.mouse.AndroidPointerCapture;
 import net.kdt.pojavlaunch.customcontrols.mouse.InGUIEventProcessor;
 import net.kdt.pojavlaunch.customcontrols.mouse.InGameEventProcessor;
 import net.kdt.pojavlaunch.customcontrols.mouse.TouchEventProcessor;
+import net.kdt.pojavlaunch.customcontrols.mouse.Touchpad;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.utils.JREUtils;
 
@@ -91,6 +92,7 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
     private final InGUIEventProcessor mInGUIProcessor = new InGUIEventProcessor();
     private TouchEventProcessor mCurrentTouchProcessor = mInGUIProcessor;
     private AndroidPointerCapture mPointerCapture;
+    private AbstractTouchpad mTouchpad;
     private boolean mLastGrabState = false;
     public static boolean sdlEnabled = false;
     boolean useSurfaceView = LauncherPreferences.PREF_USE_ALTERNATE_SURFACE;
@@ -125,6 +127,10 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
      *                         when the cursor is not grabbed
      */
     public void start(boolean isAlreadyRunning, AbstractTouchpad touchpad) {
+        mTouchpad = touchpad;
+        if(touchpad instanceof Touchpad) {
+            ((Touchpad) touchpad).setMinecraftGLSurface(this);
+        }
         if (Tools.isAndroid8OrHigher())
             setUpPointerCapture(touchpad);
         mInGUIProcessor.setAbstractTouchpad(touchpad);
@@ -502,15 +508,27 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
     }
 
     private TouchEventProcessor pickEventProcessor(boolean isGrabbing) {
+        // If touchpad is displayed (user enabled via UI), use GUI processor
+        // even when game is grabbing - this keeps touchpad mouse working
+        if(mTouchpad != null && mTouchpad.getDisplayState()) {
+            return mInGUIProcessor;
+        }
         return isGrabbing ? mIngameProcessor : mInGUIProcessor;
     }
 
     private void updateGrabState(boolean isGrabbing) {
-        if (mLastGrabState != isGrabbing) {
+        // Always re-evaluate processor when grab state changes OR when called
+        TouchEventProcessor newProcessor = pickEventProcessor(isGrabbing);
+        if (mCurrentTouchProcessor != newProcessor) {
             mCurrentTouchProcessor.cancelPendingActions();
-            mCurrentTouchProcessor = pickEventProcessor(isGrabbing);
-            mLastGrabState = isGrabbing;
+            mCurrentTouchProcessor = newProcessor;
         }
+        mLastGrabState = isGrabbing;
+    }
+
+    /** Force re-evaluation of touch processor (called when touchpad state changes) */
+    public void refreshTouchProcessor() {
+        post(() -> updateGrabState(CallbackBridge.isGrabbing()));
     }
 
     @Override
