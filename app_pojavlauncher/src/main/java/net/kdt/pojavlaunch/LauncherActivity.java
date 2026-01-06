@@ -304,16 +304,121 @@ public class LauncherActivity extends BaseActivity {
 
     public void reinstallGame() {
         File spiralDir = new File(Tools.DIR_GAME_HOME, "spiral");
-        if (spiralDir.exists()) {
+        if (!spiralDir.exists()) {
+            Toast.makeText(this, "Game not installed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Delete only the unpacked folders, not the entire spiral directory
+        // 1. Delete all subdirectories inside spiral/rsrc (but keep the jar files)
+        File rsrcDir = new File(spiralDir, "rsrc");
+        if (rsrcDir.exists() && rsrcDir.isDirectory()) {
+            File[] rsrcContents = rsrcDir.listFiles();
+            if (rsrcContents != null) {
+                for (File file : rsrcContents) {
+                    if (file.isDirectory()) {
+                        try {
+                            org.apache.commons.io.FileUtils.deleteDirectory(file);
+                        } catch (java.io.IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Failed to delete rsrc folder: " + file.getName(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Delete the crucible directory
+        File crucibleDir = new File(spiralDir, "crucible");
+        if (crucibleDir.exists()) {
             try {
-                org.apache.commons.io.FileUtils.deleteDirectory(spiralDir);
+                org.apache.commons.io.FileUtils.deleteDirectory(crucibleDir);
             } catch (java.io.IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to delete game files", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to delete crucible folder", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
-        installSpiralKnights();
+
+        // Trigger re-unpacking of the jar files
+        unpackGameResources();
+    }
+
+    private void unpackGameResources() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        // Acquire wake lock to prevent the device from sleeping during reinstallation
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KnightLauncher:ReinstallWakeLock");
+        mWakeLock.acquire(30 * 60 * 1000L); // 30 minutes max timeout
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Reinstalling Game Resources");
+        pd.setMessage("Please wait...");
+        pd.setIndeterminate(false);
+        pd.setCancelable(false);
+        pd.show();
+
+        new Thread(() -> {
+            try {
+                KnightInstaller.unpackResources(new Progress() {
+                    @Override
+                    public void postStepProgress(int prg) {}
+
+                    @Override
+                    public void postPartProgress(int prg) {}
+
+                    @Override
+                    public void postMaxSteps(int max) {}
+
+                    @Override
+                    public void postMaxPart(int max) {}
+
+                    @Override
+                    public void setPartIndeterminate(boolean indeterminate) {
+                        Tools.runOnUiThread(() -> pd.setIndeterminate(indeterminate));
+                    }
+
+                    @Override
+                    public void postLogLine(String line, Throwable th) {
+                        Tools.runOnUiThread(() -> {
+                            pd.setMessage(line);
+                            if (th != null) {
+                                releaseWakeLock();
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                String errorMessage = "Error: " + th.getMessage() + "\n" + Tools.printToString(th);
+                                new AlertDialog.Builder(LauncherActivity.this)
+                                        .setTitle("Reinstall Error")
+                                        .setMessage(errorMessage)
+                                        .setPositiveButton("OK", null)
+                                        .setCancelable(true)
+                                        .show();
+                                pd.dismiss();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void unlockExit() {
+                        Tools.runOnUiThread(() -> {
+                            releaseWakeLock();
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                            pd.dismiss();
+                            Toast.makeText(LauncherActivity.this, "Reinstall Complete", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                });
+            } catch (Exception e) {
+                Tools.runOnUiThread(() -> {
+                    releaseWakeLock();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    pd.dismiss();
+                    Toast.makeText(LauncherActivity.this, "Reinstall failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
     }
 
     private void releaseWakeLock() {

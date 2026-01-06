@@ -74,6 +74,12 @@ public class AsyncAssetManager {
                 Tools.copyAssetFile(ctx, "default.json", Tools.CTRLMAP_PATH, false);
                 Tools.copyAssetFile(ctx, "launcher_profiles.json", Tools.DIR_GAME_NEW, false);
                 Tools.copyAssetFile(ctx, "prefs.xml", new File(Tools.PROJECTX_PREFS_FILE).getParent(), false);
+                File steamAppIdFile = new File(Tools.DIR_GAME_NEW + "/spiral/steam_appid.txt");
+                if (!steamAppIdFile.exists()) {
+                    steamAppIdFile.getParentFile().mkdirs();
+                    steamAppIdFile.createNewFile();
+                    Tools.write(steamAppIdFile.getAbsolutePath(), "99900");
+                }
             } catch (IOException e) {
                 Log.e("AsyncAssetManager", "Failed to unpack critical components !");
             }

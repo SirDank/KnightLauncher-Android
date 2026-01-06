@@ -1,15 +1,24 @@
-name: Android CI (Testing)
+name: Android Release (Public Beta)
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0-beta)'
+        required: true
+        type: string
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+          fetch-depth: 0  # Full history for changelog
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -51,9 +60,7 @@ jobs:
         with:
           validate-wrappers: false
           gradle-version: "8.11"
-          # Only write cache on primary branch to avoid cache pollution
-          cache-read-only: ${{ github.ref != 'refs/heads/v3_openjdk' }}
-          # Customize what gets cached
+          cache-read-only: false
           gradle-home-cache-includes: |
             caches
             notifications
@@ -66,18 +73,46 @@ jobs:
         run: |
           ./scripts/languagelist_updater.sh
 
-          mkdir out
+          mkdir -p out
           # Build JRE JAR files (security manager, etc...)
           gradle :jre_lwjgl3glfw:build --build-cache
 
-      - name: Build Debug .apk
+      - name: Build Release APK
         run: |
-          # Build the launcher
-          gradle :app_pojavlauncher:assembleDebug --build-cache
-          mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher.apk
+          # Build the launcher in release mode
+          gradle :app_pojavlauncher:assembleRelease --build-cache
 
-      - name: Upload APK
+      - name: Determine Version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Rename APK
+        run: |
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: KnightLauncher Android ${{ steps.version.outputs.version }}
+          body: "🎮 Play Spiral Knights on Android!"
+          files: |
+            out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: KnightLauncher
-          path: out/KnightLauncher.*
+          name: KnightLauncher-${{ steps.version.outputs.version }}
+          path: out/KnightLauncher-*.apk
