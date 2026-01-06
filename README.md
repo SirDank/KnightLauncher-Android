@@ -45,7 +45,7 @@ If you need more control over the build process, follow these steps:
 
 4. **Build GLFW stub:** `./gradlew :jre_lwjgl3glfw:build`
 
-5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug` (Replace `gradlew` with `gradlew.bat` on Windows).
+5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug`
 
 ## Credits & Dependencies
 
