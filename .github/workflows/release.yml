@@ -31,7 +31,7 @@ jobs:
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre
-          workflow_conclusion: success
+          workflow_conclusion: completed
           repo: AngelAuraMC/angelauramc-openjdk-build
           branch: buildjre8
           name: jre8-pojav
@@ -41,7 +41,7 @@ jobs:
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre-new
-          workflow_conclusion: success
+          workflow_conclusion: completed
           repo: AngelAuraMC/angelauramc-openjdk-build
           branch: buildjre17-21
           name: jre17-pojav
@@ -51,7 +51,7 @@ jobs:
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre-21
-          workflow_conclusion: success
+          workflow_conclusion: completed
           repo: AngelAuraMC/angelauramc-openjdk-build
           branch: buildjre17-21
           name: jre21-pojav
@@ -81,17 +81,6 @@ jobs:
         run: |
           # Build the launcher in release mode
           gradle :app_pojavlauncher:assembleRelease --build-cache
-          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-release.apk
-
-      - name: Sign APK
-        uses: ilharp/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDir: out
-          signingKey: ${{ secrets.SIGNING_KEY }}
-          keyAlias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Determine Version
         id: version
@@ -104,63 +93,21 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Release version: $VERSION"
 
-      - name: Generate Changelog
-        id: changelog
+      - name: Rename APK
         run: |
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
-          
-          if [ -z "$PREVIOUS_TAG" ]; then
-            CHANGELOG="Initial public beta release"
-          else
-            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
-          fi
-          
-          # Create multiline output for GitHub
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Rename Signed APK
-        run: |
-          mv ${{ steps.sign_app.outputs.signedFile }} out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.version.outputs.version }}
           name: KnightLauncher Android ${{ steps.version.outputs.version }}
-          body: |
-            # KnightLauncher Android ${{ steps.version.outputs.version }}
-            
-            🎮 **Play Spiral Knights on Android!**
-            
-            ## 📥 Download & Installation
-            
-            1. Download `KnightLauncher-${{ steps.version.outputs.version }}.apk` below
-            2. Enable "Install from Unknown Sources" in your Android settings
-            3. Open the APK file and install
-            4. Launch KnightLauncher and enjoy!
-            
-            ## ⚠️ Public Beta Notice
-            
-            This is a **public beta release**. Please report any issues on our [GitHub Issues](https://github.com/SirDank/KnightLauncher-Android/issues) page.
-            
-            ## 📝 What's Changed
-            
-            ${{ steps.changelog.outputs.changelog }}
-            
-            ## 📋 System Requirements
-            
-            - Android 7.0 (API 24) or higher
-            - 2GB RAM minimum (4GB recommended)
-            - OpenGL ES 3.0 support
-            
-            **Full Changelog**: https://github.com/SirDank/KnightLauncher-Android/commits/${{ steps.version.outputs.version }}
+          body: "🎮 Play Spiral Knights on Android!"
           files: |
             out/KnightLauncher-${{ steps.version.outputs.version }}.apk
           draft: false
           prerelease: true
-          generate_release_notes: false
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
