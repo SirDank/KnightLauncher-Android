@@ -1,0 +1,171 @@
+name: Android Release (Public Beta)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0-beta)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+          fetch-depth: 0  # Full history for changelog
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Get JRE 8
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          workflow: build.yml
+          path: app_pojavlauncher/src/main/assets/components/jre
+          workflow_conclusion: success
+          repo: AngelAuraMC/angelauramc-openjdk-build
+          branch: buildjre8
+          name: jre8-pojav
+
+      - name: Get JRE17
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          workflow: build.yml
+          path: app_pojavlauncher/src/main/assets/components/jre-new
+          workflow_conclusion: success
+          repo: AngelAuraMC/angelauramc-openjdk-build
+          branch: buildjre17-21
+          name: jre17-pojav
+
+      - name: Get JRE21
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          workflow: build.yml
+          path: app_pojavlauncher/src/main/assets/components/jre-21
+          workflow_conclusion: success
+          repo: AngelAuraMC/angelauramc-openjdk-build
+          branch: buildjre17-21
+          name: jre21-pojav
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+          gradle-version: "8.11"
+          cache-read-only: false
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+          gradle-home-cache-excludes: |
+            caches/build-cache-1
+            caches/*/gc.properties
+
+      - name: Build JRE JAR files
+        run: |
+          ./scripts/languagelist_updater.sh
+
+          mkdir -p out
+          # Build JRE JAR files (security manager, etc...)
+          gradle :jre_lwjgl3glfw:build --build-cache
+
+      - name: Build Release APK
+        run: |
+          # Build the launcher in release mode
+          gradle :app_pojavlauncher:assembleRelease --build-cache
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-release.apk
+
+      - name: Sign APK
+        uses: ilharp/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDir: out
+          signingKey: ${{ secrets.SIGNING_KEY }}
+          keyAlias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Determine Version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG="Initial public beta release"
+          else
+            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          
+          # Create multiline output for GitHub
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Rename Signed APK
+        run: |
+          mv ${{ steps.sign_app.outputs.signedFile }} out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: KnightLauncher Android ${{ steps.version.outputs.version }}
+          body: |
+            # KnightLauncher Android ${{ steps.version.outputs.version }}
+            
+            🎮 **Play Spiral Knights on Android!**
+            
+            ## 📥 Download & Installation
+            
+            1. Download `KnightLauncher-${{ steps.version.outputs.version }}.apk` below
+            2. Enable "Install from Unknown Sources" in your Android settings
+            3. Open the APK file and install
+            4. Launch KnightLauncher and enjoy!
+            
+            ## ⚠️ Public Beta Notice
+            
+            This is a **public beta release**. Please report any issues on our [GitHub Issues](https://github.com/SirDank/KnightLauncher-Android/issues) page.
+            
+            ## 📝 What's Changed
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## 📋 System Requirements
+            
+            - Android 7.0 (API 24) or higher
+            - 2GB RAM minimum (4GB recommended)
+            - OpenGL ES 3.0 support
+            
+            **Full Changelog**: https://github.com/SirDank/KnightLauncher-Android/commits/${{ steps.version.outputs.version }}
+          files: |
+            out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          draft: false
+          prerelease: true
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: KnightLauncher-${{ steps.version.outputs.version }}
+          path: out/KnightLauncher-*.apk

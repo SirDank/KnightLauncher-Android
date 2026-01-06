@@ -439,6 +439,10 @@ public class KnightInstaller implements Runnable {
     }
 
     private void unpack(File zipFile, File targetDir) throws IOException {
+        unpackStatic(zipFile, targetDir);
+    }
+
+    private static void unpackStatic(File zipFile, File targetDir) throws IOException {
         try (java.util.zip.ZipInputStream zis = new java.util.zip.ZipInputStream(new FileInputStream(zipFile))) {
             java.util.zip.ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
@@ -458,5 +462,76 @@ public class KnightInstaller implements Runnable {
                 zis.closeEntry();
             }
         }
+    }
+
+    /**
+     * Unpacks the game resource jars without re-downloading.
+     * This is used for the reinstall functionality.
+     * 
+     * Unpacks:
+     * - spiral/rsrc/*.jar files (full-music-bundle.jar, full-rest-bundle.jar, intro-bundle.jar) -> spiral/rsrc/
+     * - spiral/crucible.jar -> spiral/
+     */
+    public static void unpackResources(Progress pr) throws IOException {
+        File destination = new File(Tools.DIR_GAME_HOME);
+        File spiral = new File(destination, "spiral");
+        File rsrcDir = new File(spiral, "rsrc");
+
+        pr.postLogLine("Unpacking game resources...", null);
+        pr.setPartIndeterminate(true);
+
+        int totalJars = 0;
+        int currentJar = 0;
+
+        // Count jars to unpack
+        File crucibleJar = new File(spiral, "crucible.jar");
+        if (crucibleJar.exists()) totalJars++;
+
+        if (rsrcDir.exists() && rsrcDir.isDirectory()) {
+            File[] rsrcFiles = rsrcDir.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (rsrcFiles != null) {
+                totalJars += rsrcFiles.length;
+            }
+        }
+
+        if (totalJars == 0) {
+            pr.postLogLine("No resource jars found to unpack", new IOException("No jars found"));
+            return;
+        }
+
+        pr.postMaxPart(totalJars);
+        pr.setPartIndeterminate(false);
+
+        // Unpack rsrc jars
+        if (rsrcDir.exists() && rsrcDir.isDirectory()) {
+            File[] rsrcFiles = rsrcDir.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (rsrcFiles != null) {
+                for (File jarFile : rsrcFiles) {
+                    pr.postLogLine("Unpacking " + jarFile.getName(), null);
+                    pr.postPartProgress(currentJar++);
+                    try {
+                        unpackStatic(jarFile, rsrcDir);
+                    } catch (IOException e) {
+                        pr.postLogLine("Failed to unpack " + jarFile.getName(), e);
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        // Unpack crucible.jar
+        if (crucibleJar.exists()) {
+            pr.postLogLine("Unpacking crucible.jar", null);
+            pr.postPartProgress(currentJar++);
+            try {
+                unpackStatic(crucibleJar, spiral);
+            } catch (IOException e) {
+                pr.postLogLine("Failed to unpack crucible.jar", e);
+                throw e;
+            }
+        }
+
+        pr.postLogLine("Resource repacking complete!", null);
+        pr.unlockExit();
     }
 }
