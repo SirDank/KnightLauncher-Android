@@ -6,6 +6,7 @@ import static net.kdt.pojavlaunch.PojavApplication.sExecutorService;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_IGNORE_NOTCH;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_NOTCH_SIZE;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.NotificationChannel;
@@ -75,16 +76,17 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.glfw.CallbackBridge;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;
-
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -212,6 +214,28 @@ public final class Tools {
         // switchDemo(isDemoProfile(ctx)); // Removed
     }
 
+    @SuppressLint("PrivateApi")
+    private static String systemPropertiesGet(String systemProperty) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+        Class<?> cSystemProperties = Class.forName("android.os.SystemProperties");
+        Method get = cSystemProperties.getMethod("get", String.class);
+        return (String) get.invoke(null, systemProperty);
+    }
+
+    private static boolean isAdreno740(){
+        try {
+            BufferedReader br = new BufferedReader(
+                    new FileReader("/sys/class/kgsl/kgsl-3d0/gpu_model")
+            );
+            String gpuRenderer = br.readLine();
+            return gpuRenderer != null &&
+                    gpuRenderer.toLowerCase().contains("adreno") &&
+                    gpuRenderer.contains("740");
+        } catch (IOException e) {
+            // If it doesn't exist, we definitely aren't on 740
+            return false;
+        }
+    }
+
     /**
      * Search for TouchController mod to automatically enable TouchController mod
      * support.
@@ -262,7 +286,7 @@ public final class Tools {
 
         List<String> javaArgList = new ArrayList<>();
 
-        getCacioJavaArgs(javaArgList, runtime.javaVersion == 8);
+        getCacioJavaArgs(javaArgList, runtime.javaVersion == 8, activity);
 
         File versionSpecificNativesDir = new File(Tools.DIR_CACHE, "natives/" + versionId);
         if (versionSpecificNativesDir.exists()) {
@@ -313,7 +337,7 @@ public final class Tools {
         manager.createNotificationChannel(channel);
     }
 
-    public static void getCacioJavaArgs(List<String> javaArgList, boolean isJava8) {
+    public static void getCacioJavaArgs(List<String> javaArgList, boolean isJava8, Activity activity) {
         // Caciocavallo config AWT-enabled version
         javaArgList.add("-Djava.awt.headless=false");
         javaArgList.add(
@@ -325,10 +349,20 @@ public final class Tools {
             javaArgList.add("-Dawt.toolkit=net.java.openjdk.cacio.ctc.CTCToolkit");
             javaArgList.add("-Djava.awt.graphicsenv=net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment");
         } else {
+            File caciocavavallo17Dir = new File(Tools.DIR_GAME_HOME, "caciocavallo17");
+            File[] caciocavallo17Jars = caciocavavallo17Dir.listFiles((f, s) ->s.contains("cacio-tta"));
+            if(caciocavallo17Jars == null || caciocavallo17Jars.length < 1) {
+            // We wanna avoid the launch being interrupted so we extract again if it isn't found
+                AsyncAssetManager.unpackComponents(activity);
+                caciocavallo17Jars = caciocavavallo17Dir.listFiles((f, s) ->s.contains("cacio-tta"));
+                if(caciocavallo17Jars == null || caciocavallo17Jars.length < 1)
+                    throw new RuntimeException("Failed to extract required assets!");
+            }
+            javaArgList.add("-javaagent:"+caciocavallo17Jars[0].getAbsolutePath());
             javaArgList.add("-Dawt.toolkit=com.github.caciocavallosilano.cacio.ctc.CTCToolkit");
             javaArgList.add("-Djava.awt.graphicsenv=com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment");
-            javaArgList.add("-Djava.system.class.loader=com.github.caciocavallosilano.cacio.ctc.CTCPreloadClassLoader");
-
+            // This approach breaks kilt so we use an agent instead
+//          javaArgList.add("-Djava.system.class.loader=com.github.caciocavallosilano.cacio.ctc.CTCPreloadClassLoader");
             javaArgList.add("--add-exports=java.desktop/java.awt=ALL-UNNAMED");
             javaArgList.add("--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED");
             javaArgList.add("--add-exports=java.desktop/sun.awt.image=ALL-UNNAMED");

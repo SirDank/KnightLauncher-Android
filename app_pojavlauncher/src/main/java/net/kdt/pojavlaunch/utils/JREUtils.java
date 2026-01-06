@@ -221,7 +221,7 @@ public class JREUtils {
         }
 
         if (LOCAL_RENDERER != null) {
-            envMap.put("POJAV_RENDERER", LOCAL_RENDERER);
+            envMap.put("AMETHYST_RENDERER", LOCAL_RENDERER);
             if (LOCAL_RENDERER.equals("opengles3_ltw")) {
                 envMap.put("LIBGL_ES", "3");
                 envMap.put("POJAVEXEC_EGL", "libltw.so"); // Use ANGLE EGL
@@ -230,8 +230,8 @@ public class JREUtils {
                 envMap.put("MG_DIR_PATH", Tools.DIR_DATA + "/MobileGlues");
                 envMap.put("POJAVEXEC_EGL", "libmobileglues.so");
             }
-            if (LOCAL_RENDERER.equals("opengles3_desktopgl_zink_kopper")) {
-                envMap.put("POJAVEXEC_EGL", "libEGL_mesa.so"); // Use Mesa EGL
+            if (LOCAL_RENDERER.equals("opengles3_desktopgl_zink_kopper")){
+                envMap.put("POJAVEXEC_EGL","libEGL_mesa.so"); // Use Mesa EGL
             }
             if (LOCAL_RENDERER.toLowerCase().contains("zink")) {
                 // This is sketch but it fixes a lot of things, if it causes problems we can
