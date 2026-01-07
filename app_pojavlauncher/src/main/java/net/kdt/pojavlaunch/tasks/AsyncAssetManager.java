@@ -78,7 +78,7 @@ public class AsyncAssetManager {
                 if (!steamAppIdFile.exists()) {
                     steamAppIdFile.getParentFile().mkdirs();
                     steamAppIdFile.createNewFile();
-                    Tools.write(steamAppIdFile, "99900");
+                    Tools.write(steamAppIdFile.getAbsolutePath(), "99900");
                 }
             } catch (IOException e) {
                 Log.e("AsyncAssetManager", "Failed to unpack critical components !");
