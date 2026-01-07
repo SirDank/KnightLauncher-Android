@@ -1005,20 +1005,20 @@ public class GLFW
         boolean turnipLoad = System.getenv("POJAV_LOAD_TURNIP") != null &&
                 System.getenv("POJAV_LOAD_TURNIP").equals("1");
         // These values can be found at headings_array.xml
-        if (turnipLoad && System.getenv("POJAV_RENDERER").equals("vulkan_zink")) {
+        if (turnipLoad && System.getenv("AMETHYST_RENDERER").equals("vulkan_zink")) {
             System.out.println("GLFW: Turnip+Zink detected, setting GL context to 4.6");
             glMajor = 4;
             glMinor = 6;
-        } else if (System.getenv("POJAV_RENDERER").equals("opengles3_virgl")) {
+        } else if (System.getenv("AMETHYST_RENDERER").equals("opengles3_virgl")) {
             System.out.println("GLFW: virglrenderer detected, setting GL context to 4.3");
             glMajor = 4;
             glMinor = 3;
-        } else if (System.getenv("POJAV_RENDERER").equals("opengles_mobileglues")) {
+        } else if (System.getenv("AMETHYST_RENDERER").equals("opengles_mobileglues")) {
             System.out.println("GLFW: MobileGlues detected, setting GL context to 4.0");
             glMajor = 4;
             glMinor = 0;
         } else {
-            System.out.println("GLFW: " + System.getenv("POJAV_RENDERER") + " detected, defaulting GL context to 3.3");
+            System.out.println("GLFW: " + System.getenv("AMETHYST_RENDERER") + " detected, defaulting GL context to 3.3");
         }
         win.windowAttribs.put(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
         win.windowAttribs.put(GLFW_CONTEXT_VERSION_MINOR, glMinor);

@@ -11,7 +11,14 @@ public class startInjectors {
             Class.forName("org.objectweb.asm.ClassWriter");
             Class.forName("org.objectweb.asm.MethodVisitor");
             Class.forName("org.objectweb.asm.Opcodes");
+            Package asmPackage = org.objectweb.asm.Opcodes.class.getPackage();
+            String implVersion = asmPackage.getImplementationVersion();
+            if (implVersion == null) implVersion = "not found";
+            System.out.println("Amethyst-Android: Detected ASM version: " + implVersion);
             ALC10Injector.premain(args, inst);
+            // This is the version we override old asm vers with. So we add the patches
+            // so the older version bugs are ported.
+            if (implVersion.equals("5.0.4")) ASM5OverrideInjector.premain(args, inst);
         } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
         }
     }

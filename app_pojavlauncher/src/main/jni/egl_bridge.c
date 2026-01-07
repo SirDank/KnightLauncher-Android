@@ -162,7 +162,7 @@ int pojavInitOpenGL() {
         pojav_environ->force_vsync = true;
 
     // NOTE: Override for now.
-    const char *renderer = getenv("POJAV_RENDERER");
+    const char *renderer = getenv("AMETHYST_RENDERER");
     if (strncmp("opengles", renderer, 8) == 0) {
         pojav_environ->config_renderer = RENDERER_GL4ES;
         if (!strcmp(renderer, "opengles3_desktopgl_zink_kopper")) {

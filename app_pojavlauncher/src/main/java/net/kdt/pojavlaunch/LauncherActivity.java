@@ -40,6 +40,7 @@ import net.kdt.pojavlaunch.progresskeeper.TaskCountListener;
 import net.kdt.pojavlaunch.services.ProgressServiceKeeper;
 import net.kdt.pojavlaunch.utils.NotificationUtils;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.io.File;
 import android.app.ProgressDialog;

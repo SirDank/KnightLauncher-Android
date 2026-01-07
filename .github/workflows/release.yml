@@ -110,9 +110,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: KnightLauncher-${{ steps.version.outputs.version }}
-          path: out/KnightLauncher-*.apk
