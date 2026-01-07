@@ -80,7 +80,7 @@ jobs:
       - name: Build Release APK
         run: |
           # Build the launcher in release mode
-          gradle :app_pojavlauncher:assembleRelease --build-cache
+          gradle :app_pojavlauncher:assembleDebug --build-cache
 
       - name: Determine Version
         id: version

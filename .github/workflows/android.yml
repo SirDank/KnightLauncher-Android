@@ -51,16 +51,7 @@ jobs:
         with:
           validate-wrappers: false
           gradle-version: "8.11"
-          # Only write cache on primary branch to avoid cache pollution
-          cache-read-only: ${{ github.ref != 'refs/heads/v3_openjdk' }}
-          # Customize what gets cached
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            jdks
-          gradle-home-cache-excludes: |
-            caches/build-cache-1
-            caches/*/gc.properties
+          cache-read-only: true
 
       - name: Build JRE JAR files
         run: |
@@ -68,12 +59,12 @@ jobs:
 
           mkdir out
           # Build JRE JAR files (security manager, etc...)
-          gradle :jre_lwjgl3glfw:build --build-cache
+          gradle :jre_lwjgl3glfw:build
 
       - name: Build Debug .apk
         run: |
           # Build the launcher
-          gradle :app_pojavlauncher:assembleDebug --build-cache
+          gradle :app_pojavlauncher:assembleDebug
           mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher.apk
 
       - name: Upload APK
