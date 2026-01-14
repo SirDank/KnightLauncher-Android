@@ -505,6 +505,8 @@ public class ControlLayout extends FrameLayout {
 			}
 			try {
 				String jsonPath = saveToDirectory(mEditText.getText().toString());
+				LauncherPreferences.DEFAULT_PREF.edit().putString("defaultCtrl", jsonPath).apply();
+				LauncherPreferences.PREF_DEFAULTCTRL_PATH = jsonPath;
 				Toast.makeText(context, context.getString(R.string.global_save) + ": " + jsonPath, Toast.LENGTH_SHORT).show();
 				mDialog.dismiss();
 				if(mListener != null) mListener.exitEditor();

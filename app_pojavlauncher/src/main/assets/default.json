@@ -296,7 +296,7 @@
       "orientation": "RIGHT",
       "properties": {
         "bgColor": 1291845632,
-        "cornerRadius": 100.0,
+        "cornerRadius": 50.0,
         "displayInGame": true,
         "displayInMenu": true,
         "dynamicX": "0.3199225 * ${screen_width}",

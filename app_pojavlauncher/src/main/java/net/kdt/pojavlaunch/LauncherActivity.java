@@ -306,7 +306,7 @@ public class LauncherActivity extends BaseActivity {
     public void reinstallGame() {
         File spiralDir = new File(Tools.DIR_GAME_HOME, "spiral");
         if (!spiralDir.exists()) {
-            Toast.makeText(this, "Game not installed", Toast.LENGTH_SHORT).show();
+            installSpiralKnights();
             return;
         }
 
