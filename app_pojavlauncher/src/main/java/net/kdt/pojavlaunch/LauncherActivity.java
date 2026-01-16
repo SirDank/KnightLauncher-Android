@@ -338,6 +338,12 @@ public class LauncherActivity extends BaseActivity {
                     return;
                 }
             }
+
+            // 3. Delete getdown-pro.jar
+            File getdownJar = new File(spiralDir, "getdown-pro.jar");
+            if (getdownJar.exists()) {
+                getdownJar.delete();
+            }
         }
 
         // Call installSpiralKnights with update mode

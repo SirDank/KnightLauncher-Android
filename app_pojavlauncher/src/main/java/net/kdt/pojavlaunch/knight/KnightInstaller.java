@@ -428,9 +428,10 @@ public class KnightInstaller implements Runnable {
         }
 
         // In update mode, don't re-download resources that already exist
-        int totalFiles = (updateMode ? 0 : resources.size()) + uresourcesToDownload.size() + uresourcesToUnpackOnly.size();
+        int totalDownloads = (updateMode ? 0 : resources.size()) + uresourcesToDownload.size();
+        int totalUnpacks = uresources.size();
         int currentFile = 0;
-        pr.postMaxPart(totalFiles);
+        pr.postMaxPart(totalDownloads + totalUnpacks);
         pr.setPartIndeterminate(false);
 
         // Download resources (skip in update mode - they should already exist)
@@ -445,36 +446,29 @@ public class KnightInstaller implements Runnable {
             }
         }
 
-        // Download and unpack uresources that need updating
+        // Download uresources that need updating
         for (String res : uresourcesToDownload) {
-            pr.postLogLine("Downloading and unpacking " + res, null);
+            pr.postLogLine("Downloading " + res, null);
             pr.postPartProgress(currentFile++);
             File dest = new File(spiral, res);
             Utils.downloadFile(baseUrl + res, dest, pr);
-            File unpackTarget = spiral;
-            if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
-                    || res.contains("intro-bundle.jar")) {
-                unpackTarget = new File(spiral, "rsrc");
-            }
-            unpack(dest, unpackTarget);
         }
 
-        // Unpack existing uresources that don't need updating
-        for (String res : uresourcesToUnpackOnly) {
+        // Unpack all uresources
+        for (String res : uresources) {
             File dest = new File(spiral, res);
             if (dest.exists()) {
-                pr.postLogLine("Unpacking existing " + res, null);
+                pr.postLogLine("Unpacking " + res, null);
                 pr.postPartProgress(currentFile++);
                 File unpackTarget = spiral;
-                if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
-                        || res.contains("intro-bundle.jar")) {
+                if (res.startsWith("rsrc/")) {
                     unpackTarget = new File(spiral, "rsrc");
                 }
                 unpack(dest, unpackTarget);
             }
         }
 
-        pr.postLogLine(updateMode ? "Update download complete." : "Download complete.", null);
+        pr.postLogLine(updateMode ? "Update complete." : "Download complete.", null);
     }
 
     /**
