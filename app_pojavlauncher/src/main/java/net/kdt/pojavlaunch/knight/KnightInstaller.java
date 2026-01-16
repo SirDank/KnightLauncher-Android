@@ -339,43 +339,21 @@ public class KnightInstaller implements Runnable {
             throw new IOException("getdown.txt not found");
         }
 
-        String appbase = null;
+        String appbase = "http://gamemedia2.spiralknights.com/spiral/%VERSION%";
         String version = null;
         List<String> resources = new ArrayList<>();
         List<String> uresources = new ArrayList<>();
 
-        // First pass: get appbase from existing getdown.txt (if exists)
-        if (getdownTxt.exists()) {
-            try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
-                String line;
-                while ((line = rdr.readLine()) != null) {
-                    line = line.trim();
-                    if (line.startsWith("appbase = ")) {
-                        appbase = line.substring("appbase = ".length()).trim();
-                        break; // We only need appbase for fetching
-                    }
-                }
-            }
-        }
-
         // Always fetch the full getdown.txt from the correct URL
         pr.postLogLine("Fetching latest getdown.txt from server...", null);
-        String getdownUrl = appbase + "/getdown.txt";
+        String getdownUrl = "https://gamemedia2.spiralknights.com/spiral/client/getdown.txt";
         Utils.downloadFile(getdownUrl, getdownTxt, pr);
-
-        // Re-parse the getdown.txt to get all resources
-        resources.clear();
-        uresources.clear();
-        appbase = null;
-        version = null;
 
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
             String line;
             while ((line = rdr.readLine()) != null) {
                 line = line.trim();
-                if (line.startsWith("appbase = ")) {
-                    appbase = line.substring("appbase = ".length()).trim();
-                } else if (line.startsWith("version = ")) {
+                if (line.startsWith("version = ")) {
                     version = line.substring("version = ".length()).trim();
                 } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
@@ -391,7 +369,7 @@ public class KnightInstaller implements Runnable {
             }
         }
 
-        if (appbase == null || version == null) {
+        if (version == null) {
             throw new IOException("Invalid getdown.txt: missing appbase or version");
         }
 
@@ -409,55 +387,29 @@ public class KnightInstaller implements Runnable {
         // In update mode, use hash comparison to determine what needs updating
         List<String> uresourcesToDownload = new ArrayList<>();
         List<String> uresourcesToUnpackOnly = new ArrayList<>();
-        
+
         if (updateMode) {
             // Fetch the remote digest.txt
             pr.postLogLine("Fetching digest.txt for hash comparison...", null);
             File digestFile = new File(spiral, "digest.txt");
-            File digestFileOld = new File(spiral, "digest.txt.old");
-            
-            // Backup old digest if it exists
-            if (digestFile.exists()) {
-                try {
-                    Files.copy(digestFile.toPath(), digestFileOld.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e) {
-                    // Ignore backup failure
-                }
-            }
-            
+
             // Download new digest
             Utils.downloadFile(baseUrl + "digest.txt", digestFile, pr);
-            
-            // Parse both digests
+
+            // Parse remote digest
             Map<String, String> remoteDigest = parseDigest(digestFile);
-            Map<String, String> localDigest = parseDigest(digestFileOld);
-            
-            // Check which tracked uresources need updating
+
+            // Check which tracked uresources need updating by comparing local file hash with remote
             for (String res : uresources) {
                 if (TRACKED_URESOURCES.contains(res)) {
                     String remoteHash = remoteDigest.get(res);
-                    String localHash = localDigest.get(res);
                     File localFile = new File(spiral, res);
-                    
+
                     // Need to download if:
-                    // 1. Remote hash differs from local digest hash, OR
-                    // 2. Local file doesn't exist, OR
-                    // 3. Local file's actual hash differs from remote
-                    boolean needsDownload = false;
-                    if (remoteHash == null) {
-                        // No hash in digest, download to be safe
-                        needsDownload = true;
-                    } else if (localHash == null || !localHash.equalsIgnoreCase(remoteHash)) {
-                        // Digest hashes differ
-                        needsDownload = true;
-                    } else if (!localFile.exists()) {
-                        // File missing
-                        needsDownload = true;
-                    } else if (needsUpdate(localFile, remoteHash)) {
-                        // File exists but hash doesn't match
-                        needsDownload = true;
-                    }
-                    
+                    // 1. Local file doesn't exist, OR
+                    // 2. Local file's hash differs from remote digest hash
+                    boolean needsDownload = needsUpdate(localFile, remoteHash);
+
                     if (needsDownload) {
                         pr.postLogLine("Update needed: " + res, null);
                         uresourcesToDownload.add(res);
@@ -469,11 +421,6 @@ public class KnightInstaller implements Runnable {
                     // Non-tracked uresources: just mark for unpack if they exist
                     uresourcesToUnpackOnly.add(res);
                 }
-            }
-            
-            // Clean up old digest backup
-            if (digestFileOld.exists()) {
-                digestFileOld.delete();
             }
         } else {
             // Fresh install: download all uresources
