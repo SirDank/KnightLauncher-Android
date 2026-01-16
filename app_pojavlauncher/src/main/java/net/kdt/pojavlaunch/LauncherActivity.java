@@ -305,49 +305,20 @@ public class LauncherActivity extends BaseActivity {
 
     public void updateGame() {
         File spiralDir = new File(Tools.DIR_GAME_HOME, "spiral");
-        
-        // Delete the unpacked folders if spiral directory exists
+
+        // Delete the entire spiral directory for a clean reinstall
         if (spiralDir.exists()) {
-            // 1. Delete all subdirectories inside spiral/rsrc (but keep the jar files)
-            File rsrcDir = new File(spiralDir, "rsrc");
-            if (rsrcDir.exists() && rsrcDir.isDirectory()) {
-                File[] rsrcContents = rsrcDir.listFiles();
-                if (rsrcContents != null) {
-                    for (File file : rsrcContents) {
-                        if (file.isDirectory()) {
-                            try {
-                                org.apache.commons.io.FileUtils.deleteDirectory(file);
-                            } catch (java.io.IOException e) {
-                                e.printStackTrace();
-                                Toast.makeText(this, "Failed to delete rsrc folder: " + file.getName(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 2. Delete the crucible directory
-            File crucibleDir = new File(spiralDir, "crucible");
-            if (crucibleDir.exists()) {
-                try {
-                    org.apache.commons.io.FileUtils.deleteDirectory(crucibleDir);
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Failed to delete crucible folder", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            // 3. Delete getdown-pro.jar
-            File getdownJar = new File(spiralDir, "getdown-pro.jar");
-            if (getdownJar.exists()) {
-                getdownJar.delete();
+            try {
+                org.apache.commons.io.FileUtils.deleteDirectory(spiralDir);
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to delete spiral folder", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
 
-        // Call installSpiralKnights with update mode
-        installSpiralKnights(true);
+        // Install fresh
+        installSpiralKnights();
     }
 
     private void releaseWakeLock() {
@@ -358,12 +329,8 @@ public class LauncherActivity extends BaseActivity {
     }
 
     public void installSpiralKnights() {
-        installSpiralKnights(false);
-    }
-
-    public void installSpiralKnights(boolean updateMode) {
-        // Only skip if not in update mode AND getdown-pro.jar already exists
-        if (!updateMode && new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
+        // Skip if already installed
+        if (new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
             return;
         }
 
@@ -376,7 +343,7 @@ public class LauncherActivity extends BaseActivity {
         getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         final ProgressDialog pd = new ProgressDialog(this);
-        pd.setTitle(updateMode ? "Updating Spiral Knights" : "Installing Spiral Knights");
+        pd.setTitle("Installing Spiral Knights");
         pd.setMessage("Please wait...");
         pd.setIndeterminate(false);
         pd.setCancelable(false);
@@ -385,23 +352,18 @@ public class LauncherActivity extends BaseActivity {
         new Thread(new KnightInstaller(new Progress() {
             @Override
             public void postStepProgress(int prg) {
-                // pd.setProgress(prg); // ProgressDialog max is 100 by default, steps are small
-                // integers
             }
 
             @Override
             public void postPartProgress(int prg) {
-                // pd.setSecondaryProgress(prg);
             }
 
             @Override
             public void postMaxSteps(int max) {
-                // pd.setMax(max);
             }
 
             @Override
             public void postMaxPart(int max) {
-                //
             }
 
             @Override
@@ -419,9 +381,9 @@ public class LauncherActivity extends BaseActivity {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         String errorMessage = "Error: " + th.getMessage() + "\n" + Tools.printToString(th);
                         new AlertDialog.Builder(LauncherActivity.this)
-                                .setTitle(updateMode ? "Update Error" : "Installation Error")
+                                .setTitle("Installation Error")
                                 .setMessage(errorMessage)
-                                .setPositiveButton("Retry", (d, w) -> installSpiralKnights(updateMode))
+                                .setPositiveButton("Retry", (d, w) -> installSpiralKnights())
                                 .setNeutralButton("Copy Error", (d, w) -> {
                                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(
                                             CLIPBOARD_SERVICE);
@@ -452,7 +414,7 @@ public class LauncherActivity extends BaseActivity {
                     if (getdownExists && jsonExists) {
                         LauncherPreferences.DEFAULT_PREF.edit()
                                 .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "SpiralKnights").apply();
-                        Toast.makeText(LauncherActivity.this, updateMode ? "Update Complete" : "Installation Complete", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LauncherActivity.this, "Installation Complete", Toast.LENGTH_SHORT).show();
                     } else {
                         // Error dialog is handled in postLogLine if exception occurred,
                         // but if it just failed silently or finished without exception but files are
@@ -463,12 +425,12 @@ public class LauncherActivity extends BaseActivity {
                         if (!jsonExists)
                             missingFiles += "SpiralKnights.json";
 
-                        String failureMessage = (updateMode ? "Update" : "Installation") + " finished but required files were not found: "
+                        String failureMessage = "Installation finished but required files were not found: "
                                 + missingFiles;
                         new AlertDialog.Builder(LauncherActivity.this)
-                                .setTitle(updateMode ? "Update Failed" : "Installation Failed")
+                                .setTitle("Installation Failed")
                                 .setMessage(failureMessage)
-                                .setPositiveButton("Retry", (d, w) -> installSpiralKnights(updateMode))
+                                .setPositiveButton("Retry", (d, w) -> installSpiralKnights())
                                 .setNeutralButton("Copy Error", (d, w) -> {
                                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(
                                             CLIPBOARD_SERVICE);
@@ -483,7 +445,7 @@ public class LauncherActivity extends BaseActivity {
                     }
                 });
             }
-        }, updateMode)).start();
+        })).start();
     }
 
     /** Stuff all the view boilerplate here */

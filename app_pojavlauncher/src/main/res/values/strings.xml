@@ -433,6 +433,7 @@
     <string name="mcl_button_open_directory">Open game directory</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
     <string name="mcl_button_reset_game_files">RESET / UPDATE GAME</string>
+    <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
     <string name="github_url" translatable="false">https://github.com/SirDank/KnightLauncher-Android</string>
     <string name="discord_invite" translatable="false">https://sirdank.github.io/dankware-website/discord</string>
     <string name="mcl_button_steam_login">Login with Steam</string>
