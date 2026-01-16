@@ -432,8 +432,7 @@
     <string name="ltw_render_distance_warning_msg">Your GPU is not capable of rendering above 7 render distance without Sodium or other similar mods. The render distance will be automatically reduced when you click "OK".</string>
     <string name="mcl_button_open_directory">Open game directory</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
-    <string name="mcl_button_reset_game_files">RESET GAME FILES</string>
-    <string name="mcl_reset_game_files_confirmation">Are you sure you want to reset the game files? This will delete the current installation and re-download the game.</string>
+    <string name="mcl_button_reset_game_files">RESET / UPDATE GAME</string>
     <string name="github_url" translatable="false">https://github.com/SirDank/KnightLauncher-Android</string>
     <string name="discord_invite" translatable="false">https://sirdank.github.io/dankware-website/discord</string>
     <string name="mcl_button_steam_login">Login with Steam</string>

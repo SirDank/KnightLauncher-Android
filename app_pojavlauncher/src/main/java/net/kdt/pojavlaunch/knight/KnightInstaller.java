@@ -15,10 +15,16 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 public class KnightInstaller implements Runnable {
@@ -352,14 +358,10 @@ public class KnightInstaller implements Runnable {
             }
         }
 
-        // Always fetch the full getdown.txt from appbase to get latest version info
-        if (appbase != null) {
-            pr.postLogLine("Fetching latest getdown.txt from server...", null);
-            String getdownUrl = appbase + "getdown.txt";
-            Utils.downloadFile(getdownUrl, getdownTxt, pr);
-        } else if (!getdownTxt.exists()) {
-            throw new IOException("getdown.txt not found and no appbase available");
-        }
+        // Always fetch the full getdown.txt from the correct URL
+        pr.postLogLine("Fetching latest getdown.txt from server...", null);
+        String getdownUrl = appbase + "/getdown.txt";
+        Utils.downloadFile(getdownUrl, getdownTxt, pr);
 
         // Re-parse the getdown.txt to get all resources
         resources.clear();
@@ -397,21 +399,89 @@ public class KnightInstaller implements Runnable {
         if (!baseUrl.endsWith("/"))
             baseUrl += "/";
 
-        // In update mode, only download full-rest-bundle.jar from uresources
-        List<String> uresourcesToDownload;
+        // Tracked uresources for update checking
+        final Set<String> TRACKED_URESOURCES = new HashSet<>();
+        TRACKED_URESOURCES.add("rsrc/intro-bundle.jar");
+        TRACKED_URESOURCES.add("crucible.jar");
+        TRACKED_URESOURCES.add("rsrc/full-music-bundle.jar");
+        TRACKED_URESOURCES.add("rsrc/full-rest-bundle.jar");
+
+        // In update mode, use hash comparison to determine what needs updating
+        List<String> uresourcesToDownload = new ArrayList<>();
+        List<String> uresourcesToUnpackOnly = new ArrayList<>();
+        
         if (updateMode) {
-            uresourcesToDownload = new ArrayList<>();
-            for (String res : uresources) {
-                if (res.contains("full-rest-bundle.jar")) {
-                    uresourcesToDownload.add(res);
+            // Fetch the remote digest.txt
+            pr.postLogLine("Fetching digest.txt for hash comparison...", null);
+            File digestFile = new File(spiral, "digest.txt");
+            File digestFileOld = new File(spiral, "digest.txt.old");
+            
+            // Backup old digest if it exists
+            if (digestFile.exists()) {
+                try {
+                    Files.copy(digestFile.toPath(), digestFileOld.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    // Ignore backup failure
                 }
             }
+            
+            // Download new digest
+            Utils.downloadFile(baseUrl + "digest.txt", digestFile, pr);
+            
+            // Parse both digests
+            Map<String, String> remoteDigest = parseDigest(digestFile);
+            Map<String, String> localDigest = parseDigest(digestFileOld);
+            
+            // Check which tracked uresources need updating
+            for (String res : uresources) {
+                if (TRACKED_URESOURCES.contains(res)) {
+                    String remoteHash = remoteDigest.get(res);
+                    String localHash = localDigest.get(res);
+                    File localFile = new File(spiral, res);
+                    
+                    // Need to download if:
+                    // 1. Remote hash differs from local digest hash, OR
+                    // 2. Local file doesn't exist, OR
+                    // 3. Local file's actual hash differs from remote
+                    boolean needsDownload = false;
+                    if (remoteHash == null) {
+                        // No hash in digest, download to be safe
+                        needsDownload = true;
+                    } else if (localHash == null || !localHash.equalsIgnoreCase(remoteHash)) {
+                        // Digest hashes differ
+                        needsDownload = true;
+                    } else if (!localFile.exists()) {
+                        // File missing
+                        needsDownload = true;
+                    } else if (needsUpdate(localFile, remoteHash)) {
+                        // File exists but hash doesn't match
+                        needsDownload = true;
+                    }
+                    
+                    if (needsDownload) {
+                        pr.postLogLine("Update needed: " + res, null);
+                        uresourcesToDownload.add(res);
+                    } else {
+                        pr.postLogLine("Up to date: " + res, null);
+                        uresourcesToUnpackOnly.add(res);
+                    }
+                } else {
+                    // Non-tracked uresources: just mark for unpack if they exist
+                    uresourcesToUnpackOnly.add(res);
+                }
+            }
+            
+            // Clean up old digest backup
+            if (digestFileOld.exists()) {
+                digestFileOld.delete();
+            }
         } else {
-            uresourcesToDownload = uresources;
+            // Fresh install: download all uresources
+            uresourcesToDownload.addAll(uresources);
         }
 
         // In update mode, don't re-download resources that already exist
-        int totalFiles = (updateMode ? 0 : resources.size()) + uresourcesToDownload.size();
+        int totalFiles = (updateMode ? 0 : resources.size()) + uresourcesToDownload.size() + uresourcesToUnpackOnly.size();
         int currentFile = 0;
         pr.postMaxPart(totalFiles);
         pr.setPartIndeterminate(false);
@@ -428,7 +498,7 @@ public class KnightInstaller implements Runnable {
             }
         }
 
-        // Download and unpack uresources
+        // Download and unpack uresources that need updating
         for (String res : uresourcesToDownload) {
             pr.postLogLine("Downloading and unpacking " + res, null);
             pr.postPartProgress(currentFile++);
@@ -442,25 +512,83 @@ public class KnightInstaller implements Runnable {
             unpack(dest, unpackTarget);
         }
 
-        // In update mode, also unpack other existing uresources (they weren't re-downloaded but need unpacking)
-        if (updateMode) {
-            for (String res : uresources) {
-                if (!res.contains("full-rest-bundle.jar")) {
-                    File dest = new File(spiral, res);
-                    if (dest.exists()) {
-                        pr.postLogLine("Unpacking existing " + res, null);
-                        File unpackTarget = spiral;
-                        if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
-                                || res.contains("intro-bundle.jar")) {
-                            unpackTarget = new File(spiral, "rsrc");
-                        }
-                        unpack(dest, unpackTarget);
-                    }
+        // Unpack existing uresources that don't need updating
+        for (String res : uresourcesToUnpackOnly) {
+            File dest = new File(spiral, res);
+            if (dest.exists()) {
+                pr.postLogLine("Unpacking existing " + res, null);
+                pr.postPartProgress(currentFile++);
+                File unpackTarget = spiral;
+                if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
+                        || res.contains("intro-bundle.jar")) {
+                    unpackTarget = new File(spiral, "rsrc");
                 }
+                unpack(dest, unpackTarget);
             }
         }
 
         pr.postLogLine(updateMode ? "Update download complete." : "Download complete.", null);
+    }
+
+    /**
+     * Calculate MD5 hash of a file
+     */
+    private String calculateMD5(File file) {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                md.update(buffer, 0, bytesRead);
+            }
+            byte[] digest = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (IOException | NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Parse digest.txt and return a map of filename -> MD5 hash
+     */
+    private Map<String, String> parseDigest(File digestFile) {
+        Map<String, String> digestMap = new HashMap<>();
+        if (!digestFile.exists()) {
+            return digestMap;
+        }
+        try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(digestFile)))) {
+            String line;
+            while ((line = rdr.readLine()) != null) {
+                line = line.trim();
+                int equalsIndex = line.indexOf(" = ");
+                if (equalsIndex > 0) {
+                    String filename = line.substring(0, equalsIndex);
+                    String hash = line.substring(equalsIndex + 3).trim();
+                    digestMap.put(filename, hash);
+                }
+            }
+        } catch (IOException e) {
+            // Return empty map on error
+        }
+        return digestMap;
+    }
+
+    /**
+     * Check if a uresource file needs to be updated based on hash comparison
+     */
+    private boolean needsUpdate(File localFile, String remoteHash) {
+        if (!localFile.exists()) {
+            return true;
+        }
+        String localHash = calculateMD5(localFile);
+        if (localHash == null) {
+            return true; // Re-download if we can't calculate hash
+        }
+        return !localHash.equalsIgnoreCase(remoteHash);
     }
 
     private void unpack(File zipFile, File targetDir) throws IOException {

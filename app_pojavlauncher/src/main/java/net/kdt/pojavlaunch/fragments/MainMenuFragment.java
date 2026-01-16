@@ -82,16 +82,9 @@ public class MainMenuFragment extends Fragment {
         Button mResetGameFilesButton = view.findViewById(R.id.reset_game_files_button);
         if (mResetGameFilesButton != null) {
             mResetGameFilesButton.setOnClickListener(v -> {
-                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.mcl_button_reset_game_files)
-                        .setMessage(R.string.mcl_reset_game_files_confirmation)
-                        .setPositiveButton(android.R.string.ok, (d, w) -> {
-                            if (requireActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-                                ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).updateGame();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
+                if (requireActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
+                    ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).updateGame();
+                }
             });
         }
     }
