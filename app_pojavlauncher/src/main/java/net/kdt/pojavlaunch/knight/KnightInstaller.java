@@ -30,9 +30,15 @@ public class KnightInstaller implements Runnable {
     private final Progress pr;
     private final File destination;
     private final File spiral;
+    private final boolean updateMode;
 
     public KnightInstaller(Progress pr) {
+        this(pr, false);
+    }
+
+    public KnightInstaller(Progress pr, boolean updateMode) {
         this.pr = pr;
+        this.updateMode = updateMode;
         this.destination = new File(Tools.DIR_GAME_HOME);
         this.spiral = new File(destination, "spiral");
     }
@@ -319,11 +325,11 @@ public class KnightInstaller implements Runnable {
     }
 
     private void downloadGameFiles(int progressStep) throws Exception {
-        pr.postLogLine("Downloading game files...", null);
+        pr.postLogLine(updateMode ? "Updating game files..." : "Downloading game files...", null);
         pr.setPartIndeterminate(true);
 
         File getdownTxt = new File(spiral, "getdown.txt");
-        if (!getdownTxt.exists()) {
+        if (!getdownTxt.exists() && !updateMode) {
             throw new IOException("getdown.txt not found");
         }
 
@@ -331,6 +337,35 @@ public class KnightInstaller implements Runnable {
         String version = null;
         List<String> resources = new ArrayList<>();
         List<String> uresources = new ArrayList<>();
+
+        // First pass: get appbase from existing getdown.txt (if exists)
+        if (getdownTxt.exists()) {
+            try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
+                String line;
+                while ((line = rdr.readLine()) != null) {
+                    line = line.trim();
+                    if (line.startsWith("appbase = ")) {
+                        appbase = line.substring("appbase = ".length()).trim();
+                        break; // We only need appbase for fetching
+                    }
+                }
+            }
+        }
+
+        // Always fetch the full getdown.txt from appbase to get latest version info
+        if (appbase != null) {
+            pr.postLogLine("Fetching latest getdown.txt from server...", null);
+            String getdownUrl = appbase + "getdown.txt";
+            Utils.downloadFile(getdownUrl, getdownTxt, pr);
+        } else if (!getdownTxt.exists()) {
+            throw new IOException("getdown.txt not found and no appbase available");
+        }
+
+        // Re-parse the getdown.txt to get all resources
+        resources.clear();
+        uresources.clear();
+        appbase = null;
+        version = null;
 
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
             String line;
@@ -342,52 +377,13 @@ public class KnightInstaller implements Runnable {
                     version = line.substring("version = ".length()).trim();
                 } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
-                    if (!res.startsWith("[")) { // Ignore platform specific for now unless
-                                                // it matches our platform, but
-                                                // simpler to ignore
+                    if (!res.startsWith("[")) {
                         resources.add(res);
                     }
                 } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
                     if (!res.startsWith("[")) {
                         uresources.add(res);
-                    }
-                }
-            }
-        }
-
-        // If we have appbase but no version, it means we have a stub getdown.txt (like
-        // from the installer)
-        // We need to fetch the full getdown.txt from the appbase.
-        if (appbase != null && version == null) {
-            pr.postLogLine("Detected stub getdown.txt, fetching full version...", null);
-            String getdownUrl = appbase + "getdown.txt";
-            Utils.downloadFile(getdownUrl, getdownTxt, pr);
-
-            // Re-parse the new getdown.txt
-            resources.clear();
-            uresources.clear();
-            appbase = null;
-            version = null;
-
-            try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
-                String line;
-                while ((line = rdr.readLine()) != null) {
-                    line = line.trim();
-                    if (line.startsWith("appbase = ")) {
-                        appbase = line.substring("appbase = ".length()).trim();
-                    } else if (line.startsWith("version = ")) {
-                        version = line.substring("version = ".length()).trim();
-                    } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
-                        String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[")) {
-                            resources.add(res);
-                        }
-                    } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
-                        String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[")) {
-                            uresources.add(res);
-                        }
                     }
                 }
             }
@@ -401,28 +397,39 @@ public class KnightInstaller implements Runnable {
         if (!baseUrl.endsWith("/"))
             baseUrl += "/";
 
-        int totalFiles = resources.size() + uresources.size();
+        // In update mode, only download full-rest-bundle.jar from uresources
+        List<String> uresourcesToDownload;
+        if (updateMode) {
+            uresourcesToDownload = new ArrayList<>();
+            for (String res : uresources) {
+                if (res.contains("full-rest-bundle.jar")) {
+                    uresourcesToDownload.add(res);
+                }
+            }
+        } else {
+            uresourcesToDownload = uresources;
+        }
+
+        // In update mode, don't re-download resources that already exist
+        int totalFiles = (updateMode ? 0 : resources.size()) + uresourcesToDownload.size();
         int currentFile = 0;
         pr.postMaxPart(totalFiles);
         pr.setPartIndeterminate(false);
 
-        // Download resources
-        for (String res : resources) {
-            pr.postLogLine("Downloading " + res, null);
-            pr.postPartProgress(currentFile++);
-            File dest = new File(spiral, res);
-            if (dest.exists())
-                continue; // Skip if already exists? Or overwrite? Getdown usually checks digests. For
-                          // now, skip if exists to save time, or overwrite to be safe? Let's overwrite to
-                          // ensure correctness.
-            // Actually, let's check if it exists to avoid re-downloading on retry.
-            // But if it's partial?
-            // Let's overwrite for now.
-            Utils.downloadFile(baseUrl + res, dest, pr);
+        // Download resources (skip in update mode - they should already exist)
+        if (!updateMode) {
+            for (String res : resources) {
+                pr.postLogLine("Downloading " + res, null);
+                pr.postPartProgress(currentFile++);
+                File dest = new File(spiral, res);
+                if (dest.exists())
+                    continue;
+                Utils.downloadFile(baseUrl + res, dest, pr);
+            }
         }
 
         // Download and unpack uresources
-        for (String res : uresources) {
+        for (String res : uresourcesToDownload) {
             pr.postLogLine("Downloading and unpacking " + res, null);
             pr.postPartProgress(currentFile++);
             File dest = new File(spiral, res);
@@ -435,7 +442,25 @@ public class KnightInstaller implements Runnable {
             unpack(dest, unpackTarget);
         }
 
-        pr.postLogLine("Download complete.", null);
+        // In update mode, also unpack other existing uresources (they weren't re-downloaded but need unpacking)
+        if (updateMode) {
+            for (String res : uresources) {
+                if (!res.contains("full-rest-bundle.jar")) {
+                    File dest = new File(spiral, res);
+                    if (dest.exists()) {
+                        pr.postLogLine("Unpacking existing " + res, null);
+                        File unpackTarget = spiral;
+                        if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
+                                || res.contains("intro-bundle.jar")) {
+                            unpackTarget = new File(spiral, "rsrc");
+                        }
+                        unpack(dest, unpackTarget);
+                    }
+                }
+            }
+        }
+
+        pr.postLogLine(updateMode ? "Update download complete." : "Download complete.", null);
     }
 
     private void unpack(File zipFile, File targetDir) throws IOException {

@@ -35,6 +35,7 @@ public class MainMenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Button mGithubButton = view.findViewById(R.id.github_button);
         Button mDiscordButton = view.findViewById(R.id.discord_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_files_button);
@@ -43,6 +44,7 @@ public class MainMenuFragment extends Fragment {
         Button mPlayButton = view.findViewById(R.id.play_button);
         Button mPlayerCountButton = view.findViewById(R.id.player_count_button);
 
+        mGithubButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.github_url)));
         mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
 
         if (mCustomControlButton != null) {
@@ -85,7 +87,7 @@ public class MainMenuFragment extends Fragment {
                         .setMessage(R.string.mcl_reset_game_files_confirmation)
                         .setPositiveButton(android.R.string.ok, (d, w) -> {
                             if (requireActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-                                ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).reinstallGame();
+                                ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).updateGame();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null)

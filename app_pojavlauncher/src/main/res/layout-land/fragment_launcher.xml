@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_menu_custom_controls"
                 android:text="@string/mcl_option_customcontrol"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/open_files_button"
@@ -55,12 +55,20 @@
                 app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
 
             <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/github_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_github"
+                android:text="@string/mcl_button_github"
+                app:layout_constraintTop_toBottomOf="@id/reset_game_files_button" />
+
+            <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/discord_button"
                 style="@style/LauncherMenuButton.Universal"
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_discord"
                 android:text="@string/mcl_button_discord"
-                app:layout_constraintTop_toBottomOf="@id/reset_game_files_button"/>
+                app:layout_constraintTop_toBottomOf="@id/github_button" />
 
             <com.kdt.mcgui.LauncherMenuButton
                 android:id="@+id/player_count_button"
@@ -73,8 +81,6 @@
     </ScrollView>
 
 
-
-
     <!-- This view is for cosmetic purpose only -->
     <View
         android:id="@+id/_background_display_view"
@@ -82,7 +88,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="-8dp"
         android:background="@color/background_bottom_bar"
-
         android:translationZ="-1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@id/play_button" />
@@ -91,7 +96,6 @@
         android:id="@+id/play_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_62sdp"
-
         android:layout_marginHorizontal="@dimen/_17sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:text="@string/main_play"
