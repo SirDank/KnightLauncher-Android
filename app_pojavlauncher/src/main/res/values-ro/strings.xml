@@ -70,7 +70,7 @@
     <string name="mcl_version_clone">Clonă</string>
     <string name="mcn_exit_confirm">Ești sigur că vrei să oprești forțat?</string>
     <string name="mcn_exit_title">Aplicația/Jocul a fost închis cu codul %d, vezi latestlog.txt pentru mai multe detalii.</string>
-    <string name="memory_warning_msg">Cantitatea curentă de RAM liber (%d) este mai mică decât cantitatea alocată de RAM (%d), care ar putea duce la oprire. Schimbă cantitatea alocată dacă jocul se oprește.</string>
+    <string name="memory_warning_msg">Cantitatea curentă de RAM liber (%1$d) este mai mică decât cantitatea alocată de RAM (%2$d), care ar putea duce la oprire. Schimbă cantitatea alocată dacă jocul se oprește.</string>
     <string name="multirt_config_add">Adăugare nouă</string>
     <string name="multirt_config_setdefault">Setaţi ca prestabilit</string>
     <string name="multirt_config_setdefault_already">Prestabilit</string>

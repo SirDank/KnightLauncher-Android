@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Le compte sélectionné est corrompu</string>
-    <string name="address_memory_warning_msg">La quantité actuelle d\'espace RAM allouable libre (%d) est inférieure à la RAM allouée (%d), ce qui entraînera des crashs. Modifiez l\'allocation de la RAM si le jeu crash.</string>
+    <string name="address_memory_warning_msg">La quantité actuelle d\'espace RAM allouable libre (%1$d) est inférieure à la RAM allouée (%2$d), ce qui entraînera des crashs. Modifiez l\'allocation de la RAM si le jeu crash.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Mémoire définie à %d Mo</string>
     <string name="control_chat">Tchat</string>
@@ -150,7 +150,7 @@
     <string name="mcn_exit_confirm">Voulez-vous vraiment forcer la fermeture ?</string>
     <string name="mcn_exit_title">L\'Application/Jeu a quitté avec le code %d, vérifiez le fichier latestlog.txt pour plus de détails.</string>
     <string name="mcn_signal_title">L\'application/Le jeu s\'est fermé(e) avec le code %d, vérifiez le fichier latestlog.txt pour plus de détails.</string>
-    <string name="memory_warning_msg">La quantité actuelle de RAM libre (%d) est inférieure à la RAM allouée (%d), ce qui peut entraîner des plantages. Changez l\'allocation si le jeu plante.</string>
+    <string name="memory_warning_msg">La quantité actuelle de RAM libre (%1$d) est inférieure à la RAM allouée (%2$d), ce qui peut entraîner des plantages. Changez l\'allocation si le jeu plante.</string>
     <string name="mg_renderer_angle">Utiliser ANGLE comme pilote</string>
     <string name="mg_renderer_glsl_cache">Taille du cache GLSL maximal</string>
     <string name="mg_renderer_multidraw">Mode d\'émulation multidessin</string>

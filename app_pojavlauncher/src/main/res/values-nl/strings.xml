@@ -76,7 +76,7 @@
     <string name="mcl_version_clone">Dupliceren</string>
     <string name="mcn_exit_confirm">Weet je zeker dat je sluiting wilt forceren?</string>
     <string name="mcn_exit_title">Applicatie/Game is afgesloten met de code %d, controleer latestlog.txt voor meer details.</string>
-    <string name="memory_warning_msg">De huidige hoeveelheid vrije RAM (%d) is lager dan toegewezen RAM (%d), wat kan leiden tot crashes. Verander de toewijzing als het spel crasht.</string>
+    <string name="memory_warning_msg">De huidige hoeveelheid vrije RAM (%1$d) is lager dan toegewezen RAM (%2$d), wat kan leiden tot crashes. Verander de toewijzing als het spel crasht.</string>
     <string name="multirt_config_add">Nieuwe toevoegen</string>
     <string name="multirt_config_removeerror_last">Je moet minstens één Java Runtime geïnstalleerd hebben.</string>
     <string name="multirt_config_setdefault">Zet standaard</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Akaun yang dipilih rosak</string>
-    <string name="address_memory_warning_msg">Jumlah semasa ruang RAM bebas yang boleh dialamatkan (%d) adalah lebih rendah daripada RAM yang diperuntukkan (%d), yang akan menyebabkan ranap sistem. Ubah peruntukan jika permainan ranap.</string>
+    <string name="address_memory_warning_msg">Jumlah semasa ruang RAM bebas yang boleh dialamatkan (%1$d) adalah lebih rendah daripada RAM yang diperuntukkan (%2$d), yang akan menyebabkan ranap sistem. Ubah peruntukan jika permainan ranap.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Ingatan ditetapkan kepada %d MB</string>
     <string name="control_chat">Perbualan</string>
@@ -160,7 +160,7 @@
     <string name="mcn_exit_confirm">Adakah anda mahu paksa tutup aplikasi?</string>
     <string name="mcn_exit_title">Aplikasi/Permainan keluar dengan kod %d, semak latestlog.txt untuk butiran lanjut.</string>
     <string name="mcn_signal_title">Aplikasi/Permainan dibatalkan oleh isyarat maut %d, semak latestlog.txt untuk mendapatkan butiran lanjut.</string>
-    <string name="memory_warning_msg">Bilangan RAM yang ada (%d) lebih rendah daripada RAM yang diperuntuk (%d), yang mungkin akan menyebabkan ranap. Tukar peruntukan jikalau permainan ranap.</string>
+    <string name="memory_warning_msg">Bilangan RAM yang ada (%1$d) lebih rendah daripada RAM yang diperuntuk (%2$d), yang mungkin akan menyebabkan ranap. Tukar peruntukan jikalau permainan ranap.</string>
     <string name="mg_renderer_angle">Gunakan ANGLE sebagai pemacu</string>
     <string name="mg_renderer_glsl_cache">Saiz cache GLSL maksimum</string>
     <string name="mg_renderer_multidraw">Mod emulasi multidraw</string>

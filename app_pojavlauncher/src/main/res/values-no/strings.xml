@@ -46,7 +46,7 @@
     <string name="mcl_setting_title_resolution_scaler">Oppløsnings Skaler</string>
     <string name="mcl_version_clone">Klone</string>
     <string name="mcn_exit_confirm">Er du sikker på at du vil tvinge avslutte?</string>
-    <string name="memory_warning_msg">Den nåværende mengden ledig RAM (%d) er lavere enn allokert RAM (%d), noe som kan føre til krasj. Endre allokeringen hvis spillet krasjer.</string>
+    <string name="memory_warning_msg">Den nåværende mengden ledig RAM (%1$d) er lavere enn allokert RAM (%2$d), noe som kan føre til krasj. Endre allokeringen hvis spillet krasjer.</string>
     <string name="multirt_config_add">Legg til ny</string>
     <string name="multirt_config_setdefault">Sett som standard</string>
     <string name="multirt_config_setdefault_already">Standard</string>

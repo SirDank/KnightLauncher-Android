@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Ausgewähltes Konto ist beschädigt</string>
-    <string name="address_memory_warning_msg">Der aktuelle freie adressierbare RAM-Speicherplatz (%d) ist niedriger als der zugewiesene RAM (%d), was zu Abstürzen führen wird. Sollte das Spiel abstürzen, ändere die Zuweisung.</string>
+    <string name="address_memory_warning_msg">Der aktuelle freie adressierbare RAM-Speicherplatz (%1$d) ist niedriger als der zugewiesene RAM (%2$d), was zu Abstürzen führen wird. Sollte das Spiel abstürzen, ändere die Zuweisung.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Es wurden %d MB Arbeitsspeicher zugewiesen</string>
     <string name="control_chat">Chat</string>
@@ -158,7 +158,7 @@
     <string name="mcn_exit_confirm">Beenden wirklich erzwingen?</string>
     <string name="mcn_exit_title">Anwendung/Spiel wurde mit dem Code %d beendet. Für weitere Details, siehe latestlog.txt.</string>
     <string name="mcn_signal_title">Anwendung/Spiel wurde mit dem Fehlercode %d beendet. Für weitere Details, siehe latestlog.txt.</string>
-    <string name="memory_warning_msg">Die aktuelle Menge an freiem RAM (%d) ist niedriger als zugewiesener RAM (%d), was zu Abstürzen führen kann. Ändere die Zuordnung, wenn das Spiel abstürzt.</string>
+    <string name="memory_warning_msg">Die aktuelle Menge an freiem RAM (%1$d) ist niedriger als zugewiesener RAM (%2$d), was zu Abstürzen führen kann. Ändere die Zuordnung, wenn das Spiel abstürzt.</string>
     <string name="mg_renderer_angle">Nutze ANGLE als Treiber</string>
     <string name="mg_renderer_glsl_cache">Maximale GLSL-Cache-Größe</string>
     <string name="mg_renderer_multidraw">Multidraw-Emulationsmodus</string>

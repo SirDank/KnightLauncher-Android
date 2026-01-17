@@ -87,7 +87,7 @@
     <string name="mcl_version_clone">Klonuoti</string>
     <string name="mcn_exit_confirm">Ar jūs tikrai norite priverstinai išjungti?</string>
     <string name="mcn_exit_title">Applikacija išsijungė su kodu %d, patikrinkite latestlog.txt kad gautumėte detalių.</string>
-    <string name="memory_warning_msg">Dabartinis kiekis laisvo RAM (%d) yra mažesnis negu paskirtas RAM (%d), kas gali baigtis išsijungimais. Pakeiskite paskirtą kiekį jeigu išsijungia žaidimas.</string>
+    <string name="memory_warning_msg">Dabartinis kiekis laisvo RAM (%1$d) yra mažesnis negu paskirtas RAM (%2$d), kas gali baigtis išsijungimais. Pakeiskite paskirtą kiekį jeigu išsijungia žaidimas.</string>
     <string name="multirt_config_add">Pridėti naują</string>
     <string name="multirt_config_setdefault">Nustatyti numatytą</string>
     <string name="multirt_config_setdefault_already">Numatytasis</string>

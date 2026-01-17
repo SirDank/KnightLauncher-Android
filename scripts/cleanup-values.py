@@ -4,7 +4,8 @@ Cleanup script for Android string resources.
 
 This script:
 1. Cleans up unused string keys from all strings.xml files in values* folders
-2. Reports missing keys in each localized strings.xml compared to the base values/strings.xml
+2. Fixes multiple substitution format issues (converts %d to %1$d, %2$d, etc.)
+3. Reports missing keys in each localized strings.xml compared to the base values/strings.xml
 """
 
 import os
@@ -62,6 +63,31 @@ def parse_string_keys(strings_file: Path) -> Dict[str, Tuple[str, bool]]:
     return keys
 
 
+# Keys that should NEVER be deleted, even if not found in code search.
+# These are essential strings referenced in AndroidManifest.xml, build configs,
+# or used by the Android system in ways that can't be easily detected.
+PROTECTED_KEYS = {
+    # App identity
+    'app_name',              # Application label in AndroidManifest.xml
+    'app_short_name',        # Short app name
+    
+    # Activity labels from AndroidManifest.xml
+    'import_control_label',  # Import controls activity label
+    
+    # Notification channels
+    'notif_channel_id',      # Notification channel ID
+    'notif_channel_name',    # Notification channel name
+    
+    # URLs and external references (translatable="false" but still needed)
+    'discord_invite',
+    'github_url',
+    
+    # Format strings that might not be detected
+    'percent_format',
+    'color_default_hex',
+}
+
+
 def find_used_string_keys(project_root: Path) -> Set[str]:
     """
     Find all string keys used in the project.
@@ -69,8 +95,11 @@ def find_used_string_keys(project_root: Path) -> Set[str]:
     Searches for:
     - R.string.xxx in Java/Kotlin files
     - @string/xxx in XML files
+    
+    Also includes PROTECTED_KEYS that should never be deleted.
     """
-    used_keys = set()
+    # Start with protected keys that must never be deleted
+    used_keys = PROTECTED_KEYS.copy()
     
     # Patterns to find string references
     java_pattern = re.compile(r'R\.string\.(\w+)')
@@ -80,6 +109,12 @@ def find_used_string_keys(project_root: Path) -> Set[str]:
     search_dirs = [
         project_root / "app_pojavlauncher" / "src" / "main" / "java",
         project_root / "app_pojavlauncher" / "src" / "main" / "res",
+        project_root / "app_pojavlauncher" / "src" / "main" / "jni",  # For SDL subdirectory AndroidManifest
+    ]
+    
+    # Also search specifically for AndroidManifest.xml files
+    manifest_files = [
+        project_root / "app_pojavlauncher" / "src" / "main" / "AndroidManifest.xml",
     ]
     
     # File extensions to search
@@ -103,17 +138,64 @@ def find_used_string_keys(project_root: Path) -> Set[str]:
             except Exception as e:
                 print(f"  Warning: Failed to read {file_path}: {e}")
     
+    # Search AndroidManifest.xml files specifically
+    for manifest_file in manifest_files:
+        if not manifest_file.exists():
+            continue
+        try:
+            content = manifest_file.read_text(encoding='utf-8', errors='ignore')
+            used_keys.update(xml_pattern.findall(content))
+        except Exception as e:
+            print(f"  Warning: Failed to read {manifest_file}: {e}")
+    
     return used_keys
 
 
-def remove_unused_keys_from_file(strings_file: Path, used_keys: Set[str], base_keys: Dict[str, Tuple[str, bool]]) -> Tuple[int, List[str]]:
+def fix_positional_format(value: str) -> str:
+    """
+    Fix multiple substitution format issues in Android strings.
+    
+    Converts non-positional format specifiers to positional ones.
+    For example: "Value %d and %d" becomes "Value %1$d and %2$d"
+    
+    Only fixes if there are 2 or more non-positional specifiers.
+    """
+    # Pattern to match non-positional format specifiers (e.g., %d, %s, %f)
+    # but NOT already positional ones (e.g., %1$d, %2$s)
+    # Also handle %% (escaped percent) - don't count these
+    
+    # Find all format specifiers
+    # Non-positional: %d, %s, %f, etc.
+    # Positional: %1$d, %2$s, etc.
+    non_positional_pattern = re.compile(r'(?<!%)%(?!\d+\$)([dsfoxXeEgGaAc])')
+    
+    matches = list(non_positional_pattern.finditer(value))
+    
+    # Only fix if there are 2 or more non-positional specifiers
+    if len(matches) < 2:
+        return value
+    
+    # Replace from end to start to preserve positions
+    result = value
+    for i, match in enumerate(reversed(matches), 1):
+        pos = len(matches) - i + 1
+        specifier = match.group(1)
+        start, end = match.span()
+        result = result[:start] + f'%{pos}${specifier}' + result[end:]
+    
+    return result
+
+
+def remove_unused_keys_from_file(strings_file: Path, used_keys: Set[str], base_keys: Dict[str, Tuple[str, bool]]) -> Tuple[int, int, List[str]]:
     """
     Remove unused keys from a strings.xml file.
-    Also removes XML comments, empty lines, and sorts keys alphabetically.
+    Also removes XML comments, empty lines, sorts keys alphabetically,
+    and fixes multiple substitution format issues.
     
-    Returns a tuple of (number of removed keys, list of removed key names).
+    Returns a tuple of (number of removed keys, number of format fixes, list of removed key names).
     """
     removed_keys = []
+    format_fixes = 0
     
     try:
         # Read the file content as text
@@ -149,7 +231,12 @@ def remove_unused_keys_from_file(strings_file: Path, used_keys: Set[str], base_k
             if name in removed_keys:
                 continue
             
-            strings_data.append((name, attrs, value))
+            # Fix positional format issues
+            fixed_value = fix_positional_format(value)
+            if fixed_value != value:
+                format_fixes += 1
+            
+            strings_data.append((name, attrs, fixed_value))
         
         # Sort by name alphabetically (case-insensitive)
         strings_data.sort(key=lambda x: x[0].lower())
@@ -175,11 +262,11 @@ def remove_unused_keys_from_file(strings_file: Path, used_keys: Set[str], base_k
         # Write the new content
         strings_file.write_text(new_content, encoding='utf-8')
         
-        return len(removed_keys), removed_keys
+        return len(removed_keys), format_fixes, removed_keys
         
     except Exception as e:
         print(f"  Error processing {strings_file}: {e}")
-        return 0, []
+        return 0, 0, []
 
 
 def find_missing_keys(base_keys: Dict[str, Tuple[str, bool]], variant_keys: Dict[str, Tuple[str, bool]]) -> List[str]:
@@ -220,6 +307,7 @@ def main():
     print("Scanning project for string key usage...")
     used_keys = find_used_string_keys(project_root)
     print(f"  Found {len(used_keys)} unique string keys in use")
+    print(f"  (includes {len(PROTECTED_KEYS)} protected keys that are never deleted)")
     print()
     
     # Step 3: Find unused keys
@@ -242,21 +330,23 @@ def main():
     print()
     
     print("=" * 60)
-    print("CLEANING UP UNUSED KEYS")
+    print("CLEANING UP UNUSED KEYS AND FIXING FORMAT ISSUES")
     print("=" * 60)
     total_removed = 0
+    total_format_fixes = 0
     
     for folder in values_folders:
         strings_file = folder / "strings.xml"
         folder_name = folder.name
         
-        removed_count, removed_keys = remove_unused_keys_from_file(strings_file, used_keys, base_keys)
+        removed_count, format_fix_count, removed_keys = remove_unused_keys_from_file(strings_file, used_keys, base_keys)
         total_removed += removed_count
+        total_format_fixes += format_fix_count
         
         # Always print the count for each file
-        print(f"{folder_name}: Removed {removed_count} keys")
+        print(f"{folder_name}: Removed {removed_count} keys, Fixed {format_fix_count} format issues")
     
-    print(f"\nTotal removed: {total_removed} keys across all files")
+    print(f"\nTotal: Removed {total_removed} keys, Fixed {total_format_fixes} format issues across all files")
     print()
     
     # Step 5: Find commonly missing keys (missing from ALL variant files)

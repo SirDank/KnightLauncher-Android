@@ -60,7 +60,7 @@
     <string name="mcl_setting_title_resolution_scaler">Eraldusvõime skaala</string>
     <string name="mcl_setting_title_use_surface_view">Kasuta alternatiivset pinnarenderdust</string>
     <string name="mcl_version_clone">Klooni</string>
-    <string name="memory_warning_msg">Hetkel saadaolev muutmälu (%d) on madalam kui eraldatud muutmälu (%d), mis võib krahhe põhjustada. Kui mäng jookseb kokku, muuda mälueraldust.</string>
+    <string name="memory_warning_msg">Hetkel saadaolev muutmälu (%1$d) on madalam kui eraldatud muutmälu (%2$d), mis võib krahhe põhjustada. Kui mäng jookseb kokku, muuda mälueraldust.</string>
     <string name="multirt_config_add">Lisa uus</string>
     <string name="multirt_config_setdefault">Määra vaikimisi</string>
     <string name="multirt_config_setdefault_already">Vaikimisi</string>

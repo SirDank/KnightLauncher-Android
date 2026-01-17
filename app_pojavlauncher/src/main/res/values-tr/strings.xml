@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Seçilen Hesap hasarlı/Kullanılmaz durumda</string>
-    <string name="address_memory_warning_msg">Mevcut kullanılabilir adreslenebilir bellek miktarı (%d), ayrılan bellek (%d) miktarından daha az ve bu çökme sorunlarına yol açabilir. Oyun çökerse bellek tahsisini değiştirin.</string>
+    <string name="address_memory_warning_msg">Mevcut kullanılabilir adreslenebilir bellek miktarı (%1$d), ayrılan bellek (%2$d) miktarından daha az ve bu çökme sorunlarına yol açabilir. Oyun çökerse bellek tahsisini değiştirin.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Bellek %d MB olarak ayarlandı</string>
     <string name="control_chat">Sohbet</string>
@@ -160,7 +160,7 @@
     <string name="mcn_exit_confirm">Zorla kapatmak istediğinize emin misiniz?</string>
     <string name="mcn_exit_title">Uygulama/Oyundan %d koduyla çıkıldı, daha fazla bilgi için latestlog.txt\'ye bakın.</string>
     <string name="mcn_signal_title">Uygulama/Oyun, ciddi bir sinyal (%d) nedeniyle sonlandırıldı. Daha fazla bilgi için latestlog.txt dosyasını kontrol edin.</string>
-    <string name="memory_warning_msg">Şuanki boş bellek (%d) verilecek bellekten (%d) daha az, bu durum çökmelere sebep olabilir. Eğer oyun çökerse verilen belleği değiştirin.</string>
+    <string name="memory_warning_msg">Şuanki boş bellek (%1$d) verilecek bellekten (%2$d) daha az, bu durum çökmelere sebep olabilir. Eğer oyun çökerse verilen belleği değiştirin.</string>
     <string name="mg_renderer_angle">Sürücü olarak ANGLE\'ı kullan</string>
     <string name="mg_renderer_glsl_cache">Maks GLSL önbellek boyutu</string>
     <string name="mg_renderer_multidraw">Multidraw emulasyon modu</string>

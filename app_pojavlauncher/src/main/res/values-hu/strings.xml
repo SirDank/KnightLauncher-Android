@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="address_memory_warning_msg">A jelenlegi szabad memória (%d) kevesebb a kiosztottnál (%d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>
+    <string name="address_memory_warning_msg">A jelenlegi szabad memória (%1$d) kevesebb a kiosztottnál (%2$d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>
     <string name="app_short_name">Ametiszt</string>
     <string name="autoram_info_msg">Memória beállítva %d MB-ra</string>
     <string name="control_chat">Csevegés</string>
@@ -157,7 +157,7 @@
     <string name="mcn_exit_confirm">Biztosan ki akarsz lépni?</string>
     <string name="mcn_exit_title">Application/Game kilépett %d kóddal, nézd meg a latestlog.txt több részletért.</string>
     <string name="mcn_signal_title">Az alkalmazás kilépett %d kóddal, nézd meg a latestlog.txt több részletért.</string>
-    <string name="memory_warning_msg">A jelenlegi szabad memória (%d) kevesebb a kiosztottnál (%d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>
+    <string name="memory_warning_msg">A jelenlegi szabad memória (%1$d) kevesebb a kiosztottnál (%2$d), ami kifagyásokhoz vezethet. Változtass a kiosztáson ha ez történik.</string>
     <string name="mg_renderer_angle">ANGLE használata driverként</string>
     <string name="mg_renderer_glsl_cache">Maximum GLSL cache méret</string>
     <string name="mg_renderer_multidraw">Multidraw emulációs mód</string>

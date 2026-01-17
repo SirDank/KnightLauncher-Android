@@ -94,7 +94,7 @@
     <string name="mcl_version_clone">Κλώνος</string>
     <string name="mcn_exit_confirm">Είστε βέβαιοι ότι θέλετε να αναγκάσετε το κλείσιμο;</string>
     <string name="mcn_exit_title">Η εφαρμογή/παιχνίδι τερμάτισε με τον κωδικό %d, ελέγξτε το latestlog.txt για περισσότερες λεπτομέρειες.</string>
-    <string name="memory_warning_msg">Το τρέχον ποσό της διαθέσιμης μνήμης RAM (%d) είναι μικρότερο από την κατανεμημένη RAM (%d), το οποίο μπορεί να οδηγήσει σε καταρρεύσεις. Αλλάξτε την κατανομή αν το παιχνίδι καταρρεύσει.</string>
+    <string name="memory_warning_msg">Το τρέχον ποσό της διαθέσιμης μνήμης RAM (%1$d) είναι μικρότερο από την κατανεμημένη RAM (%2$d), το οποίο μπορεί να οδηγήσει σε καταρρεύσεις. Αλλάξτε την κατανομή αν το παιχνίδι καταρρεύσει.</string>
     <string name="multirt_config_add">Προσθήκη νέου</string>
     <string name="multirt_config_removeerror_last">Πρέπει να έχετε τουλάχιστον ένα Java Runtime εγκατεστημένο.</string>
     <string name="multirt_config_setdefault">Ορισμός ως προεπιλογή</string>

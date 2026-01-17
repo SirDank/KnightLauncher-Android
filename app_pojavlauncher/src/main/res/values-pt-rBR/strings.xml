@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="address_memory_warning_msg">A quantidade atual de RAM livre (%d) é menor que a RAM alocada (%d), no qual pode causar falhas. Altere a quantidade se o jogo apresentar alguma falha.</string>
+    <string name="address_memory_warning_msg">A quantidade atual de RAM livre (%1$d) é menor que a RAM alocada (%2$d), no qual pode causar falhas. Altere a quantidade se o jogo apresentar alguma falha.</string>
     <string name="autoram_info_msg">Memória definida para %d MB</string>
     <string name="control_customkey">Enviar tecla personalizada</string>
     <string name="control_debug">Depuração</string>
@@ -124,7 +124,7 @@
     <string name="mcn_exit_confirm">Tem certeza que deseja forçar o encerramento?</string>
     <string name="mcn_exit_title">Aplicativo/jogo fechou com o código %d, verifique latestlog.txt para mais detalhes.</string>
     <string name="mcn_signal_title">Aplicativo/jogo fechou com o código %d, verifique latestlog.txt para mais detalhes.</string>
-    <string name="memory_warning_msg">A quantidade atual de RAM livre (%d) é menor que a RAM alocada (%d), no qual pode causar falhas. Altere a quantidade se o jogo apresentar alguma falha.</string>
+    <string name="memory_warning_msg">A quantidade atual de RAM livre (%1$d) é menor que a RAM alocada (%2$d), no qual pode causar falhas. Altere a quantidade se o jogo apresentar alguma falha.</string>
     <string name="multirt_config_add">Adicionar nova</string>
     <string name="multirt_config_removeerror_last">Você precisa ter pelo menos um Java Runtime instalado.</string>
     <string name="multirt_config_setdefault">Definir como padrão</string>

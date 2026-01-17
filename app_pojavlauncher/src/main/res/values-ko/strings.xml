@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">선택한 계정이 손상되었습니다</string>
-    <string name="address_memory_warning_msg">현재 사용 가능한 RAM 크기(%d) 가 할당된 RAM 크기(%d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>
+    <string name="address_memory_warning_msg">현재 사용 가능한 RAM 크기(%1$d) 가 할당된 RAM 크기(%2$d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">메모리가 %dMB 할당되었습니다.</string>
     <string name="control_chat">채팅</string>
@@ -152,7 +152,7 @@
     <string name="mcn_exit_confirm">강제 종료하시겠습니까?</string>
     <string name="mcn_exit_title">애플리케이션/게임이 코드 %d와 함께 종료되었습니다, lastestlog.txt를 확인하여 추가 정보를 확인하세요.</string>
     <string name="mcn_signal_title">애플리케이션/게임이 %d로 인해 종료되었습니다, lastestlog.txt를 확인하여 추가 정보를 확인하세요.</string>
-    <string name="memory_warning_msg">현재 사용 가능한 RAM 크기(%d) 가 할당된 RAM 크기(%d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>
+    <string name="memory_warning_msg">현재 사용 가능한 RAM 크기(%1$d) 가 할당된 RAM 크기(%2$d) 보다 낮습니다. 게임이 충돌할 경우 RAM 할당량을 변경하세요.</string>
     <string name="mg_renderer_angle">ANGLE을 드라이버로 사용</string>
     <string name="mg_renderer_glsl_cache">GLSL 최대 캐시 크기</string>
     <string name="mg_renderer_multidraw">멀티드로우 에뮬레이션 모드</string>

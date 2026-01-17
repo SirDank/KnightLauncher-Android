@@ -95,7 +95,7 @@
     <string name="mcl_version_clone">คัดลอก</string>
     <string name="mcn_exit_confirm">คุณแน่ใจหรือไม่ว่าต้องการบังคับปิด?</string>
     <string name="mcn_exit_title">ออกจากแอปพลิเคชัน/เกมเด้งด้วยรหัส %d โปรดตรวจสอบที่ latestlog.txt สำหรับรายละเอียดเพิ่มเติม</string>
-    <string name="memory_warning_msg">ขณะนี้เเรมที่เหลือในเครืองของคุณ (%d) น้อยกว่าเเรมที่ตั้งไว้ (%d) อาจะทำให้เด้งได้ ปรับค่าเเรมที่ต้องการเมื่อเกมเด้ง</string>
+    <string name="memory_warning_msg">ขณะนี้เเรมที่เหลือในเครืองของคุณ (%1$d) น้อยกว่าเเรมที่ตั้งไว้ (%2$d) อาจะทำให้เด้งได้ ปรับค่าเเรมที่ต้องการเมื่อเกมเด้ง</string>
     <string name="multirt_config_add">เพื่มใหม่</string>
     <string name="multirt_config_removeerror_last">คุณต้องติดตั้งรันไทม์ Java อย่างน้อยหนึ่งรายการ</string>
     <string name="multirt_config_setdefault">ตั้งค่าเริ่มต้น</string>

@@ -62,7 +62,7 @@
     <string name="mcl_version_clone">I-Clone</string>
     <string name="mcn_exit_confirm">Sigurado ka bang gusto mong pilitin na isara?</string>
     <string name="mcn_exit_title">Lumabas ang application/Laro na may code na %d, tingnan ang latestlog.txt para sa higit pang mga detalye.</string>
-    <string name="memory_warning_msg">Ang kasalukuyang dami ng libreng RAM (%d) ay mas mababa kaysa sa inilalaan na RAM (%d), na maaaring humantong sa mga pag-crash. Baguhin ang paglalaan kung ang laro ay nag-crash.</string>
+    <string name="memory_warning_msg">Ang kasalukuyang dami ng libreng RAM (%1$d) ay mas mababa kaysa sa inilalaan na RAM (%2$d), na maaaring humantong sa mga pag-crash. Baguhin ang paglalaan kung ang laro ay nag-crash.</string>
     <string name="multirt_config_add">Magdagdag ng bago</string>
     <string name="multirt_config_setdefault">Itakda ang default</string>
     <string name="multirt_progress_caching">Pag-cache...</string>

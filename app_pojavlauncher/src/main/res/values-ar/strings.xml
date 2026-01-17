@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="address_memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%d) أقل من ذاكرة الوصول العشوائي المحددة (%d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>
+    <string name="address_memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%1$d) أقل من ذاكرة الوصول العشوائي المحددة (%2$d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>
     <string name="autoram_info_msg">تم تعيين الذاكرة إلى %d ميغابايت</string>
     <string name="control_chat">دردشة</string>
     <string name="control_customkey">إرسال رمز مفتاحي مخصص</string>
@@ -128,7 +128,7 @@
     <string name="mcn_exit_confirm">هل أنت متأكد من أنك تريد فرض الإغلاق؟</string>
     <string name="mcn_exit_title">تم الخروج من التطبيق/اللعبة بخلل %d، تحقق من latestlog.txt لمزيد من التفاصيل.</string>
     <string name="mcn_signal_title">تم الخروج من التطبيق/اللعبة بخلل %d، انظر في latestlog.txt لمزيد من التفاصيل.</string>
-    <string name="memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%d) أقل من ذاكرة الوصول العشوائي المحددة (%d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>
+    <string name="memory_warning_msg">الكَمَيَّة الحالية من ذاكرة الوصول العشوائي المتاحة للاستخدام (%1$d) أقل من ذاكرة الوصول العشوائي المحددة (%2$d)، مما قد يؤدي إلى حدوث أعطال. غير الذاكرة المخصصة إذا توقفت اللعبة.</string>
     <string name="multirt_config_add">إضافة جديد</string>
     <string name="multirt_config_removeerror_last">يجب أن يكون لديك على الأقل بيئة تشغيل جافا واحدة مثبتة.</string>
     <string name="multirt_config_setdefault">تعيين كافتراضي</string>

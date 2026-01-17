@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Цей обліковий запис пошкоджено</string>
-    <string name="address_memory_warning_msg">Поточний обсяг вільного адресного простору оперативної пам’яті (%d) менший за виділену оперативну пам’ять (%d), що призведе до збоїв. Змініть розподіл, якщо гра виходить з ладу.</string>
+    <string name="address_memory_warning_msg">Поточний обсяг вільного адресного простору оперативної пам’яті (%1$d) менший за виділену оперативну пам’ять (%2$d), що призведе до збоїв. Змініть розподіл, якщо гра виходить з ладу.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Виділено %d МБ пам\'яті</string>
     <string name="control_chat">Чат</string>
@@ -164,7 +164,7 @@
     <string name="mcn_exit_confirm">Ви впевнені, що хочете примусово закрити його?</string>
     <string name="mcn_exit_title">Програма/гра завершилася з кодом %d, див. latestlog.txt для більш детальної інформації.</string>
     <string name="mcn_signal_title">Програму/гру перервано небезпечним сигналом %d, подробиці перевірте в latestlog.txt.</string>
-    <string name="memory_warning_msg">Поточна кількість вільної оперативної пам\'яті (%d) менша, ніж виділена оперативна пам\'ять (%d), що може призвести до збоїв. Змініть кількість вільної оперативної пам\'яті, якщо гра виходить з ладу.</string>
+    <string name="memory_warning_msg">Поточна кількість вільної оперативної пам\'яті (%1$d) менша, ніж виділена оперативна пам\'ять (%2$d), що може призвести до збоїв. Змініть кількість вільної оперативної пам\'яті, якщо гра виходить з ладу.</string>
     <string name="mg_renderer_angle">Використовувати ANGLE як драйвер</string>
     <string name="mg_renderer_glsl_cache">Макс. розмір кешу GLSL</string>
     <string name="mg_renderer_multidraw">Режим емуляції Multidraw</string>

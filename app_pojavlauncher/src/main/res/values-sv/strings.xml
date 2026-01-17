@@ -26,7 +26,7 @@
     <string name="mcl_setting_title_mousespeed">Mus hastighet</string>
     <string name="mcl_setting_title_resolution_scaler">Upplösningsskalare</string>
     <string name="mcl_setting_title_use_surface_view">Använd alternera ytrendering</string>
-    <string name="memory_warning_msg">Det aktuella beloppet av gratis RAM (%d) är lägre än allokerat RAM (%d), vilket kan leda till krascher. Ändra tilldelningen om spelet kraschar.</string>
+    <string name="memory_warning_msg">Det aktuella beloppet av gratis RAM (%1$d) är lägre än allokerat RAM (%2$d), vilket kan leda till krascher. Ändra tilldelningen om spelet kraschar.</string>
     <string name="multirt_config_add">Lägg till ny</string>
     <string name="multirt_config_setdefault">Ange standard</string>
     <string name="multirt_config_setdefault_already">Standard</string>

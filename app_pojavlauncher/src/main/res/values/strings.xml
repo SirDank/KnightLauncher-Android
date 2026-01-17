@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Selected account is corrupted</string>
-    <string name="address_memory_warning_msg">The current amount of free addressable RAM space (%d) is lower than the allocated RAM (%d), which will lead to crashes. Change the allocation if the game crashes.</string>
+    <string name="address_memory_warning_msg">The current amount of free addressable RAM space (%1$d) is lower than the allocated RAM (%2$d), which will lead to crashes. Change the allocation if the game crashes.</string>
+    <string name="app_name">KnightLauncher</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Memory set to %d MB</string>
     <string name="color_default_hex" translatable="false">FFFF0000</string>
@@ -115,6 +116,7 @@
     <string name="import_control_import_button">import controls</string>
     <string name="import_control_invalid_file">Invalid or corrupted file</string>
     <string name="import_control_invalid_name">Invalid name or file already exists</string>
+    <string name="import_control_label">Import Controls</string>
     <string name="import_control_verifying_file">File is being verified, please wait and try again…</string>
     <string name="lazy_service_default_title">KnightLauncher Foreground Service</string>
     <string name="log_view_button_output_off">Output\nOFF</string>
@@ -139,7 +141,7 @@
     <string name="mcl_download_mods_complete">Mods downloaded successfully!</string>
     <string name="mcl_download_mods_confirmation">Are you sure you want to delete the mods folder? This will re-download my custom modpack</string>
     <string name="mcl_download_mods_failed">Failed to download mods</string>
-    <string name="mcl_download_mods_progress">Downloading mods: %d/%d</string>
+    <string name="mcl_download_mods_progress">Downloading mods: %1$d/%2$d</string>
     <string name="mcl_gamepad_forcedSDL">Forcibly start SDL controller handling</string>
     <string name="mcl_gamepad_forcedSDL_subtitle">Can allow old versions of Legacy4J to use SDL backend</string>
     <string name="mcl_gamepad_SDL">Enable SDL controller backend</string>
@@ -177,7 +179,7 @@
     <string name="mcn_exit_confirm">Are you sure want to force close?</string>
     <string name="mcn_exit_title">Application/Game exited with code %d, check latestlog.txt for more details.</string>
     <string name="mcn_signal_title">Application/Game aborted by fatal signal %d, check latestlog.txt for more details.</string>
-    <string name="memory_warning_msg">The current amount of free RAM (%d) is lower than allocated RAM (%d), which may lead to crashes. Change the allocation if the game crashes.</string>
+    <string name="memory_warning_msg">The current amount of free RAM (%1$d) is lower than allocated RAM (%2$d), which may lead to crashes. Change the allocation if the game crashes.</string>
     <string name="mg_renderer_angle">Use ANGLE as driver</string>
     <string name="mg_renderer_glsl_cache">Max GLSL cache size</string>
     <string name="mg_renderer_multidraw">Multidraw emulation mode</string>

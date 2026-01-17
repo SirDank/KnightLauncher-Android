@@ -61,7 +61,7 @@
     <string name="mcl_version_clone">Раздвоить</string>
     <string name="mcn_exit_confirm">Вы увѣрены, что хотите принудительно закрыть оный?</string>
     <string name="mcn_exit_title">Произошла оказія съ приложеніемъ/игрой съ кодомъ %d. Осмотрите latestlog.txt, дабы получить болѣе подробную информацію.</string>
-    <string name="memory_warning_msg">Текущій объёмъ свободной оперативной памяти (%d) меньше выдѣленной (%d), что может привести къ сбоямъ приложенія. Измѣните количество выдѣленной памяти при сбоѣ игры.</string>
+    <string name="memory_warning_msg">Текущій объёмъ свободной оперативной памяти (%1$d) меньше выдѣленной (%2$d), что может привести къ сбоямъ приложенія. Измѣните количество выдѣленной памяти при сбоѣ игры.</string>
     <string name="multirt_config_add">Добавить новую</string>
     <string name="multirt_config_setdefault">Установить по умолчанію</string>
     <string name="multirt_config_setdefault_already">По умолчанію</string>

@@ -89,7 +89,7 @@
     <string name="mcl_version_clone">Duplikovať</string>
     <string name="mcn_exit_confirm">Ste si istí, že chcete ukončiť hru?</string>
     <string name="mcn_exit_title">Hra spadla. Skontroluj latestlog.txt pre viac podrobností.</string>
-    <string name="memory_warning_msg">Aktuálne množstvo voľnej RAM (%d) je nižšia ako pridelená RAM (%d), čo môže viesť k pádu. Zmeňte alokáciu, ak hra spadne.</string>
+    <string name="memory_warning_msg">Aktuálne množstvo voľnej RAM (%1$d) je nižšia ako pridelená RAM (%2$d), čo môže viesť k pádu. Zmeňte alokáciu, ak hra spadne.</string>
     <string name="multirt_config_add">Pridať nový</string>
     <string name="multirt_config_removeerror_last">Musíte mať aspoň jednu inštaláciu Javy.</string>
     <string name="multirt_config_setdefault">Nastaviť predvolené</string>

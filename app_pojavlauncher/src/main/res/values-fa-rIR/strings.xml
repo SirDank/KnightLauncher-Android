@@ -84,7 +84,7 @@
     <string name="mcl_version_clone">شبیه‌سازی</string>
     <string name="mcn_exit_confirm">آیا از خروج اجباری اطمینان دارید؟</string>
     <string name="mcn_exit_title">برنامه یا بازی با کد مرجوعی %d خارج شد. برای جزئیات بیشتر به lastlog.text مراجعت کنید.</string>
-    <string name="memory_warning_msg">میزان رم آزاد فعلی (%d) از میزان رم اختصاص یافته (%d) کمتر است، که ممکن است باعث کرش شود. رم اختصاص یافته را تغییر دهید اگر بازی کرش خورد.</string>
+    <string name="memory_warning_msg">میزان رم آزاد فعلی (%1$d) از میزان رم اختصاص یافته (%2$d) کمتر است، که ممکن است باعث کرش شود. رم اختصاص یافته را تغییر دهید اگر بازی کرش خورد.</string>
     <string name="multirt_config_add">افزودن جدید</string>
     <string name="multirt_config_removeerror_last">شما باید حداقل یک جاوای نصب شده داشته باشید.</string>
     <string name="multirt_config_setdefault">تنظیم پیش‌فرض</string>

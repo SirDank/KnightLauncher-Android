@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">所选账户存在问题</string>
-    <string name="address_memory_warning_msg">当前可用内存（%d）低于分配值（%d），大概率会导致崩溃！若崩溃请调整内存分配。</string>
+    <string name="address_memory_warning_msg">当前可用内存（%1$d）低于分配值（%2$d），大概率会导致崩溃！若崩溃请调整内存分配。</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">已分配内存 %d MB</string>
     <string name="control_chat">聊天</string>
@@ -164,7 +164,7 @@
     <string name="mcn_exit_confirm">您确定要强制关闭？</string>
     <string name="mcn_exit_title">应用/游戏以代码 %d 退出，请查看日志 latestlog.txt 以了解详情。</string>
     <string name="mcn_signal_title">应用/游戏以致命信息 %d 中止，请查看日志 latestlog.txt 以了解详情。</string>
-    <string name="memory_warning_msg">当前空闲内存（%d）低于分配值（%d），存在崩溃风险！若崩溃请调整内存分配。</string>
+    <string name="memory_warning_msg">当前空闲内存（%1$d）低于分配值（%2$d），存在崩溃风险！若崩溃请调整内存分配。</string>
     <string name="mg_renderer_angle">使用 ANGLE 作为驱动</string>
     <string name="mg_renderer_glsl_cache">最大 GLSL 缓存大小</string>
     <string name="mg_renderer_multidraw">MultiDraw 模拟方案</string>

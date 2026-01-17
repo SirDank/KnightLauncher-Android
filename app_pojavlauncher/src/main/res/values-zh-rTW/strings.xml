@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">所選帳號存在問題</string>
-    <string name="address_memory_warning_msg">當前可用 RAM（%d）低於分配值（%d）大概率會導致遊戲崩潰！若崩潰請調整 RAM 分配。</string>
+    <string name="address_memory_warning_msg">當前可用 RAM（%1$d）低於分配值（%2$d）大概率會導致遊戲崩潰！若崩潰請調整 RAM 分配。</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">記憶體已設為 %d MB</string>
     <string name="control_chat">聊天</string>
@@ -160,7 +160,7 @@
     <string name="mcn_exit_confirm">您確定要強制關閉？</string>
     <string name="mcn_exit_title">應用/遊戲以代碼 %d 退出，請查看記錄檔 lastestlog.txt 以瞭解詳情。</string>
     <string name="mcn_signal_title">應用/遊戲以致命信息 %d 中止，請查看記錄檔 latestlog.txt 以瞭解詳情。</string>
-    <string name="memory_warning_msg">當前空閒 RAM（%d）低於分配值（%d），存在崩潰風險！若崩潰請調整 RAM 分配。</string>
+    <string name="memory_warning_msg">當前空閒 RAM（%1$d）低於分配值（%2$d），存在崩潰風險！若崩潰請調整 RAM 分配。</string>
     <string name="mg_renderer_angle">使用 ANGLE 作為驅動</string>
     <string name="mg_renderer_glsl_cache">最大 GLSL 緩存大小</string>
     <string name="mg_renderer_multidraw">多重繪制模擬模式</string>

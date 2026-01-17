@@ -75,7 +75,7 @@
     <string name="mcl_version_clone">Cloen</string>
     <string name="mcn_exit_confirm">R u suer u wantz 2 forec cloes?</string>
     <string name="mcn_exit_title">Applicashun/game exitd wif code %d, chek lastestlog.txt 4 moar details.</string>
-    <string name="memory_warning_msg">WURNING: Catz iz becomin’ une of teh Memory Muncherz, wich may leid tu game crash! (Free %d, munch’d %d MB) Change teh allocasion if teh game crashez.</string>
+    <string name="memory_warning_msg">WURNING: Catz iz becomin’ une of teh Memory Muncherz, wich may leid tu game crash! (Free %1$d, munch’d %2$d MB) Change teh allocasion if teh game crashez.</string>
     <string name="multirt_config_removeerror_last">Yyu have one Java Marathon here.</string>
     <string name="multirt_config_setdefault">Set favoritz</string>
     <string name="multirt_config_setdefault_already">My favritz</string>

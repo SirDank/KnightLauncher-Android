@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Akun yang dipilih rusak atau tidak valid</string>
-    <string name="address_memory_warning_msg">Jumlah RAM kosong saat ini (%d) lebih rendah dari RAM yang dialokasikan (%d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>
+    <string name="address_memory_warning_msg">Jumlah RAM kosong saat ini (%1$d) lebih rendah dari RAM yang dialokasikan (%2$d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Memori disetel ke %d MB</string>
     <string name="control_chat">Chat</string>
@@ -160,7 +160,7 @@
     <string name="mcn_exit_confirm">Apa anda yakin mau tutup secara paksa?</string>
     <string name="mcn_exit_title">Aplikasi/permainan keluar dengan kode %d, cek latestlog.txt untuk detail lebih lanjut.</string>
     <string name="mcn_signal_title">Aplikasi/Game keluar dengan sinyal fatal %d, cek latestlog.txt untuk detail lebih lanjut.</string>
-    <string name="memory_warning_msg">Jumlah RAM kosong saat ini (%d) lebih rendah dari RAM yang dialokasikan (%d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>
+    <string name="memory_warning_msg">Jumlah RAM kosong saat ini (%1$d) lebih rendah dari RAM yang dialokasikan (%2$d), yang dapat menyebabkan crash. Ubah alokasi jika game crash.</string>
     <string name="mg_renderer_angle">Gunakan ANGLE sebagai driver</string>
     <string name="mg_renderer_glsl_cache">Ukuran Maksimum Cache GLSL</string>
     <string name="mg_renderer_multidraw">Mode Emulasi Multidraw</string>

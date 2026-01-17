@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Tài khoản được chọn đã bị hỏng</string>
-    <string name="address_memory_warning_msg">Lượng RAM trống khả định hiện tại (%d) thấp hơn hơn lượng RAM đã phân bổ (%d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>
+    <string name="address_memory_warning_msg">Lượng RAM trống khả định hiện tại (%1$d) thấp hơn hơn lượng RAM đã phân bổ (%2$d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Bộ nhớ được đặt thành %d MB</string>
     <string name="control_chat">Chat</string>
@@ -160,7 +160,7 @@
     <string name="mcn_exit_confirm">Bạn có chắc chắn muốn buộc thoát khỏi trò chơi?</string>
     <string name="mcn_exit_title">Ứng dụng/Trò chơi đã thoát với mã %d, kiểm tra tệp latestlog.txt để biết thêm chi tiết.</string>
     <string name="mcn_signal_title">Ứng dụng/Trò chơi đã thoát với mã %d, kiểm tra nhật kí trình khởi chạy (latestlog.txt) để biết thêm chi tiết.</string>
-    <string name="memory_warning_msg">Lượng RAM trống hiện tại (%d) thấp hơn hơn lượng RAM đã phân bổ (%d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>
+    <string name="memory_warning_msg">Lượng RAM trống hiện tại (%1$d) thấp hơn hơn lượng RAM đã phân bổ (%2$d) và có thể gây ra vấn đề. Thay đổi giá trị phân bổ nếu trò chơi thoát đột ngột.</string>
     <string name="mg_renderer_angle">Dùng ANGLE làm trình điều khiển</string>
     <string name="mg_renderer_glsl_cache">Kích cỡ bộ đệm GLSL tối đa</string>
     <string name="mg_renderer_multidraw">Chế độ giả lập Multidraw</string>

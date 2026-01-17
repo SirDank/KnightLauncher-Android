@@ -79,7 +79,7 @@
     <string name="mcl_version_clone">Clonar</string>
     <string name="mcn_exit_confirm">Tu tens a certeza que queres forçar o encerramento do jogo?</string>
     <string name="mcn_exit_title">Aplicação/Jogo saiu com código %d, verifique latestlog.txt para mais detalhes.</string>
-    <string name="memory_warning_msg">A quantidade atual de memória RAM livre (%d) é menor do que a memória RAM alocada (%d), o que pode levar a falhas. Altera a alocação se o jogo falhar.</string>
+    <string name="memory_warning_msg">A quantidade atual de memória RAM livre (%1$d) é menor do que a memória RAM alocada (%2$d), o que pode levar a falhas. Altera a alocação se o jogo falhar.</string>
     <string name="multirt_config_add">Adicionar nova</string>
     <string name="multirt_config_removeerror_last">Deves ter ao menos um Java Runtime instalado.</string>
     <string name="multirt_config_setdefault">Definir como padrão</string>

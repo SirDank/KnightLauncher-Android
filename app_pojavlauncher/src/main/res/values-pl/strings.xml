@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Wybrane konto jest uszkodzone</string>
-    <string name="address_memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%d) jest niższa od przydzielonej pamięci, (%d), co może prowadzić do awarii. Zmień przydzielenie, jeśli gra ulegnie awarii.</string>
+    <string name="address_memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%1$d) jest niższa od przydzielonej pamięci, (%2$d), co może prowadzić do awarii. Zmień przydzielenie, jeśli gra ulegnie awarii.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Przydzielono %d MB pamięci</string>
     <string name="control_chat">Czat</string>
@@ -164,7 +164,7 @@
     <string name="mcn_exit_confirm">Czy na pewno chcesz wymusić zamknięcie?</string>
     <string name="mcn_exit_title">Aplikacja/gra została zakończona z błędem o kodzie %d. Więcej szczegółów znajdziesz w pliku latestlog.txt.</string>
     <string name="mcn_signal_title">Aplikacja/gra została przerwana przez błąd krytyczny nr %d. Więcej szczegółów znajdziesz w pliku latestlog.txt.</string>
-    <string name="memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%d) jest mniejsza od przydzielonej pamięci RAM (%d), co może prowadzić do awarii. Zmień ilość, jeśli gra ulegnie awarii.</string>
+    <string name="memory_warning_msg">Bieżąca ilość wolnej pamięci RAM (%1$d) jest mniejsza od przydzielonej pamięci RAM (%2$d), co może prowadzić do awarii. Zmień ilość, jeśli gra ulegnie awarii.</string>
     <string name="mg_renderer_angle">Używaj sterownika ANGLE</string>
     <string name="mg_renderer_glsl_cache">Maksymalny rozmiar pamięci podręcznej GLSL</string>
     <string name="mg_renderer_multidraw">Tryb emulacji Multidraw</string>

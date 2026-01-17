@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">Выбранная учётная запись повреждена</string>
-    <string name="address_memory_warning_msg">Текущий объём линейно адресуемой оперативной памяти (%d) меньше, чем выделенная (%d), что может привести к сбою. В случае сбоя игры измените количество выделенной памяти.</string>
+    <string name="address_memory_warning_msg">Текущий объём линейно адресуемой оперативной памяти (%1$d) меньше, чем выделенная (%2$d), что может привести к сбою. В случае сбоя игры измените количество выделенной памяти.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">Выделено %d Мбайт ОЗУ</string>
     <string name="control_chat">Чат</string>
@@ -157,7 +157,7 @@
     <string name="mcn_exit_confirm">Вы уверены, что хотите принудительно завершить игру?</string>
     <string name="mcn_exit_title">Произошёл собой приложения/игры с кодом %d. Проверьте latestlog.txt, чтобы получить больше информации.</string>
     <string name="mcn_signal_title">Произошло аварийное завершение игры с сигналом %d. Проверьте latestlog.txt, чтобы получить больше информации.</string>
-    <string name="memory_warning_msg">Текущий объем свободной оперативной памяти (%d) меньше, чем выделенная (%d), что может привести к сбоям. Измените количество выделенной памяти при сбое игры.</string>
+    <string name="memory_warning_msg">Текущий объем свободной оперативной памяти (%1$d) меньше, чем выделенная (%2$d), что может привести к сбоям. Измените количество выделенной памяти при сбое игры.</string>
     <string name="mg_renderer_angle">Использовать ANGLE в качестве драйвера</string>
     <string name="mg_renderer_glsl_cache">Максимальный размер кэша GLSL</string>
     <string name="mg_renderer_multidraw">Режим эмуляции MultiDraw</string>

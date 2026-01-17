@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="account_corrupted">החשבון שנבחר פגום</string>
-    <string name="address_memory_warning_msg">כמות שטח ה-RAM הפנוי הנוכחית (%d) נמוכה משטח ה-RAM המוקצה (%d), מה שיגרום לקריסות. יש לשנות את ההקצאה אם המשחק קורס.</string>
+    <string name="address_memory_warning_msg">כמות שטח ה-RAM הפנוי הנוכחית (%1$d) נמוכה משטח ה-RAM המוקצה (%2$d), מה שיגרום לקריסות. יש לשנות את ההקצאה אם המשחק קורס.</string>
     <string name="app_short_name">KnightLauncher</string>
     <string name="autoram_info_msg">זיכרון הוגדר ל %d MB</string>
     <string name="control_chat">צ\'אט</string>
@@ -148,7 +148,7 @@
     <string name="mcn_exit_confirm">האם אתה בטוח שאתה רוצה לכפות כיבוי?</string>
     <string name="mcn_exit_title">היישומון / המשחק קרס, עם קוד שגיאה %d, בדוק את latestlog.txt למידע נוסף.</string>
     <string name="mcn_signal_title">היישומון/המשחק הופסק על ידי אות קריטי %d, בדוק את latestlog.txt למידע נוסף.</string>
-    <string name="memory_warning_msg">הכמות הנוכחית של RAM פנוי (%d) נמוכה מכמות ה-RAM שהוקצתה (%d), מה שעלול לגרום למשחק לקרוס. הנך מתבקש לשנות את ההקצאה במידה והמשחק קורס.</string>
+    <string name="memory_warning_msg">הכמות הנוכחית של RAM פנוי (%1$d) נמוכה מכמות ה-RAM שהוקצתה (%2$d), מה שעלול לגרום למשחק לקרוס. הנך מתבקש לשנות את ההקצאה במידה והמשחק קורס.</string>
     <string name="mg_renderer_angle">השתמש ב-ANGLE כדריבר</string>
     <string name="mg_renderer_glsl_cache">גודל מטמון GLSL מקסימלי</string>
     <string name="mg_renderer_multidraw">מצב אמולציה multidraw</string>

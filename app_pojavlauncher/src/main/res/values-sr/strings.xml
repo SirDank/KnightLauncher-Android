@@ -61,7 +61,7 @@
     <string name="mcl_version_clone">Клонирај</string>
     <string name="mcn_exit_confirm">Да ли желите да форсе-изаћете?</string>
     <string name="mcn_exit_title">Апликација/Игра изашла је са кодом %d, провјерите latestlog.txt за више детаља.</string>
-    <string name="memory_warning_msg">Слободна меморија (%d) је нижа од подешене меморије (%d), то можда заустави функцију игре. Промените подешену меморију ако се то деси.</string>
+    <string name="memory_warning_msg">Слободна меморија (%1$d) је нижа од подешене меморије (%2$d), то можда заустави функцију игре. Промените подешену меморију ако се то деси.</string>
     <string name="toast_permission_denied">ПојавЛаунчер треба пиши/читај дозволу!</string>
     <string name="warning_remove_account">Овај налог ће бити уклоњен!</string>
 </resources>

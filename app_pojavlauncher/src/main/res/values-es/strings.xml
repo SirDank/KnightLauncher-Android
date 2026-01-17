@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="address_memory_warning_msg">La cantidad actual de RAM libre (%d) es menor que la RAM asignada (%d), lo cual puede causar cierres forzados. Cambie la cantidad asignada si el juego se cierra.</string>
+    <string name="address_memory_warning_msg">La cantidad actual de RAM libre (%1$d) es menor que la RAM asignada (%2$d), lo cual puede causar cierres forzados. Cambie la cantidad asignada si el juego se cierra.</string>
     <string name="autoram_info_msg">Memoria establecida a %d MB</string>
     <string name="control_chat">Chat</string>
     <string name="control_customkey">Enviar tecla personalizada</string>
@@ -127,7 +127,7 @@
     <string name="mcn_exit_confirm">¿Estás seguro de que quieres forzar el cierre?</string>
     <string name="mcn_exit_title">La aplicación/juego ha finalizado con el código %d, mira el archivo latestlog.txt para más detalles.</string>
     <string name="mcn_signal_title">La aplicación/juego ha finalizado con código %d, revise latestlog.txt para más detalles.</string>
-    <string name="memory_warning_msg">La cantidad actual de memoria RAM libre (%d) es menor que la memoria RAM asignada (%d), lo que puede provocar cierres forzados. Cambia la asignación si el juego se cierra.</string>
+    <string name="memory_warning_msg">La cantidad actual de memoria RAM libre (%1$d) es menor que la memoria RAM asignada (%2$d), lo que puede provocar cierres forzados. Cambia la asignación si el juego se cierra.</string>
     <string name="multirt_config_add">Añadir</string>
     <string name="multirt_config_removeerror_last">Debes tener al menos un Runtime de Java instalado.</string>
     <string name="multirt_config_setdefault">Establecer como predeterminado</string>

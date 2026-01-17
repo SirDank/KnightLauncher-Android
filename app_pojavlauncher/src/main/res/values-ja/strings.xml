@@ -103,7 +103,7 @@
     <string name="mcn_exit_confirm">強制終了しますか？</string>
     <string name="mcn_exit_title">アプリケーション/ゲームはコード %dで終了しました。詳細についてはlatestlog.txtをご確認ください</string>
     <string name="mcn_signal_title">アプリケーション/ゲームはコード %dで終了しました。詳細についてはlatestlog.txtをご確認ください。</string>
-    <string name="memory_warning_msg">現在の空きメモリ量(%d)は割り当てられたRAM(%d)よりも低く、クラッシュする可能性があります. ゲームがクラッシュした場合は割り当てを変更します。</string>
+    <string name="memory_warning_msg">現在の空きメモリ量(%1$d)は割り当てられたRAM(%2$d)よりも低く、クラッシュする可能性があります. ゲームがクラッシュした場合は割り当てを変更します。</string>
     <string name="multirt_config_add">新規追加</string>
     <string name="multirt_config_removeerror_last">最低でも1つJavaランタイムをインストールする必要があります。</string>
     <string name="multirt_config_setdefault">デフォルトに設定</string>

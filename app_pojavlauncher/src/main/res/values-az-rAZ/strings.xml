@@ -72,7 +72,7 @@
     <string name="mcl_version_clone">Klon</string>
     <string name="mcn_exit_confirm">Zorla bağlamaq istədiyinizə əminsiniz?</string>
     <string name="mcn_exit_title">Proqram/Oyun %d kodu ilə çıxdı, ətraflı məlumat üçün latestlog.txt-ə baxın.</string>
-    <string name="memory_warning_msg">Boş RAM-ın cari miqdarı (%d) ayrılmış RAM-dan (%d) azdır və bu, çökmələrə səbəb ola bilər. Oyun qəzaya uğrayarsa, yeri dəyişdirin.</string>
+    <string name="memory_warning_msg">Boş RAM-ın cari miqdarı (%1$d) ayrılmış RAM-dan (%2$d) azdır və bu, çökmələrə səbəb ola bilər. Oyun qəzaya uğrayarsa, yeri dəyişdirin.</string>
     <string name="multirt_config_add">Yeni əlavə et</string>
     <string name="multirt_config_removeerror_last">Ən azı bir Java Runtime quraşdırılmış olmalıdır.</string>
     <string name="multirt_config_setdefault">Defolt təyin edin</string>
