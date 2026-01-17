@@ -51,20 +51,36 @@
 				app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
 
 			<com.kdt.mcgui.LauncherMenuButton
-				android:id="@+id/github_button"
+				android:id="@+id/download_mods_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="match_parent"
-				android:drawableStart="@drawable/ic_github"
-				android:text="@string/mcl_button_github"
+				android:drawableStart="@drawable/ic_download"
+				android:text="@string/mcl_button_download_mods"
 				app:layout_constraintTop_toBottomOf="@id/reset_game_files_button" />
 
-			<com.kdt.mcgui.LauncherMenuButton
-				android:id="@+id/discord_button"
-				style="@style/LauncherMenuButton.Universal"
+			<LinearLayout
+				android:id="@+id/github_discord_row"
 				android:layout_width="match_parent"
-				android:text="@string/mcl_button_discord"
-				android:drawableStart="@drawable/ic_discord"
-				app:layout_constraintTop_toBottomOf="@id/github_button" />
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				app:layout_constraintTop_toBottomOf="@id/download_mods_button">
+
+				<com.kdt.mcgui.LauncherMenuButton
+					android:id="@+id/github_button"
+					style="@style/LauncherMenuButton.Universal"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:drawableStart="@drawable/ic_github"
+					android:text="@string/mcl_button_github" />
+
+				<com.kdt.mcgui.LauncherMenuButton
+					android:id="@+id/discord_button"
+					style="@style/LauncherMenuButton.Universal"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:text="@string/mcl_button_discord"
+					android:drawableStart="@drawable/ic_discord" />
+			</LinearLayout>
 
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/player_count_button"
@@ -72,7 +88,7 @@
 				android:layout_width="match_parent"
 				android:drawableStart="@drawable/ic_menu_users"
 				android:text="@string/mcl_button_player_count"
-				app:layout_constraintTop_toBottomOf="@id/discord_button" />
+				app:layout_constraintTop_toBottomOf="@id/github_discord_row" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
 

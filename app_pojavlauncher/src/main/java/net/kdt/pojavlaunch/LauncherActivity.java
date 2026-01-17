@@ -39,6 +39,7 @@ import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 import net.kdt.pojavlaunch.progresskeeper.TaskCountListener;
 import net.kdt.pojavlaunch.services.ProgressServiceKeeper;
 import net.kdt.pojavlaunch.utils.NotificationUtils;
+import net.kdt.pojavlaunch.utils.WakeLockUtils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -55,7 +56,7 @@ public class LauncherActivity extends BaseActivity {
     private ProgressLayout mProgressLayout;
     private ProgressServiceKeeper mProgressServiceKeeper;
     private NotificationManager mNotificationManager;
-    private PowerManager.WakeLock mWakeLock;
+    private final WakeLockUtils mWakeLockUtils = new WakeLockUtils();
 
     /* Allows to switch from one button "type" to another */
     private final FragmentManager.FragmentLifecycleCallbacks mFragmentCallbackListener = new FragmentManager.FragmentLifecycleCallbacks() {
@@ -321,26 +322,13 @@ public class LauncherActivity extends BaseActivity {
         installSpiralKnights();
     }
 
-    private void releaseWakeLock() {
-        if (mWakeLock != null && mWakeLock.isHeld()) {
-            mWakeLock.release();
-        }
-        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
     public void installSpiralKnights() {
         // Skip if already installed
         if (new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
             return;
         }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-
-        // Acquire wake lock to prevent the device from sleeping during installation
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KnightLauncher:InstallWakeLock");
-        mWakeLock.acquire(60 * 60 * 1000L); // 1 hour max timeout
-        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mWakeLockUtils.acquire(this, "KnightLauncher:InstallWakeLock");
 
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Installing Spiral Knights");
@@ -377,8 +365,7 @@ public class LauncherActivity extends BaseActivity {
                     pd.setMessage(line);
                     if (th != null) {
                         // Release wake lock on error
-                        releaseWakeLock();
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                        mWakeLockUtils.release();
                         String errorMessage = "Error: " + th.getMessage() + "\n" + Tools.printToString(th);
                         new AlertDialog.Builder(LauncherActivity.this)
                                 .setTitle("Installation Error")
@@ -404,8 +391,7 @@ public class LauncherActivity extends BaseActivity {
             public void unlockExit() {
                 Tools.runOnUiThread(() -> {
                     // Release wake lock when installation is complete
-                    releaseWakeLock();
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    mWakeLockUtils.release();
                     pd.dismiss();
                     boolean getdownExists = new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists();
                     boolean jsonExists = new File(Tools.DIR_GAME_HOME, "versions/SpiralKnights/SpiralKnights.json")
