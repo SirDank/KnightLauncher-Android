@@ -16,6 +16,99 @@ from xml.etree import ElementTree as ET
 from typing import Set, Dict, List, Tuple
 
 
+# =============================================================================
+# Terminal Colors (ANSI escape codes)
+# =============================================================================
+
+class Colors:
+    """ANSI color codes for terminal output."""
+    # Reset
+    RESET = '\033[0m'
+    
+    # Regular colors
+    BLACK = '\033[30m'
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+    
+    # Bold/Bright colors
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    BOLD_RED = '\033[1;31m'
+    BOLD_GREEN = '\033[1;32m'
+    BOLD_YELLOW = '\033[1;33m'
+    BOLD_BLUE = '\033[1;34m'
+    BOLD_MAGENTA = '\033[1;35m'
+    BOLD_CYAN = '\033[1;36m'
+    BOLD_WHITE = '\033[1;37m'
+    
+    # Background colors
+    BG_RED = '\033[41m'
+    BG_GREEN = '\033[42m'
+    BG_YELLOW = '\033[43m'
+    BG_BLUE = '\033[44m'
+
+
+def enable_windows_ansi():
+    """Enable ANSI escape codes on Windows."""
+    if sys.platform == 'win32':
+        try:
+            import ctypes
+            kernel32 = ctypes.windll.kernel32
+            # Enable VIRTUAL_TERMINAL_PROCESSING
+            kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+        except Exception:
+            pass  # Fall back to no colors if it fails
+
+
+def c(text: str, color: str) -> str:
+    """Wrap text with color codes."""
+    return f"{color}{text}{Colors.RESET}"
+
+
+def header(text: str) -> str:
+    """Format a header line."""
+    return c(text, Colors.BOLD_CYAN)
+
+
+def success(text: str) -> str:
+    """Format success message."""
+    return c(text, Colors.BOLD_GREEN)
+
+
+def warning(text: str) -> str:
+    """Format warning message."""
+    return c(text, Colors.BOLD_YELLOW)
+
+
+def error(text: str) -> str:
+    """Format error message."""
+    return c(text, Colors.BOLD_RED)
+
+
+def info(text: str) -> str:
+    """Format info message."""
+    return c(text, Colors.CYAN)
+
+
+def dim(text: str) -> str:
+    """Format dimmed/secondary text."""
+    return c(text, Colors.DIM)
+
+
+def number(text: str) -> str:
+    """Format numbers."""
+    return c(text, Colors.BOLD_MAGENTA)
+
+
+# Enable ANSI on Windows
+enable_windows_ansi()
+
+
 def get_project_root() -> Path:
     """Get the project root directory (parent of scripts folder)."""
     return Path(__file__).parent.parent
@@ -283,31 +376,33 @@ def find_missing_keys(base_keys: Dict[str, Tuple[str, bool]], variant_keys: Dict
 
 
 def main():
-    print("=" * 60)
-    print("Android String Resources Cleanup Script")
-    print("=" * 60)
+    # Title banner
+    print()
+    print(header("=" * 60))
+    print(header("  🧹 Android String Resources Cleanup Script"))
+    print(header("=" * 60))
     print()
     
     project_root = get_project_root()
-    print(f"Project root: {project_root}")
+    print(f"📂 Project root: {info(str(project_root))}")
     print()
     
     # Step 1: Parse base strings.xml
     base_strings_path = get_base_strings_path()
     if not base_strings_path.exists():
-        print(f"Error: Base strings.xml not found at {base_strings_path}")
+        print(error(f"❌ Error: Base strings.xml not found at {base_strings_path}"))
         sys.exit(1)
     
-    print(f"Parsing base strings.xml...")
+    print(f"📖 Parsing base strings.xml...")
     base_keys = parse_string_keys(base_strings_path)
-    print(f"  Found {len(base_keys)} string keys in base")
+    print(f"   Found {number(str(len(base_keys)))} string keys in base")
     print()
     
     # Step 2: Find all used string keys
-    print("Scanning project for string key usage...")
+    print(f"🔍 Scanning project for string key usage...")
     used_keys = find_used_string_keys(project_root)
-    print(f"  Found {len(used_keys)} unique string keys in use")
-    print(f"  (includes {len(PROTECTED_KEYS)} protected keys that are never deleted)")
+    print(f"   Found {number(str(len(used_keys)))} unique string keys in use")
+    print(f"   {dim(f'(includes {len(PROTECTED_KEYS)} protected keys that are never deleted)')}")
     print()
     
     # Step 3: Find unused keys
@@ -318,20 +413,24 @@ def main():
             if translatable:
                 unused_in_base.add(key)
     
-    print(f"Found {len(unused_in_base)} unused translatable keys in base:")
     if unused_in_base:
+        print(warning(f"⚠️  Found {len(unused_in_base)} unused translatable keys in base:"))
         for key in sorted(unused_in_base):
-            print(f"    - {key}")
+            print(f"    {dim('•')} {warning(key)}")
+    else:
+        print(success(f"✅ No unused translatable keys in base!"))
     print()
     
     # Step 4: Process all values folders
     values_folders = get_values_folders()
-    print(f"Found {len(values_folders)} values folders with strings.xml")
+    print(f"📁 Found {number(str(len(values_folders)))} values folders with strings.xml")
     print()
     
-    print("=" * 60)
-    print("CLEANING UP UNUSED KEYS AND FIXING FORMAT ISSUES")
-    print("=" * 60)
+    print(header("=" * 60))
+    print(header("  🔧 CLEANING UP UNUSED KEYS AND FIXING FORMAT ISSUES"))
+    print(header("=" * 60))
+    print()
+    
     total_removed = 0
     total_format_fixes = 0
     
@@ -343,17 +442,26 @@ def main():
         total_removed += removed_count
         total_format_fixes += format_fix_count
         
-        # Always print the count for each file
-        print(f"{folder_name}: Removed {removed_count} keys, Fixed {format_fix_count} format issues")
+        # Color-code based on changes made
+        if removed_count > 0 or format_fix_count > 0:
+            removed_text = success(f"Removed {removed_count}") if removed_count > 0 else dim(f"Removed {removed_count}")
+            fixed_text = success(f"Fixed {format_fix_count}") if format_fix_count > 0 else dim(f"Fixed {format_fix_count}")
+            print(f"  {c(folder_name, Colors.BOLD_WHITE)}: {removed_text} keys, {fixed_text} format issues")
+        else:
+            print(f"  {dim(folder_name)}: {dim('No changes')}")
     
-    print(f"\nTotal: Removed {total_removed} keys, Fixed {total_format_fixes} format issues across all files")
+    print()
+    if total_removed > 0 or total_format_fixes > 0:
+        print(success(f"✅ Total: Removed {total_removed} keys, Fixed {total_format_fixes} format issues across all files"))
+    else:
+        print(info(f"ℹ️  No changes needed - all files are clean!"))
     print()
     
     # Step 5: Find commonly missing keys (missing from ALL variant files)
-    print("=" * 60)
-    print("COMMONLY MISSING KEYS REPORT")
-    print("=" * 60)
-    print("Keys present in base values/strings.xml but missing from ALL variants:")
+    print(header("=" * 60))
+    print(header("  📋 COMMONLY MISSING KEYS REPORT"))
+    print(header("=" * 60))
+    print(f"Keys present in base {c('values/strings.xml', Colors.BOLD)} but missing from ALL variants:")
     print()
     
     # Get translatable keys from base
@@ -375,16 +483,17 @@ def main():
         commonly_missing -= set(variant_keys.keys())
     
     if commonly_missing:
-        print(f"Found {len(commonly_missing)} keys missing from all {variant_count} variant files:")
+        print(warning(f"⚠️  Found {len(commonly_missing)} keys missing from all {variant_count} variant files:"))
         for key in sorted(commonly_missing):
-            print(f"    - {key}")
+            print(f"    {dim('•')} {warning(key)}")
     else:
-        print(f"No keys are commonly missing from all {variant_count} variants!")
+        print(success(f"✅ No keys are commonly missing from all {variant_count} variants!"))
     
     print()
-    print("=" * 60)
-    print("Done!")
-    print("=" * 60)
+    print(header("=" * 60))
+    print(success("  ✨ Done!"))
+    print(header("=" * 60))
+    print()
 
 
 if __name__ == "__main__":
