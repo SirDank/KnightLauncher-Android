@@ -129,69 +129,46 @@ public class MainMenuFragment extends Fragment {
         pd.show();
 
         new Thread(() -> {
-            try {
-                // Delete mods folder if it exists
-                File modsDir = ModsDownloader.getModsDirectory();
-                if (modsDir.exists()) {
-                    Tools.runOnUiThread(() -> pd.setMessage("Deleting existing mods..."));
-                    org.apache.commons.io.FileUtils.deleteDirectory(modsDir);
+            // Download mods with progress callback
+            ModsDownloader.downloadMods(new ModsDownloader.ProgressCallback() {
+                @Override
+                public void onStatusUpdate(String status) {
+                    Tools.runOnUiThread(() -> pd.setMessage(status));
                 }
 
-                // Create fresh mods folder
-                if (!modsDir.mkdirs() && !modsDir.exists()) {
-                    throw new java.io.IOException("Failed to create mods directory");
+                @Override
+                public void onProgress(int current, int total, String currentFileName) {
+                    Tools.runOnUiThread(() -> {
+                        pd.setIndeterminate(false);
+                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        pd.setMax(100);
+                        pd.setMessage(getString(R.string.mcl_download_mods_progress, current, total) + "\n" + currentFileName);
+                        pd.setProgress((current * 100) / total);
+                    });
                 }
 
-                Tools.runOnUiThread(() -> {
-                    pd.setIndeterminate(false);
-                    pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    pd.setMax(100);
-                });
+                @Override
+                public void onComplete() {
+                    Tools.runOnUiThread(() -> {
+                        mWakeLockUtils.release();
+                        pd.dismiss();
+                        Toast.makeText(requireContext(), R.string.mcl_download_mods_complete, Toast.LENGTH_LONG).show();
+                    });
+                }
 
-                // Download mods with progress callback
-                ModsDownloader.downloadMods(new ModsDownloader.ProgressCallback() {
-                    @Override
-                    public void onProgress(int current, int total, String currentFileName) {
-                        Tools.runOnUiThread(() -> {
-                            pd.setMessage(getString(R.string.mcl_download_mods_progress, current, total) + "\n" + currentFileName);
-                            pd.setProgress((current * 100) / total);
-                        });
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Tools.runOnUiThread(() -> {
-                            mWakeLockUtils.release();
-                            pd.dismiss();
-                            Toast.makeText(requireContext(), R.string.mcl_download_mods_complete, Toast.LENGTH_LONG).show();
-                        });
-                    }
-
-                    @Override
-                    public void onError(String error, Throwable throwable) {
-                        Tools.runOnUiThread(() -> {
-                            mWakeLockUtils.release();
-                            pd.dismiss();
-                            new AlertDialog.Builder(requireContext())
-                                    .setTitle(R.string.mcl_download_mods_failed)
-                                    .setMessage(error)
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .show();
-                        });
-                    }
-                });
-
-            } catch (Exception e) {
-                Tools.runOnUiThread(() -> {
-                    mWakeLockUtils.release();
-                    pd.dismiss();
-                    new AlertDialog.Builder(requireContext())
-                            .setTitle(R.string.mcl_download_mods_failed)
-                            .setMessage(e.getMessage())
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show();
-                });
-            }
+                @Override
+                public void onError(String error, Throwable throwable) {
+                    Tools.runOnUiThread(() -> {
+                        mWakeLockUtils.release();
+                        pd.dismiss();
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(R.string.mcl_download_mods_failed)
+                                .setMessage(error)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show();
+                    });
+                }
+            });
         }).start();
     }
 

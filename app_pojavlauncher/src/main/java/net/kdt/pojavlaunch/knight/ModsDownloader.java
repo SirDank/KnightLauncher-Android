@@ -24,6 +24,7 @@ public class ModsDownloader {
      * Callback interface for reporting download progress.
      */
     public interface ProgressCallback {
+        void onStatusUpdate(String status);
         void onProgress(int current, int total, String currentFileName);
         void onComplete();
         void onError(String error, Throwable throwable);
@@ -67,11 +68,26 @@ public class ModsDownloader {
     
     /**
      * Downloads all mods from the repository to the mods folder.
+     * Handles folder deletion/creation and progress reporting.
      * @param callback Progress callback for UI updates
      */
     public static void downloadMods(ProgressCallback callback) {
         try {
-            // Get mods list
+            // Delete mods folder if it exists
+            File modsDir = getModsDirectory();
+            if (modsDir.exists()) {
+                callback.onStatusUpdate("Deleting existing mods...");
+                org.apache.commons.io.FileUtils.deleteDirectory(modsDir);
+            }
+
+            // Create fresh mods folder
+            callback.onStatusUpdate("Creating mods folder...");
+            if (!modsDir.mkdirs() && !modsDir.exists()) {
+                throw new IOException("Failed to create mods directory");
+            }
+
+            // Fetch mods list from GitHub
+            callback.onStatusUpdate("Fetching mods list from GitHub...");
             List<ModFile> mods = getModsList();
             
             if (mods.isEmpty()) {
@@ -79,7 +95,6 @@ public class ModsDownloader {
                 return;
             }
             
-            File modsDir = getModsDirectory();
             int total = mods.size();
             
             for (int i = 0; i < mods.size(); i++) {

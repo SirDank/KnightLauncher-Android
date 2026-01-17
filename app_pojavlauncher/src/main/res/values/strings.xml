@@ -127,13 +127,13 @@
     <string name="login_again">Please log in again</string>
     <string name="main_install_jar_file">Execute a .jar</string>
     <string name="main_play">Play</string>
-    <string name="main_share_logs">Share log file</string>
+    <string name="main_share_logs">SHARE LOG</string>
     <string name="mcl_button_discord">Discord</string>
     <string name="mcl_button_download_mods">Download Mods</string>
     <string name="mcl_button_github">GitHub</string>
-    <string name="mcl_button_open_directory">Open game directory</string>
+    <string name="mcl_button_open_directory">OPEN GAME DIR</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
-    <string name="mcl_button_reset_game_files">UPDATE / RESET GAME</string>
+    <string name="mcl_button_reset_game_files">UPDATE / RESET</string>
     <string name="mcl_disable_gestures">Disable gestures</string>
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
     <string name="mcl_disable_swap_hand">Disable double tap to swap hands</string>
