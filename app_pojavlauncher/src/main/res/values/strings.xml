@@ -305,6 +305,7 @@
     <string name="version_select_hint">Select a version</string>
     <string name="forge_dl_progress">Downloading installer for %s</string>
     <string name="forge_dl_searching">Searching for Forge version number</string>
+    <string name="neoforge_dl_searching">Searching for NeoForge version number</string>
     <string name="modloader_dl_failed_to_load_list">Failed to load the version list!</string>
     <string name="forge_dl_no_installer">Sorry, but this version of Forge does not have an installer, which is not yet supported.</string>
     <string name="forge_dl_select_version">Select Forge version</string>
@@ -495,4 +496,17 @@
     <string name="mg_renderer_title_fsr">AMD FSR 1 Upscaling</string>
     <string name="autorendererselectfailed">Auto-renderer select failed, defaulting to HolyGL4ES</string>
     <string name="mcl_setting_renderer_vulkan_kopper_zink">Kopper Zink (Vulkan) - (all versions, mid)</string>
+    <string name="sodium_warning_title">Sodium detected!</string>
+    <string name="sodium_warning_message">It appears you are using sodium, this is unsupported and may lead to graphical issues or crashes. Please remove it and all dependent mods.</string>
+    <string name="delete_sodium">Delete Sodium and Launch</string>
+    <string name="sodium_override_title">Run sodium forcefully</string>
+    <string name="sodium_override_summaryOff">Using sodium may cause visual bugs and crashes. You have been warned.</string>
+    <string name="sodium_override_summaryOn">Sodium is not supported. No help will be given if you encounter any issues.</string>
+    <!--  Make sure the people turning this on can read English.  -->
+    <string name="sodium_math_warning_title" translatable="false">Solve the math question to enable</string>
+    <string name="sodium_math_warning_message" translatable="false">
+    Sodium is unsupported, you are on your own. No support will be given in the discord server.\nUsing sodium may result in bugs, glitches, and crashes. No help will be given even if you lose any of your worlds or saves.\n\nNow what\'s %1$s multiplied by %2$s plus %3$s minus %4$s?
+    </string>
+    <string name="not_modpack_file">Not a modpack file!</string>
+
 </resources>
