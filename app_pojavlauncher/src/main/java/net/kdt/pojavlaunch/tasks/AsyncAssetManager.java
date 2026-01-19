@@ -92,7 +92,8 @@ public class AsyncAssetManager {
         sExecutorService.execute(() -> {
             try {
                 unpackComponent(ctx, "caciocavallo", false);
-                unpackComponent(ctx, "caciocavallo17", false);
+                // Temporarily disabled - Spiral Knights only uses JRE8
+                // unpackComponent(ctx, "caciocavallo17", false);
                 // Since the Java module system doesn't allow multiple JARs to declare the same
                 // module,
                 // we repack them to a single file here
