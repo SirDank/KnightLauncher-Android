@@ -234,7 +234,7 @@ void setNativeWindowSwapInterval(struct ANativeWindow* nativeWindow, int swapInt
         return;
     }
     if(nativeWindowReal->common.version != sizeof(struct ANativeWindow_real)) {
-        LOGW("ANativeWindow version does not match. Expected %i, got %i",
+        LOGW("ANativeWindow version does not match. Expected %zu, got %i",
                             sizeof(struct ANativeWindow_real), nativeWindowReal->common.version);
         return;
     }

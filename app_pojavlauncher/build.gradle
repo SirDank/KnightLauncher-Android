@@ -99,7 +99,10 @@ android {
         versionCode 10000000
         versionName getVersionName()
         multiDexEnabled true //important
-        resValue 'string', 'curseforge_api_key', 'DUMMY'
+        ndk {
+            // Only build for ARM architectures (skip x86/x86_64 which are for emulators)
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
     }
 
     buildTypes {
