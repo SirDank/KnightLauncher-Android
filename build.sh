@@ -199,7 +199,7 @@ build_apk() {
     
     # Create output directory and copy APK
     mkdir -p out
-    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher.apk
+    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
     
     success "APK built successfully!"
     success "Output: $(realpath out/KnightLauncher.apk)"

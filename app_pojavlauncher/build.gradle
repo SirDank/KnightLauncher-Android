@@ -131,9 +131,8 @@ android {
             // Don't set to true or java.awt will be a.a or something similar.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // defaultConfig already set
-            // multiDexEnabled = true
-            // debuggable = true
+            // Sign with debug keystore so the APK can be installed
+            signingConfig signingConfigs.customDebug
             resValue 'string', 'storageProviderAuthorities', 'com.sirdank.knightlauncher.scoped.gamefolder'
             resValue 'string', 'application_package', 'com.sirdank.knightlauncher'
         }

@@ -100,7 +100,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
