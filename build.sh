@@ -195,11 +195,11 @@ build_glfw_stub() {
 build_apk() {
     info "Building KnightLauncher APK..."
     
-    ./gradlew :app_pojavlauncher:assembleDebug --build-cache
+    ./gradlew :app_pojavlauncher:assembleRelease --build-cache
     
     # Create output directory and copy APK
     mkdir -p out
-    cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher.apk
+    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher.apk
     
     success "APK built successfully!"
     success "Output: $(realpath out/KnightLauncher.apk)"

@@ -129,7 +129,7 @@ echo.
 
 echo [INFO] Building KnightLauncher APK...
 
-call gradlew.bat :app_pojavlauncher:assembleDebug --build-cache
+call gradlew.bat :app_pojavlauncher:assembleRelease --build-cache
 if errorlevel 1 (
     echo [ERROR] Failed to build APK.
     goto :error_exit
@@ -137,7 +137,7 @@ if errorlevel 1 (
 
 :: Create output directory and copy APK
 if not exist "out" mkdir "out"
-copy /y "app_pojavlauncher\build\outputs\apk\debug\app_pojavlauncher-debug.apk" "out\KnightLauncher.apk" >nul
+copy /y "app_pojavlauncher\build\outputs\apk\release\app_pojavlauncher-release-unsigned.apk" "out\KnightLauncher.apk" >nul
 
 echo [SUCCESS] APK built successfully!
 echo.

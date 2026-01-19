@@ -66,11 +66,11 @@ jobs:
           # Build JRE JAR files (security manager, etc...)
           gradle :jre_lwjgl3glfw:build
 
-      - name: Build Debug .apk
+      - name: Build Release .apk
         run: |
           # Build the launcher
-          gradle :app_pojavlauncher:assembleDebug
-          mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher.apk
+          gradle :app_pojavlauncher:assembleRelease
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

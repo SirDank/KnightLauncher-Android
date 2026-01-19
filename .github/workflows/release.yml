@@ -84,8 +84,8 @@ jobs:
 
       - name: Build Release APK
         run: |
-          # Build the launcher in release mode
-          gradle :app_pojavlauncher:assembleDebug --build-cache
+          # Build the launcher
+          gradle :app_pojavlauncher:assembleRelease --build-cache
 
       - name: Determine Version
         id: version
@@ -100,7 +100,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release-unsigned.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
