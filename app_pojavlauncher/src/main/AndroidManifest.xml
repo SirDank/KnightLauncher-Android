@@ -125,6 +125,16 @@
             </intent-filter>
         </provider>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="@string/shareProviderAuthority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider" />
+        </provider>
+
         <service android:name=".services.ProgressService"
             android:foregroundServiceType="dataSync"/>
         <service android:name=".services.GameService" android:process=":game"

@@ -291,4 +291,12 @@
     <string name="tasks_ongoing">Tasks are in progress, please wait</string>
     <string name="toast_permission_denied">The read/write to storage permission is required!</string>
     <string name="warning_remove_account">This account will be removed!</string>
+
+    <!-- App Update -->
+    <string name="update_available_title">Update Available</string>
+    <string name="update_available_message">A new version of KnightLauncher is available!\n\nCurrent: %1$s\nNew: %2$s\n\nWould you like to update now?</string>
+    <string name="update_now">Update Now</string>
+    <string name="update_later">Later</string>
+    <string name="downloading_update">Downloading Update</string>
+    <string name="update_download_failed">Failed to download update. Please try again later.</string>
 </resources>

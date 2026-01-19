@@ -10,6 +10,7 @@ def getVersionName = {
     ByteArrayOutputStream BRANCH = new ByteArrayOutputStream()
     // Used by the fallback for github actions
     ByteArrayOutputStream TAG_PART_COMMIT = new ByteArrayOutputStream()
+    ByteArrayOutputStream LATEST_TAG = new ByteArrayOutputStream()
     String TAG_STRING
 
     exec {
@@ -32,6 +33,16 @@ def getVersionName = {
             } catch (Exception e) {
             }
         }
+        
+        // Also get the latest tag for version info
+        exec {
+            try {
+                commandLine 'git', 'describe', '--tags', '--abbrev=0'
+                ignoreExitValue true
+                standardOutput = LATEST_TAG
+            } catch (Exception e) {
+            }
+        }
     }
 
 
@@ -42,8 +53,13 @@ def getVersionName = {
              //Fallback no repo
             return ("LOCAL-" + "${getDate()}")
         }else {
-            // Used by github actions
-            TAG_STRING =  'knightlauncher-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
+            // Used by github actions - include the version tag for update checking
+            // Format: knightlauncher-v0.3.4-20260119-commit
+            String latestTag = LATEST_TAG.toString().trim()
+            if (latestTag == "") {
+                latestTag = "v0.0.0"  // Fallback if no tags exist
+            }
+            TAG_STRING =  'knightlauncher-' + latestTag + "-" + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
         }
 
     }
@@ -135,6 +151,7 @@ android {
             signingConfig signingConfigs.customDebug
             resValue 'string', 'storageProviderAuthorities', 'com.sirdank.knightlauncher.scoped.gamefolder'
             resValue 'string', 'application_package', 'com.sirdank.knightlauncher'
+            resValue 'string', 'shareProviderAuthority', 'com.sirdank.knightlauncher.scoped.controlfolder'
         }
         gplay {
             initWith release
