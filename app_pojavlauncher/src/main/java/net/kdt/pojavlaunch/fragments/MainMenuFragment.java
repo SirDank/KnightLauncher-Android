@@ -22,6 +22,7 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.knight.ModsDownloader;
+import net.kdt.pojavlaunch.knight.ModsApplier;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 import net.kdt.pojavlaunch.utils.WakeLockUtils;
@@ -73,6 +74,12 @@ public class MainMenuFragment extends Fragment {
         // Download Mods button
         if (mDownloadModsButton != null) {
             mDownloadModsButton.setOnClickListener(v -> showDownloadModsConfirmation());
+        }
+
+        // Apply Mods button
+        Button mApplyModsButton = view.findViewById(R.id.apply_mods_button);
+        if (mApplyModsButton != null) {
+            mApplyModsButton.setOnClickListener(v -> showApplyModsConfirmation());
         }
 
         // Player count button
@@ -165,6 +172,83 @@ public class MainMenuFragment extends Fragment {
                         pd.dismiss();
                         new AlertDialog.Builder(requireContext())
                                 .setTitle(R.string.mcl_download_mods_failed)
+                                .setMessage(error)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show();
+                    });
+                }
+            });
+        }).start();
+    }
+
+    private void showApplyModsConfirmation() {
+        // Check if mods exist first
+        if (ModsApplier.getModFiles().isEmpty()) {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.mcl_button_apply_mods)
+                    .setMessage(R.string.mcl_apply_mods_no_mods)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+            return;
+        }
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.mcl_button_apply_mods)
+                .setMessage(R.string.mcl_apply_mods_confirmation)
+                .setPositiveButton(android.R.string.ok, (d, w) -> startModsApply())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void startModsApply() {
+        // Acquire wake lock
+        mWakeLockUtils.acquire(requireActivity(), "KnightLauncher:InstallWakeLock");
+
+        // Create progress dialog
+        final ProgressDialog pd = new ProgressDialog(requireContext());
+        pd.setTitle(R.string.mcl_button_apply_mods);
+        pd.setMessage("Preparing...");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+
+        new Thread(() -> {
+            // Apply mods with progress callback
+            ModsApplier.applyMods(new ModsApplier.ProgressCallback() {
+                @Override
+                public void onStatusUpdate(String status) {
+                    Tools.runOnUiThread(() -> pd.setMessage(status));
+                }
+
+                @Override
+                public void onProgress(int current, int total, String currentItem) {
+                    Tools.runOnUiThread(() -> {
+                        pd.setIndeterminate(false);
+                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        pd.setMax(100);
+                        pd.setMessage(getString(R.string.mcl_apply_mods_progress, current, total) + "\n" + currentItem);
+                        pd.setProgress((current * 100) / total);
+                    });
+                }
+
+                @Override
+                public void onComplete(ModsApplier.ApplyStats stats) {
+                    Tools.runOnUiThread(() -> {
+                        mWakeLockUtils.release();
+                        pd.dismiss();
+                        String message = getString(R.string.mcl_apply_mods_complete, 
+                                stats.jarsUnpacked, stats.modsApplied);
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                    });
+                }
+
+                @Override
+                public void onError(String error, Throwable throwable) {
+                    Tools.runOnUiThread(() -> {
+                        mWakeLockUtils.release();
+                        pd.dismiss();
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(R.string.mcl_apply_mods_failed)
                                 .setMessage(error)
                                 .setPositiveButton(android.R.string.ok, null)
                                 .show();
