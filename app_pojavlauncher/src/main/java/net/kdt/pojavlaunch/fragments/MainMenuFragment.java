@@ -148,11 +148,13 @@ public class MainMenuFragment extends Fragment {
                 }
 
                 @Override
-                public void onComplete() {
+                public void onComplete(ModsDownloader.SyncStats stats) {
                     Tools.runOnUiThread(() -> {
                         mWakeLockUtils.release();
                         pd.dismiss();
-                        Toast.makeText(requireContext(), R.string.mcl_download_mods_complete, Toast.LENGTH_LONG).show();
+                        String message = getString(R.string.mcl_download_mods_complete, 
+                                stats.downloaded, stats.skipped, stats.deleted);
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
                     });
                 }
 

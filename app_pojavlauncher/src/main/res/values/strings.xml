@@ -138,8 +138,8 @@
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
     <string name="mcl_disable_swap_hand">Disable double tap to swap hands</string>
     <string name="mcl_disable_swap_hand_subtitle">Disables double tapping on the hotbar item to swap it in the second hand.</string>
-    <string name="mcl_download_mods_complete">Mods downloaded successfully!</string>
-    <string name="mcl_download_mods_confirmation">Are you sure you want to delete the mods folder? This will re-download my custom modpack</string>
+    <string name="mcl_download_mods_complete">Mods synced! Downloaded: %1$d, Unchanged: %2$d, Removed: %3$d</string>
+    <string name="mcl_download_mods_confirmation">Sync mods with the latest version? This will download new/updated mods and remove deprecated ones.</string>
     <string name="mcl_download_mods_failed">Failed to download mods</string>
     <string name="mcl_download_mods_progress">Downloading mods: %1$d/%2$d</string>
     <string name="mcl_gamepad_forcedSDL">Forcibly start SDL controller handling</string>
