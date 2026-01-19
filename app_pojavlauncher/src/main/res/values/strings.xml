@@ -133,7 +133,7 @@
     <string name="mcl_button_github">GitHub</string>
     <string name="mcl_button_open_directory">OPEN GAME DIR</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
-    <string name="mcl_button_reset_game_files">UPDATE / RESET</string>
+    <string name="mcl_button_reset_game_files">UPDATE / RESET GAME</string>
     <string name="mcl_disable_gestures">Disable gestures</string>
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
     <string name="mcl_disable_swap_hand">Disable double tap to swap hands</string>
