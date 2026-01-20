@@ -343,25 +343,41 @@ public class LauncherActivity extends BaseActivity {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Installing Spiral Knights");
         pd.setMessage("Please wait...");
-        pd.setIndeterminate(false);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setMax(100);
+        pd.setProgress(0);
+        pd.setIndeterminate(true);
         pd.setCancelable(false);
         pd.show();
 
         new Thread(new KnightInstaller(new Progress() {
+            private int maxSteps = 100;
+            private int maxPart = 100;
+
             @Override
             public void postStepProgress(int prg) {
+                Tools.runOnUiThread(() -> {
+                    pd.setIndeterminate(false);
+                    pd.setProgress(prg * 100 / maxSteps);
+                });
             }
 
             @Override
             public void postPartProgress(int prg) {
+                Tools.runOnUiThread(() -> {
+                    pd.setIndeterminate(false);
+                    pd.setSecondaryProgress(prg * 100 / maxPart);
+                });
             }
 
             @Override
             public void postMaxSteps(int max) {
+                maxSteps = max > 0 ? max : 100;
             }
 
             @Override
             public void postMaxPart(int max) {
+                maxPart = max > 0 ? max : 100;
             }
 
             @Override

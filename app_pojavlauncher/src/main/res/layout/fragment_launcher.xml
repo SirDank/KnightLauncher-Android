@@ -18,20 +18,36 @@
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
+				<LinearLayout
+			android:id="@+id/controls_row"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintTop_toTopOf="parent">
+
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/custom_control_button"
 				style="@style/LauncherMenuButton.Universal"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
+				android:layout_weight="1"
 				android:drawableStart="@drawable/ic_menu_custom_controls"
-				android:text="@string/mcl_option_customcontrol"
-				app:layout_constraintTop_toTopOf="parent" />
+				android:text="@string/mcl_option_customcontrol" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/reset_controls_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:drawableStart="@drawable/ic_menu_refresh"
+				android:text="@string/mcl_button_reset_controls" />
+		</LinearLayout>
 
 			<LinearLayout
 			android:id="@+id/open_share_row"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
-			app:layout_constraintTop_toBottomOf="@id/custom_control_button">
+			app:layout_constraintTop_toBottomOf="@id/controls_row">
 
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/open_files_button"

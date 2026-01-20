@@ -25,6 +25,7 @@ import net.kdt.pojavlaunch.knight.ModsDownloader;
 import net.kdt.pojavlaunch.knight.ModsApplier;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
+import net.kdt.pojavlaunch.tasks.AsyncAssetManager;
 import net.kdt.pojavlaunch.utils.WakeLockUtils;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
@@ -57,6 +58,12 @@ public class MainMenuFragment extends Fragment {
         if (mCustomControlButton != null) {
             mCustomControlButton
                     .setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
+        }
+
+        // Reset Controls button
+        Button mResetControlsButton = view.findViewById(R.id.reset_controls_button);
+        if (mResetControlsButton != null) {
+            mResetControlsButton.setOnClickListener(v -> showResetControlsConfirmation());
         }
 
         mPlayButton.setOnClickListener(v -> ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true));
@@ -114,6 +121,18 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
+    private void showResetControlsConfirmation() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.mcl_button_reset_controls)
+                .setMessage(R.string.mcl_reset_controls_confirmation)
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    AsyncAssetManager.unpackSingleFiles(requireContext());
+                    Toast.makeText(requireContext(), R.string.mcl_reset_controls_complete, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
     private void showDownloadModsConfirmation() {
         new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.mcl_button_download_mods)
@@ -127,10 +146,13 @@ public class MainMenuFragment extends Fragment {
         // Acquire wake lock and lock orientation
         mWakeLockUtils.acquire(requireActivity(), "KnightLauncher:ModsDownloadWakeLock");
 
-        // Create progress dialog
+        // Create progress dialog with horizontal style from the start
         final ProgressDialog pd = new ProgressDialog(requireContext());
         pd.setTitle(R.string.mcl_button_download_mods);
         pd.setMessage("Preparing...");
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setMax(100);
+        pd.setProgress(0);
         pd.setIndeterminate(true);
         pd.setCancelable(false);
         pd.show();
@@ -147,8 +169,6 @@ public class MainMenuFragment extends Fragment {
                 public void onProgress(int current, int total, String currentFileName) {
                     Tools.runOnUiThread(() -> {
                         pd.setIndeterminate(false);
-                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        pd.setMax(100);
                         pd.setMessage(getString(R.string.mcl_download_mods_progress, current, total) + "\n" + currentFileName);
                         pd.setProgress((current * 100) / total);
                     });
@@ -204,10 +224,13 @@ public class MainMenuFragment extends Fragment {
         // Acquire wake lock
         mWakeLockUtils.acquire(requireActivity(), "KnightLauncher:InstallWakeLock");
 
-        // Create progress dialog
+        // Create progress dialog with horizontal style from the start
         final ProgressDialog pd = new ProgressDialog(requireContext());
         pd.setTitle(R.string.mcl_button_apply_mods);
         pd.setMessage("Preparing...");
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setMax(100);
+        pd.setProgress(0);
         pd.setIndeterminate(true);
         pd.setCancelable(false);
         pd.show();
@@ -224,8 +247,6 @@ public class MainMenuFragment extends Fragment {
                 public void onProgress(int current, int total, String currentItem) {
                     Tools.runOnUiThread(() -> {
                         pd.setIndeterminate(false);
-                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        pd.setMax(100);
                         pd.setMessage(getString(R.string.mcl_apply_mods_progress, current, total) + "\n" + currentItem);
                         pd.setProgress((current * 100) / total);
                     });

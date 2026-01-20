@@ -156,6 +156,9 @@
     <string name="mcl_memory_allocation_subtitle">Controls how much memory is given to Minecraft.</string>
     <string name="mcl_option_customcontrol">Custom controls</string>
     <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
+    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
+    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
+    <string name="mcl_reset_controls_complete">Controls reset to default</string>
     <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; only, fast)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ only</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ only, fast)</string>
