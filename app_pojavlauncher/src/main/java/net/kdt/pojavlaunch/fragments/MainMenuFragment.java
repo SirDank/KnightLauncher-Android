@@ -4,6 +4,7 @@ import static net.kdt.pojavlaunch.Tools.openPath;
 import static net.kdt.pojavlaunch.Tools.shareLog;
 
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -258,7 +259,7 @@ public class MainMenuFragment extends Fragment {
                         mWakeLockUtils.release();
                         pd.dismiss();
                         String message = getString(R.string.mcl_apply_mods_complete, 
-                                stats.jarsUnpacked, stats.modsApplied);
+                                stats.jarsUnpacked, stats.getTotalModsApplied());
                         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
                     });
                 }
@@ -274,6 +275,12 @@ public class MainMenuFragment extends Fragment {
                                 .setPositiveButton(android.R.string.ok, null)
                                 .show();
                     });
+                }
+
+                @Override
+                public void onWarning(String modName, String warning) {
+                    Log.w("ModsApply", "Warning for " + modName + ": " + warning);
+                    // Warnings are logged but don't interrupt the process
                 }
             });
         }).start();
