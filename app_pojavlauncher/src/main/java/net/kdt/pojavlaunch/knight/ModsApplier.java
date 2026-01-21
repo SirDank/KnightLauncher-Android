@@ -424,13 +424,13 @@ public class ModsApplier {
                             continue;
                         }
                         
-                        extractZipToDirectory(modFile, classChangesDir, true);
+                        extractZipToDirectory(modFile, classChangesDir, false);
                         stats.classModsApplied++;
                         hasClassMods = true;
                         Log.i(TAG, "Class mod mounted to code/class-changes/");
                     } else {
-                        // Resource mod: extract to rsrc/
-                        extractZipToDirectory(modFile, rsrcDir, true);
+                        // Resource mod: extract to rsrc/ (no file protection by default)
+                        extractZipToDirectory(modFile, rsrcDir, false);
                         stats.resourceModsApplied++;
                         Log.i(TAG, "Resource mod mounted to rsrc/");
                     }
