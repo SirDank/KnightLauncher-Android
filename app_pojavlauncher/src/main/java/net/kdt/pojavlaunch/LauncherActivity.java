@@ -47,6 +47,11 @@ import java.io.File;
 import android.app.ProgressDialog;
 import net.kdt.pojavlaunch.knight.KnightInstaller;
 import net.kdt.pojavlaunch.knight.Progress;
+import net.kdt.pojavlaunch.knight.UpdateChecker;
+import net.kdt.pojavlaunch.utils.DownloadUtils;
+import androidx.core.content.FileProvider;
+import android.net.Uri;
+import android.util.Log;
 
 public class LauncherActivity extends BaseActivity {
     public static final String SETTING_FRAGMENT_TAG = "SETTINGS_FRAGMENT";
@@ -177,6 +182,11 @@ public class LauncherActivity extends BaseActivity {
 
         if (savedInstanceState == null && !new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
             installSpiralKnights();
+        }
+
+        // Check for app updates (only on fresh launch)
+        if (savedInstanceState == null) {
+            checkForAppUpdate();
         }
     }
 
@@ -333,25 +343,41 @@ public class LauncherActivity extends BaseActivity {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Installing Spiral Knights");
         pd.setMessage("Please wait...");
-        pd.setIndeterminate(false);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setMax(100);
+        pd.setProgress(0);
+        pd.setIndeterminate(true);
         pd.setCancelable(false);
         pd.show();
 
         new Thread(new KnightInstaller(new Progress() {
+            private int maxSteps = 100;
+            private int maxPart = 100;
+
             @Override
             public void postStepProgress(int prg) {
+                Tools.runOnUiThread(() -> {
+                    pd.setIndeterminate(false);
+                    pd.setProgress(prg * 100 / maxSteps);
+                });
             }
 
             @Override
             public void postPartProgress(int prg) {
+                Tools.runOnUiThread(() -> {
+                    pd.setIndeterminate(false);
+                    pd.setSecondaryProgress(prg * 100 / maxPart);
+                });
             }
 
             @Override
             public void postMaxSteps(int max) {
+                maxSteps = max > 0 ? max : 100;
             }
 
             @Override
             public void postMaxPart(int max) {
+                maxPart = max > 0 ? max : 100;
             }
 
             @Override
@@ -439,5 +465,118 @@ public class LauncherActivity extends BaseActivity {
         mFragmentView = findViewById(R.id.container_fragment);
         mSettingsButton = findViewById(R.id.setting_button);
         mProgressLayout = findViewById(R.id.progress_layout);
+    }
+
+    /**
+     * Check for app updates from GitHub releases.
+     * Runs asynchronously and shows a dialog if an update is available.
+     */
+    private void checkForAppUpdate() {
+        UpdateChecker.checkForUpdates(BuildConfig.VERSION_NAME, new UpdateChecker.UpdateCheckCallback() {
+            @Override
+            public void onUpdateAvailable(UpdateChecker.ReleaseInfo release) {
+                showUpdateDialog(release);
+            }
+
+            @Override
+            public void onNoUpdate() {
+                // Silent - no action needed
+                Log.i("UpdateChecker", "No update available");
+            }
+
+            @Override
+            public void onError(String error) {
+                // Silent failure - don't bother user with network errors
+                Log.e("UpdateChecker", "Update check failed: " + error);
+            }
+        });
+    }
+
+    /**
+     * Show a dialog prompting the user to update.
+     */
+    private void showUpdateDialog(UpdateChecker.ReleaseInfo release) {
+        String message = getString(R.string.update_available_message, 
+            BuildConfig.VERSION_NAME, release.versionName);
+        
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.update_available_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.update_now, (d, w) -> downloadAndInstallUpdate(release))
+            .setNegativeButton(R.string.update_later, null)
+            .show();
+    }
+
+    /**
+     * Download the APK update and install it.
+     */
+    private void downloadAndInstallUpdate(UpdateChecker.ReleaseInfo release) {
+        mWakeLockUtils.acquire(this, "KnightLauncher:UpdateWakeLock");
+
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle(R.string.downloading_update);
+        pd.setMessage(release.releaseName);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setMax(100);
+        pd.setProgress(0);
+        pd.setCancelable(false);
+        pd.show();
+
+        new Thread(() -> {
+            try {
+                // Save APK to app's external files directory
+                File apkFile = new File(getExternalFilesDir(null), "KnightLauncher-update.apk");
+                
+                // Delete old update file if exists
+                if (apkFile.exists()) {
+                    apkFile.delete();
+                }
+
+                // Download with progress monitoring
+                DownloadUtils.downloadFileMonitored(
+                    release.apkUrl,
+                    apkFile,
+                    null,
+                    (downloaded, total) -> {
+                        int percent = total > 0 ? (int) ((downloaded * 100L) / total) : 0;
+                        runOnUiThread(() -> pd.setProgress(percent));
+                    }
+                );
+
+                runOnUiThread(() -> {
+                    pd.dismiss();
+                    mWakeLockUtils.release();
+                    installApk(apkFile);
+                });
+
+            } catch (IOException e) {
+                Log.e("UpdateChecker", "Download failed", e);
+                runOnUiThread(() -> {
+                    pd.dismiss();
+                    mWakeLockUtils.release();
+                    Toast.makeText(LauncherActivity.this, 
+                        R.string.update_download_failed, Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * Launch the Android package installer for the downloaded APK.
+     */
+    private void installApk(File apkFile) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri apkUri = FileProvider.getUriForFile(this,
+                getString(R.string.shareProviderAuthority), apkFile);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("UpdateChecker", "Failed to start install intent", e);
+            Toast.makeText(this, "Failed to open installer: " + e.getMessage(), 
+                Toast.LENGTH_LONG).show();
+        }
     }
 }

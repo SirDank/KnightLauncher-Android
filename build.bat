@@ -98,6 +98,18 @@ if exist "scripts\languagelist_updater.bat" (
 echo.
 
 :: =============================================================================
+:: Patch MobileGlues for ARM-only build
+:: =============================================================================
+
+echo [INFO] Patching MobileGlues for ARM-only build...
+
+:: Skip x86/x86_64 builds (only ARM devices are supported)
+powershell -Command "$file = 'MobileGlues\build.gradle.kts'; $content = Get-Content $file -Raw; $newContent = $content -replace 'ndkVersion = \"27.3.13750724\"', ('ndkVersion = \"27.3.13750724\"' + \"`r`n        ndk {`r`n            // Only build for ARM architectures (skip x86/x86_64 which are for emulators)`r`n            abiFilters += listOf(\"arm64-v8a\", \"armeabi-v7a\")`r`n        }\"); Set-Content $file $newContent -NoNewline"
+
+echo [SUCCESS] MobileGlues patched for ARM-only build.
+echo.
+
+:: =============================================================================
 :: Build GLFW Stub
 :: =============================================================================
 
@@ -117,7 +129,7 @@ echo.
 
 echo [INFO] Building KnightLauncher APK...
 
-call gradlew.bat :app_pojavlauncher:assembleDebug --build-cache
+call gradlew.bat :app_pojavlauncher:assembleRelease --build-cache
 if errorlevel 1 (
     echo [ERROR] Failed to build APK.
     goto :error_exit
@@ -125,7 +137,7 @@ if errorlevel 1 (
 
 :: Create output directory and copy APK
 if not exist "out" mkdir "out"
-copy /y "app_pojavlauncher\build\outputs\apk\debug\app_pojavlauncher-debug.apk" "out\KnightLauncher.apk" >nul
+copy /y "app_pojavlauncher\build\outputs\apk\release\app_pojavlauncher-release.apk" "out\KnightLauncher.apk" >nul
 
 echo [SUCCESS] APK built successfully!
 echo.

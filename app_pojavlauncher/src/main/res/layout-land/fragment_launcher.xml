@@ -22,20 +22,36 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.kdt.mcgui.LauncherMenuButton
-                android:id="@+id/custom_control_button"
-                style="@style/LauncherMenuButton.Universal"
+            <LinearLayout
+                android:id="@+id/controls_row"
                 android:layout_width="match_parent"
-                android:drawableStart="@drawable/ic_menu_custom_controls"
-                android:text="@string/mcl_option_customcontrol"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.kdt.mcgui.LauncherMenuButton
+                    android:id="@+id/custom_control_button"
+                    style="@style/LauncherMenuButton.Universal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_menu_custom_controls"
+                    android:text="@string/mcl_option_customcontrol" />
+
+                <com.kdt.mcgui.LauncherMenuButton
+                    android:id="@+id/reset_controls_button"
+                    style="@style/LauncherMenuButton.Universal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_menu_refresh"
+                    android:text="@string/mcl_button_reset_controls" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/open_share_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/custom_control_button">
+                app:layout_constraintTop_toBottomOf="@id/controls_row">
 
                 <com.kdt.mcgui.LauncherMenuButton
                     android:id="@+id/open_files_button"
@@ -54,20 +70,20 @@
                     android:text="@string/main_share_logs" />
             </LinearLayout>
 
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/reset_game_files_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_menu_delete_forever"
+                android:text="@string/mcl_button_reset_game_files"
+                app:layout_constraintTop_toBottomOf="@id/open_share_row" />
+
             <LinearLayout
-                android:id="@+id/reset_download_row"
+                android:id="@+id/mods_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/open_share_row">
-
-                <com.kdt.mcgui.LauncherMenuButton
-                    android:id="@+id/reset_game_files_button"
-                    style="@style/LauncherMenuButton.Universal"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_menu_delete_forever"
-                    android:text="@string/mcl_button_reset_game_files" />
+                app:layout_constraintTop_toBottomOf="@id/reset_game_files_button">
 
                 <com.kdt.mcgui.LauncherMenuButton
                     android:id="@+id/download_mods_button"
@@ -76,6 +92,14 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_download"
                     android:text="@string/mcl_button_download_mods" />
+
+                <com.kdt.mcgui.LauncherMenuButton
+                    android:id="@+id/apply_mods_button"
+                    style="@style/LauncherMenuButton.Universal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_menu_install_jar"
+                    android:text="@string/mcl_button_apply_mods" />
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/reset_download_row">
+                app:layout_constraintTop_toBottomOf="@id/mods_row">
 
                 <com.kdt.mcgui.LauncherMenuButton
                     android:id="@+id/github_button"

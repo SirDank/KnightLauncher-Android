@@ -133,15 +133,21 @@
     <string name="mcl_button_github">GitHub</string>
     <string name="mcl_button_open_directory">OPEN GAME DIR</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
-    <string name="mcl_button_reset_game_files">UPDATE / RESET</string>
+    <string name="mcl_button_reset_game_files">UPDATE / RESET GAME</string>
     <string name="mcl_disable_gestures">Disable gestures</string>
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
     <string name="mcl_disable_swap_hand">Disable double tap to swap hands</string>
     <string name="mcl_disable_swap_hand_subtitle">Disables double tapping on the hotbar item to swap it in the second hand.</string>
-    <string name="mcl_download_mods_complete">Mods downloaded successfully!</string>
-    <string name="mcl_download_mods_confirmation">Are you sure you want to delete the mods folder? This will re-download my custom modpack</string>
+    <string name="mcl_download_mods_complete">Mods synced! Downloaded: %1$d, Unchanged: %2$d, Removed: %3$d</string>
+    <string name="mcl_download_mods_confirmation">Sync mods with the latest version? This will download new/updated mods and remove deprecated ones.</string>
     <string name="mcl_download_mods_failed">Failed to download mods</string>
     <string name="mcl_download_mods_progress">Downloading mods: %1$d/%2$d</string>
+    <string name="mcl_button_apply_mods">Apply Mods</string>
+    <string name="mcl_apply_mods_confirmation">Apply mods to the game? This will rebuild original resources and overlay downloaded mods.</string>
+    <string name="mcl_apply_mods_no_mods">No mods found. Download mods first before applying.</string>
+    <string name="mcl_apply_mods_progress">Applying mods: %1$d/%2$d</string>
+    <string name="mcl_apply_mods_complete">Mods applied! Resources rebuilt: %1$d, Mods applied: %2$d</string>
+    <string name="mcl_apply_mods_failed">Failed to apply mods</string>
     <string name="mcl_gamepad_forcedSDL">Forcibly start SDL controller handling</string>
     <string name="mcl_gamepad_forcedSDL_subtitle">Can allow old versions of Legacy4J to use SDL backend</string>
     <string name="mcl_gamepad_SDL">Enable SDL controller backend</string>
@@ -150,6 +156,9 @@
     <string name="mcl_memory_allocation_subtitle">Controls how much memory is given to Minecraft.</string>
     <string name="mcl_option_customcontrol">Custom controls</string>
     <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
+    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
+    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
+    <string name="mcl_reset_controls_complete">Controls reset to default</string>
     <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; only, fast)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ only</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ only, fast)</string>
@@ -291,4 +300,12 @@
     <string name="tasks_ongoing">Tasks are in progress, please wait</string>
     <string name="toast_permission_denied">The read/write to storage permission is required!</string>
     <string name="warning_remove_account">This account will be removed!</string>
+
+    <!-- App Update -->
+    <string name="update_available_title">Update Available</string>
+    <string name="update_available_message">A new version of KnightLauncher is available!\n\nCurrent: %1$s\nNew: %2$s\n\nWould you like to update now?</string>
+    <string name="update_now">Update Now</string>
+    <string name="update_later">Later</string>
+    <string name="downloading_update">Downloading Update</string>
+    <string name="update_download_failed">Failed to download update. Please try again later.</string>
 </resources>

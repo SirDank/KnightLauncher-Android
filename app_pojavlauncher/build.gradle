@@ -10,6 +10,7 @@ def getVersionName = {
     ByteArrayOutputStream BRANCH = new ByteArrayOutputStream()
     // Used by the fallback for github actions
     ByteArrayOutputStream TAG_PART_COMMIT = new ByteArrayOutputStream()
+    ByteArrayOutputStream LATEST_TAG = new ByteArrayOutputStream()
     String TAG_STRING
 
     exec {
@@ -32,6 +33,16 @@ def getVersionName = {
             } catch (Exception e) {
             }
         }
+        
+        // Also get the latest tag for version info
+        exec {
+            try {
+                commandLine 'git', 'describe', '--tags', '--abbrev=0'
+                ignoreExitValue true
+                standardOutput = LATEST_TAG
+            } catch (Exception e) {
+            }
+        }
     }
 
 
@@ -42,8 +53,13 @@ def getVersionName = {
              //Fallback no repo
             return ("LOCAL-" + "${getDate()}")
         }else {
-            // Used by github actions
-            TAG_STRING =  'knightlauncher-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
+            // Used by github actions - include the version tag for update checking
+            // Format: knightlauncher-v0.3.4-20260119-commit
+            String latestTag = LATEST_TAG.toString().trim()
+            if (latestTag == "") {
+                latestTag = "v0.0.0"  // Fallback if no tags exist
+            }
+            TAG_STRING =  'knightlauncher-' + latestTag + "-" + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
         }
 
     }
@@ -75,6 +91,7 @@ android {
 
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false  // Disable lintVital for release builds
     }
 
     signingConfigs {
@@ -99,7 +116,10 @@ android {
         versionCode 10000000
         versionName getVersionName()
         multiDexEnabled true //important
-        resValue 'string', 'curseforge_api_key', 'DUMMY'
+        ndk {
+            // Only build for ARM architectures (skip x86/x86_64 which are for emulators)
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
     }
 
     buildTypes {
@@ -127,11 +147,11 @@ android {
             // Don't set to true or java.awt will be a.a or something similar.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // defaultConfig already set
-            // multiDexEnabled = true
-            // debuggable = true
+            // Sign with debug keystore so the APK can be installed
+            signingConfig signingConfigs.customDebug
             resValue 'string', 'storageProviderAuthorities', 'com.sirdank.knightlauncher.scoped.gamefolder'
             resValue 'string', 'application_package', 'com.sirdank.knightlauncher'
+            resValue 'string', 'shareProviderAuthority', 'com.sirdank.knightlauncher.scoped.controlfolder'
         }
         gplay {
             initWith release
@@ -180,7 +200,9 @@ android {
 
 afterEvaluate {
     // Explicit dependencies for which the apk relies on
-    tasks.mergeDebugAssets.dependsOn(":arc_dns_injector:jar", ":lwjgl2_methods_injector:jar", ":jre_lwjgl3glfw:jar")
+    def jarTasks = [":arc_dns_injector:jar", ":lwjgl2_methods_injector:jar", ":jre_lwjgl3glfw:jar"]
+    tasks.mergeDebugAssets.dependsOn(jarTasks)
+    tasks.mergeReleaseAssets.dependsOn(jarTasks)
 }
 
 dependencies {

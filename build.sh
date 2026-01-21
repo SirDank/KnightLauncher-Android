@@ -176,6 +176,15 @@ update_language_list() {
     fi
 }
 
+patch_mobileglues() {
+    info "Patching MobileGlues for ARM-only build..."
+    
+    # Skip x86/x86_64 builds (only ARM devices are supported)
+    sed -i 's/ndkVersion = "27.3.13750724"/ndkVersion = "27.3.13750724"\n        ndk {\n            \/\/ Only build for ARM architectures (skip x86\/x86_64 which are for emulators)\n            abiFilters += listOf("arm64-v8a", "armeabi-v7a")\n        }/' MobileGlues/build.gradle.kts
+    
+    success "MobileGlues patched for ARM-only build."
+}
+
 build_glfw_stub() {
     info "Building GLFW stub (jre_lwjgl3glfw)..."
     
@@ -186,11 +195,11 @@ build_glfw_stub() {
 build_apk() {
     info "Building KnightLauncher APK..."
     
-    ./gradlew :app_pojavlauncher:assembleDebug --build-cache
+    ./gradlew :app_pojavlauncher:assembleRelease --build-cache
     
     # Create output directory and copy APK
     mkdir -p out
-    cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher.apk
+    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
     
     success "APK built successfully!"
     success "Output: $(realpath out/KnightLauncher.apk)"
@@ -210,6 +219,7 @@ main() {
     check_requirements
     download_jres
     update_language_list
+    patch_mobileglues
     build_glfw_stub
     build_apk
     

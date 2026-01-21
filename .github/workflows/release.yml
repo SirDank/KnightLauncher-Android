@@ -36,25 +36,25 @@ jobs:
           branch: buildjre8
           name: jre8-pojav
 
-      - name: Get JRE17
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre-new
-          workflow_conclusion: completed
-          repo: AngelAuraMC/angelauramc-openjdk-build
-          branch: buildjre17-21
-          name: jre17-pojav
+      # - name: Get JRE17
+      #   uses: dawidd6/action-download-artifact@v9
+      #   with:
+      #     workflow: build.yml
+      #     path: app_pojavlauncher/src/main/assets/components/jre-new
+      #     workflow_conclusion: completed
+      #     repo: AngelAuraMC/angelauramc-openjdk-build
+      #     branch: buildjre17-21
+      #     name: jre17-pojav
 
-      - name: Get JRE21
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre-21
-          workflow_conclusion: completed
-          repo: AngelAuraMC/angelauramc-openjdk-build
-          branch: buildjre17-21
-          name: jre21-pojav
+      # - name: Get JRE21
+      #   uses: dawidd6/action-download-artifact@v9
+      #   with:
+      #     workflow: build.yml
+      #     path: app_pojavlauncher/src/main/assets/components/jre-21
+      #     workflow_conclusion: completed
+      #     repo: AngelAuraMC/angelauramc-openjdk-build
+      #     branch: buildjre17-21
+      #     name: jre21-pojav
 
       - uses: gradle/actions/setup-gradle@v4
         with:
@@ -69,6 +69,11 @@ jobs:
             caches/build-cache-1
             caches/*/gc.properties
 
+      - name: Patch MobileGlues for ARM-only build
+        run: |
+          # Skip x86/x86_64 builds for faster CI (only ARM devices are supported)
+          sed -i 's/ndkVersion = "27.3.13750724"/ndkVersion = "27.3.13750724"\n        ndk {\n            // Only build for ARM architectures (skip x86/x86_64 which are for emulators)\n            abiFilters += listOf("arm64-v8a", "armeabi-v7a")\n        }/' MobileGlues/build.gradle.kts
+
       - name: Build JRE JAR files
         run: |
           ./scripts/languagelist_updater.sh
@@ -79,8 +84,8 @@ jobs:
 
       - name: Build Release APK
         run: |
-          # Build the launcher in release mode
-          gradle :app_pojavlauncher:assembleDebug --build-cache
+          # Build the launcher
+          gradle :app_pojavlauncher:assembleRelease --build-cache
 
       - name: Determine Version
         id: version
@@ -95,7 +100,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
