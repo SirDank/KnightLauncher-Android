@@ -323,14 +323,16 @@ public class KnightInstaller implements Runnable {
         pr.setPartIndeterminate(true);
 
         File getdownTxt = new File(spiral, "getdown.txt");
-        if (!getdownTxt.exists()) {
-            throw new IOException("getdown.txt not found");
-        }
 
         String appbase = null;
         String version = null;
         List<String> resources = new ArrayList<>();
         List<String> uresources = new ArrayList<>();
+
+        // Always fetch the full getdown.txt from the correct URL
+        pr.postLogLine("Fetching latest getdown.txt from server...", null);
+        String getdownUrl = "https://gamemedia2.spiralknights.com/spiral/client/getdown.txt";
+        Utils.downloadFile(getdownUrl, getdownTxt, pr);
 
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
             String line;
@@ -342,52 +344,13 @@ public class KnightInstaller implements Runnable {
                     version = line.substring("version = ".length()).trim();
                 } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
-                    if (!res.startsWith("[")) { // Ignore platform specific for now unless
-                                                // it matches our platform, but
-                                                // simpler to ignore
+                    if (!res.startsWith("[")) {
                         resources.add(res);
                     }
                 } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
                     if (!res.startsWith("[")) {
                         uresources.add(res);
-                    }
-                }
-            }
-        }
-
-        // If we have appbase but no version, it means we have a stub getdown.txt (like
-        // from the installer)
-        // We need to fetch the full getdown.txt from the appbase.
-        if (appbase != null && version == null) {
-            pr.postLogLine("Detected stub getdown.txt, fetching full version...", null);
-            String getdownUrl = appbase + "getdown.txt";
-            Utils.downloadFile(getdownUrl, getdownTxt, pr);
-
-            // Re-parse the new getdown.txt
-            resources.clear();
-            uresources.clear();
-            appbase = null;
-            version = null;
-
-            try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
-                String line;
-                while ((line = rdr.readLine()) != null) {
-                    line = line.trim();
-                    if (line.startsWith("appbase = ")) {
-                        appbase = line.substring("appbase = ".length()).trim();
-                    } else if (line.startsWith("version = ")) {
-                        version = line.substring("version = ".length()).trim();
-                    } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
-                        String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[")) {
-                            resources.add(res);
-                        }
-                    } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
-                        String res = line.substring(line.indexOf(" = ") + 3).trim();
-                        if (!res.startsWith("[")) {
-                            uresources.add(res);
-                        }
                     }
                 }
             }
@@ -401,9 +364,10 @@ public class KnightInstaller implements Runnable {
         if (!baseUrl.endsWith("/"))
             baseUrl += "/";
 
-        int totalFiles = resources.size() + uresources.size();
+        int totalDownloads = resources.size() + uresources.size();
+        int totalUnpacks = uresources.size();
         int currentFile = 0;
-        pr.postMaxPart(totalFiles);
+        pr.postMaxPart(totalDownloads + totalUnpacks);
         pr.setPartIndeterminate(false);
 
         // Download resources
@@ -412,27 +376,30 @@ public class KnightInstaller implements Runnable {
             pr.postPartProgress(currentFile++);
             File dest = new File(spiral, res);
             if (dest.exists())
-                continue; // Skip if already exists? Or overwrite? Getdown usually checks digests. For
-                          // now, skip if exists to save time, or overwrite to be safe? Let's overwrite to
-                          // ensure correctness.
-            // Actually, let's check if it exists to avoid re-downloading on retry.
-            // But if it's partial?
-            // Let's overwrite for now.
+                continue;
             Utils.downloadFile(baseUrl + res, dest, pr);
         }
 
-        // Download and unpack uresources
+        // Download uresources
         for (String res : uresources) {
-            pr.postLogLine("Downloading and unpacking " + res, null);
+            pr.postLogLine("Downloading " + res, null);
             pr.postPartProgress(currentFile++);
             File dest = new File(spiral, res);
             Utils.downloadFile(baseUrl + res, dest, pr);
-            File unpackTarget = spiral;
-            if (res.contains("full-music-bundle.jar") || res.contains("full-rest-bundle.jar")
-                    || res.contains("intro-bundle.jar")) {
-                unpackTarget = new File(spiral, "rsrc");
+        }
+
+        // Unpack all uresources
+        for (String res : uresources) {
+            File dest = new File(spiral, res);
+            if (dest.exists()) {
+                pr.postLogLine("Unpacking " + res, null);
+                pr.postPartProgress(currentFile++);
+                File unpackTarget = spiral;
+                if (res.startsWith("rsrc/")) {
+                    unpackTarget = new File(spiral, "rsrc");
+                }
+                unpack(dest, unpackTarget);
             }
-            unpack(dest, unpackTarget);
         }
 
         pr.postLogLine("Download complete.", null);
