@@ -60,6 +60,16 @@ public class UpdateChecker {
     public static void checkForUpdates(String currentVersion, UpdateCheckCallback callback) {
         new Thread(() -> {
             try {
+                // Compare versions
+                String currentClean = cleanVersion(currentVersion);
+                
+                // Skip update check for test builds (version 0.0.0 means no tags in repo)
+                if (currentClean.isEmpty() || currentClean.equals("0.0.0")) {
+                    Log.i(TAG, "Skipping update check for test build: " + currentVersion);
+                    Tools.runOnUiThread(() -> callback.onNoUpdate());
+                    return;
+                }
+                
                 ReleaseInfo latestRelease = fetchLatestRelease();
                 
                 if (latestRelease == null) {
@@ -67,8 +77,6 @@ public class UpdateChecker {
                     return;
                 }
                 
-                // Compare versions
-                String currentClean = cleanVersion(currentVersion);
                 String latestClean = latestRelease.versionName;
                 
                 Log.i(TAG, "Current version: " + currentClean + ", Latest: " + latestClean);
