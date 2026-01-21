@@ -33,8 +33,9 @@ cd "$SCRIPT_DIR"
 # Configuration
 JRE_REPO="AngelAuraMC/angelauramc-openjdk-build"
 JRE8_BRANCH="buildjre8"
-JRE17_BRANCH="buildjre17-21"
-JRE21_BRANCH="buildjre17-21"
+# JRE 17/21 are disabled - Spiral Knights only uses JRE 8
+# JRE17_BRANCH="buildjre17-21"
+# JRE21_BRANCH="buildjre17-21"
 ASSETS_DIR="app_pojavlauncher/src/main/assets/components"
 
 # =============================================================================
@@ -136,31 +137,20 @@ download_from_nightly() {
     success "Extracted $artifact_name to $dest_dir"
 }
 
-download_jres() {
-    info "Setting up JRE components..."
+download_jre() {
+    info "Setting up JRE 8 component..."
     
-    # Create directories
+    # Create directory
     mkdir -p "$ASSETS_DIR/jre"
-    mkdir -p "$ASSETS_DIR/jre-new"
-    mkdir -p "$ASSETS_DIR/jre-21"
     
-    # Check if JREs already exist
+    # Note: JRE 17/21 are disabled as Spiral Knights only uses JRE 8
+    # The jre-new and jre-21 directories are not needed
+    
+    # Check if JRE 8 already exists
     if [[ -d "$ASSETS_DIR/jre" && $(ls -A "$ASSETS_DIR/jre" 2>/dev/null) ]]; then
         warning "JRE 8 directory already exists. Skipping download."
     else
         download_github_artifact "$JRE_REPO" "$JRE8_BRANCH" "jre8-pojav" "$ASSETS_DIR/jre" || true
-    fi
-    
-    if [[ -d "$ASSETS_DIR/jre-new" && $(ls -A "$ASSETS_DIR/jre-new" 2>/dev/null) ]]; then
-        warning "JRE 17 directory already exists. Skipping download."
-    else
-        download_github_artifact "$JRE_REPO" "$JRE17_BRANCH" "jre17-pojav" "$ASSETS_DIR/jre-new" || true
-    fi
-    
-    if [[ -d "$ASSETS_DIR/jre-21" && $(ls -A "$ASSETS_DIR/jre-21" 2>/dev/null) ]]; then
-        warning "JRE 21 directory already exists. Skipping download."
-    else
-        download_github_artifact "$JRE_REPO" "$JRE21_BRANCH" "jre21-pojav" "$ASSETS_DIR/jre-21" || true
     fi
 }
 
@@ -217,7 +207,7 @@ main() {
     echo ""
     
     check_requirements
-    download_jres
+    download_jre
     update_language_list
     patch_mobileglues
     build_glfw_stub

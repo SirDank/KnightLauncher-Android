@@ -15,7 +15,13 @@
   </a>
 </p>
 
-KnightLauncher is a launcher that allows you to play **Spiral Knights** on your Android device. It is a fork of [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android)
+<p align="center">
+  <b>Play Spiral Knights on your Android device! 🎮</b>
+</p>
+
+KnightLauncher is a dedicated launcher that allows you to play **Spiral Knights** on your Android device. It is a fork of [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android), tailored specifically for the Spiral Knights experience.
+
+---
 
 ## 📥 Download & Installation
 
@@ -30,63 +36,180 @@ KnightLauncher is a launcher that allows you to play **Spiral Knights** on your 
    - Tap `Install` and wait for installation to complete
 4. **Launch KnightLauncher** and start playing Spiral Knights!
 
+> **Note:** The APK is signed for easy installation. No need to worry about unsigned APK warnings!
+
+---
+
 ## ⚠️ Public Beta Notice
 
 KnightLauncher for Android is currently in **public beta**. You may encounter bugs or issues. Please report them on our [Issues page](https://github.com/SirDank/KnightLauncher-Android/issues).
 
+---
+
 ## ✨ Features
 
-- KnightLauncher is a dedicated launcher for the Java-based MMO **Spiral Knights**.
-- It handles the downloading, installation, and execution of the game on Android.
-- OpenJDK 8/11/17/21 Support
-- Virtual Controls
-- Optimization for Touch Screens
+### Core Features
 
-## Building
+- 🎮 **Dedicated Spiral Knights Launcher**
+- ☕ **OpenJDK 8 Support**
+- 🕹️ **Virtual Controls**
 
-### Quick Build (Recommended)
+### Mods & Customization
 
-The easiest way to build KnightLauncher is to use the pre-built JREs provided by our CI.
+- 📥 **Mods Downloader** — Download mods directly from within the app with progress tracking
+- 🔄 **Incremental Mod Sync** — Smart synchronization using SHA hash comparison to minimize downloads and remove deprecated mods
+- 🔧 **Apply Mods** — Rebuild game resources and overlay downloaded mods with one tap
 
-1. Clone the repository: `git clone --recursive https://github.com/SirDank/KnightLauncher-Android.git`
-2. Build the launcher: `./gradlew :app_pojavlauncher:assembleDebug` (Use `gradlew.bat` on Windows)
+### App Management
 
-The built APK will be located in `app_pojavlauncher/build/outputs/apk/debug/`.
+- 🔄 **In-App Updates** — Automatic update checker that fetches the latest release from GitHub and prompts you to update
+- 🔃 **Update / Reset Game** — Reinstall or update the game with a single tap
+- 🎛️ **Reset Controls** — Restore custom controls to their default state
 
-### Detailed Build
+---
 
-If you need more control over the build process, follow these steps:
+## 📋 Supported Devices
 
-1. **Java Runtime Environment (JRE):** Download the `jre8-pojav` artifact from our [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions). This package contains pre-built JREs for all supported architectures. If you need to build the JRE yourself, follow the instructions in the [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch) repository.
+| Architecture | Support |
+|-------------|---------|
+| `arm64-v8a` | ✅ Full Support |
+| `armeabi-v7a` | ✅ Full Support |
+| `x86` | ❌ Not Supported (Emulators) |
+| `x86_64` | ❌ Not Supported (Emulators) |
 
-2. **LWJGL:** The build instructions for the custom LWJGL are available over the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
+> **Note:** KnightLauncher is built exclusively for ARM devices. x86/x86_64 architectures (typically used in emulators) are not supported.
 
-3. **Language List:** Because languages are auto-added by Crowdin, you need to run the language list generator before building. In the project directory, run:
-    - Linux/macOS:
+---
 
-        ```bash
-        chmod +x scripts/languagelist_updater.sh
-        bash scripts/languagelist_updater.sh
-        ```
+## 🛠️ Building
 
-    - Windows:
+### Prerequisites
 
-        ```batch
-        scripts\languagelist_updater.bat
-        ```
+- **JDK 21** (Temurin recommended)
+- **Git** with submodules support
+- **Internet connection** (for downloading JRE artifacts)
+- Platform-specific tools:
+  - **Linux/macOS:** `curl`, `unzip`
+  - **Windows:** PowerShell
 
-4. **Build GLFW stub:** `./gradlew :jre_lwjgl3glfw:build`
+### Quick Build (Using Build Scripts)
 
-5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug`
+We provide convenient build scripts that handle everything automatically:
 
-## Credits & Dependencies
+#### Linux/macOS
 
-- [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): The base of this project.
-- [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android): The immediate parent fork.
-- [Spiral Knights](https://www.spiralknights.com/): The game itself (owned by Grey Havens).
-- [Boardwalk](https://github.com/zhuowei/Boardwalk): The original Android Java launcher.
-- [GL4ES](https://github.com/ptitSeb/gl4es), [MobileGlues](https://github.com/MobileGL-Dev/MobileGlues), [OpenAL-Soft](https://github.com/kcat/openal-soft): Native libraries for graphics and audio.
+```bash
+# Clone the repository with submodules
+git clone --recursive https://github.com/SirDank/KnightLauncher-Android.git
+cd KnightLauncher-Android
 
-## License
+# Run the build script
+chmod +x build.sh
+./build.sh
+```
 
-KnightLauncher is licensed under [GNU LGPLv3](LICENSE). Spiral Knights is a trademark of Grey Havens.
+#### Windows
+
+```batch
+:: Clone the repository with submodules
+git clone --recursive https://github.com/SirDank/KnightLauncher-Android.git
+cd KnightLauncher-Android
+
+:: Run the build script
+build.bat
+```
+
+The build scripts will:
+
+1. ✅ Check requirements (JDK 21, curl/PowerShell, etc.)
+2. 📥 Download JRE components automatically
+3. 🌐 Update the language list
+4. 🔧 Patch MobileGlues for ARM-only builds
+5. 🏗️ Build the GLFW stub
+6. 📦 Build the signed release APK
+
+**Output:** `out/KnightLauncher.apk`
+
+### Manual Build
+
+If you prefer manual control over the build process:
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone --recursive https://github.com/SirDank/KnightLauncher-Android.git
+   cd KnightLauncher-Android
+   ```
+
+2. **Download JRE 8:**
+   Download the `jre8-pojav` artifact from [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) and extract to `app_pojavlauncher/src/main/assets/components/jre/`
+
+3. **Update language list:**
+
+   ```bash
+   # Linux/macOS
+   chmod +x scripts/languagelist_updater.sh
+   bash scripts/languagelist_updater.sh
+
+   # Windows
+   scripts\languagelist_updater.bat
+   ```
+
+4. **Build GLFW stub:**
+
+   ```bash
+   ./gradlew :jre_lwjgl3glfw:build --build-cache
+   ```
+
+5. **Build the APK:**
+
+   ```bash
+   # Debug build
+   ./gradlew :app_pojavlauncher:assembleDebug
+
+   # Release build (signed)
+   ./gradlew :app_pojavlauncher:assembleRelease
+   ```
+
+**APK Locations:**
+
+- Debug: `app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk`
+- Release: `app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk`
+
+---
+
+## 🔄 CI/CD Workflows
+
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| **Android CI (Testing)** | Manual | Builds test APK for development validation |
+| **Android Release (Public Beta)** | Manual (with version input) | Creates GitHub release with signed APK |
+
+Both workflows:
+
+- Use JDK 21 and Gradle 8.11
+- Download JRE 8 from [AngelAuraMC/angelauramc-openjdk-build](https://github.com/AngelAuraMC/angelauramc-openjdk-build)
+- Patch MobileGlues for ARM-only builds
+- Build signed release APKs
+
+---
+
+## 🙏 Credits & Dependencies
+
+| Project | Description |
+|---------|-------------|
+| [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) | The base of this project |
+| [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android) | The immediate parent fork |
+| [Spiral Knights](https://www.spiralknights.com/) | The game itself (owned by Grey Havens) |
+| [Boardwalk](https://github.com/zhuowei/Boardwalk) | The original Android Java launcher |
+| [GL4ES](https://github.com/ptitSeb/gl4es) | OpenGL to OpenGL ES translation |
+| [MobileGlues](https://github.com/MobileGL-Dev/MobileGlues) | Mobile OpenGL utilities |
+| [OpenAL-Soft](https://github.com/kcat/openal-soft) | Cross-platform audio library |
+
+---
+
+## 📄 License
+
+KnightLauncher is licensed under [GNU LGPLv3](LICENSE).
+
+Spiral Knights is a trademark of Grey Havens.

@@ -60,21 +60,17 @@ echo.
 :: Download JRE Components
 :: =============================================================================
 
-echo [INFO] Setting up JRE components...
+echo [INFO] Setting up JRE 8 component...
 
-:: Create directories
+:: Create directory (JRE 17/21 are disabled - Spiral Knights only uses JRE 8)
 if not exist "%ASSETS_DIR%\jre" mkdir "%ASSETS_DIR%\jre"
-if not exist "%ASSETS_DIR%\jre-new" mkdir "%ASSETS_DIR%\jre-new"
-if not exist "%ASSETS_DIR%\jre-21" mkdir "%ASSETS_DIR%\jre-21"
 
-:: Check and download JRE 8
+:: Check and download JRE 8 only
 call :check_and_download_jre jre jre8-pojav
 
-:: Check and download JRE 17
-call :check_and_download_jre jre-new jre17-pojav
-
-:: Check and download JRE 21
-call :check_and_download_jre jre-21 jre21-pojav
+:: Note: JRE 17/21 downloads are disabled as Spiral Knights only uses JRE 8
+:: call :check_and_download_jre jre-new jre17-pojav
+:: call :check_and_download_jre jre-21 jre21-pojav
 
 echo.
 
