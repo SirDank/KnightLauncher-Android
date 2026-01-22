@@ -74,19 +74,6 @@ jobs:
           # Skip x86/x86_64 builds for faster CI (only ARM devices are supported)
           sed -i 's/ndkVersion = "27.3.13750724"/ndkVersion = "27.3.13750724"\n        ndk {\n            \/\/ Only build for ARM architectures (skip x86\/x86_64 which are for emulators)\n            abiFilters += listOf("arm64-v8a", "armeabi-v7a")\n        }/' MobileGlues/build.gradle.kts
 
-      - name: Build JRE JAR files
-        run: |
-          ./scripts/languagelist_updater.sh
-
-          mkdir -p out
-          # Build JRE JAR files (security manager, etc...)
-          gradle :jre_lwjgl3glfw:build --build-cache
-
-      - name: Build Release APK
-        run: |
-          # Build the launcher
-          gradle :app_pojavlauncher:assembleRelease --build-cache
-
       - name: Determine Version
         id: version
         run: |
@@ -97,6 +84,21 @@ jobs:
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Release version: $VERSION"
+
+      - name: Build JRE JAR files
+        run: |
+          ./scripts/languagelist_updater.sh
+
+          mkdir -p out
+          # Build JRE JAR files (security manager, etc...)
+          gradle :jre_lwjgl3glfw:build --build-cache
+
+      - name: Build Release APK
+        env:
+          VERSION_OVERRIDE: ${{ steps.version.outputs.version }}
+        run: |
+          # Build the launcher with explicit version
+          gradle :app_pojavlauncher:assembleRelease --build-cache
 
       - name: Rename APK
         run: |

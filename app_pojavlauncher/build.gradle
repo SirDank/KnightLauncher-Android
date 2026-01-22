@@ -5,6 +5,13 @@ plugins {
 static def getDate() { return new Date().format('yyyyMMdd') }
 
 def getVersionName = {
+    // Check for VERSION_OVERRIDE environment variable (used by release workflow)
+    String versionOverride = System.getenv("VERSION_OVERRIDE")
+    if (versionOverride != null && !versionOverride.trim().isEmpty()) {
+        println "Using VERSION_OVERRIDE: " + versionOverride
+        return versionOverride.trim()
+    }
+    
     // Get the last version tag, as well as the short head of the last commit
     ByteArrayOutputStream TAG = new ByteArrayOutputStream()
     ByteArrayOutputStream BRANCH = new ByteArrayOutputStream()
