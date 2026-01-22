@@ -4,9 +4,6 @@ import java.lang.instrument.Instrumentation;
 
 public class startInjectors {
     public static void premain(String args, Instrumentation inst) {
-        // Suppress LWJGL2 debug log spam (cursor/grab messages)
-        DebugLogSuppressor.premain(args, inst);
-        
         try {
             // Check if we have the asm classes we need
             Class.forName("org.objectweb.asm.ClassReader");
@@ -18,6 +15,10 @@ public class startInjectors {
             String implVersion = asmPackage.getImplementationVersion();
             if (implVersion == null) implVersion = "not found";
             System.out.println("Amethyst-Android: Detected ASM version: " + implVersion);
+            
+            // Suppress LWJGL2 debug log spam (cursor/grab messages)
+            DebugLogSuppressor.premain(args, inst);
+            
             ALC10Injector.premain(args, inst);
             // This is the version we override old asm vers with. So we add the patches
             // so the older version bugs are ported.
