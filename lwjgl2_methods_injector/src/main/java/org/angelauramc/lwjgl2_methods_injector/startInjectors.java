@@ -4,6 +4,9 @@ import java.lang.instrument.Instrumentation;
 
 public class startInjectors {
     public static void premain(String args, Instrumentation inst) {
+        // Suppress LWJGL2 debug log spam (cursor/grab messages)
+        DebugLogSuppressor.premain(args, inst);
+        
         try {
             // Check if we have the asm classes we need
             Class.forName("org.objectweb.asm.ClassReader");
