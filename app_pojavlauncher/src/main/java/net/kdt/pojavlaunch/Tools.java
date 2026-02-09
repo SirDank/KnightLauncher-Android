@@ -792,6 +792,7 @@ public final class Tools {
         jvmArgs.add("-XX:+DisableExplicitGC");
         jvmArgs.add("-XX:+UseParallelGC");
         jvmArgs.add("-XX:+UseParallelOldGC");
+        jvmArgs.add("-Dorg.lwjgl.util.Debug=true");
 
         args.jvm = jvmArgs.toArray();
         args.game = new Object[0];

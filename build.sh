@@ -13,6 +13,9 @@
 
 set -e  # Exit on error
 
+# Clear console
+clear
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,12 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Configuration
-JRE_REPO="AngelAuraMC/angelauramc-openjdk-build"
-JRE8_BRANCH="buildjre8"
-# JRE 17/21 are disabled - Spiral Knights only uses JRE 8
-# JRE17_BRANCH="buildjre17-21"
-# JRE21_BRANCH="buildjre17-21"
-ASSETS_DIR="app_pojavlauncher/src/main/assets/components"
+ASSETS_DIR="app_pojavlauncher/src/main/assets/components/jre"
 
 # =============================================================================
 # Functions
@@ -45,17 +43,34 @@ ASSETS_DIR="app_pojavlauncher/src/main/assets/components"
 check_requirements() {
     info "Checking requirements..."
     
+    # Use JAVA_HOME if set
+    if [[ -n "$JAVA_HOME" ]]; then
+        info "JAVA_HOME is set to: $JAVA_HOME"
+        export PATH="$JAVA_HOME/bin:$PATH"
+    fi
+    
     # Check Java version
     if ! command -v java &> /dev/null; then
-        error "Java is not installed. Please install JDK 21 (Temurin recommended)."
+        error "Java is not installed. Please install JDK 21 (Temurin recommended).
+        Download from: https://adoptium.net/temurin/releases/?version=21"
     fi
     
     JAVA_VERSION=$(java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1)
+    info "Java version detected: $JAVA_VERSION"
+    
     if [[ "$JAVA_VERSION" != "21" ]]; then
-        warning "Java 21 is recommended. Current version: $JAVA_VERSION"
-    else
-        success "JDK 21 detected."
+        echo ""
+        error "JDK 21 is REQUIRED but found JDK $JAVA_VERSION.
+        Android Gradle Plugin 8.7.2 requires JDK 21.
+        
+        Solutions:
+        1. Install JDK 21 Temurin from: https://adoptium.net/temurin/releases/?version=21
+        2. Set JAVA_HOME to your JDK 21 installation:
+           export JAVA_HOME=/path/to/jdk-21
+        3. Or run this script from a shell with JDK 21 in PATH"
     fi
+    
+    success "JDK 21 detected."
     
     # Check curl
     if ! command -v curl &> /dev/null; then
@@ -70,87 +85,33 @@ check_requirements() {
     success "All requirements met."
 }
 
-download_github_artifact() {
-    local repo="$1"
-    local branch="$2"
-    local artifact_name="$3"
-    local dest_dir="$4"
+check_jre() {
+    info "Checking JRE 8 component..."
     
-    info "Downloading $artifact_name from $repo ($branch branch)..."
+    # Create directory if needed
+    mkdir -p "$ASSETS_DIR"
     
-    # Create destination directory
-    mkdir -p "$dest_dir"
+    # Check if both required JRE files exist
+    local jre_arm="$ASSETS_DIR/bin-arm.tar.xz"
+    local jre_arm64="$ASSETS_DIR/bin-arm64.tar.xz"
     
-    # Get the latest workflow run ID
-    local runs_url="https://api.github.com/repos/$repo/actions/workflows/build.yml/runs?branch=$branch&status=success&per_page=1"
-    local run_id=$(curl -s "$runs_url" | grep -o '"id": [0-9]*' | head -n 1 | cut -d' ' -f2)
-    
-    if [[ -z "$run_id" ]]; then
-        error "Failed to find successful workflow run for $artifact_name"
-    fi
-    
-    # Get artifact download URL
-    local artifacts_url="https://api.github.com/repos/$repo/actions/runs/$run_id/artifacts"
-    local artifact_info=$(curl -s "$artifacts_url")
-    local artifact_id=$(echo "$artifact_info" | grep -B5 "\"name\": \"$artifact_name\"" | grep -o '"id": [0-9]*' | head -n 1 | cut -d' ' -f2)
-    
-    if [[ -z "$artifact_id" ]]; then
-        warning "Could not find artifact $artifact_name via API. Attempting nightly release download..."
-        download_from_nightly "$artifact_name" "$dest_dir"
-        return
-    fi
-    
-    # Note: GitHub requires authentication to download artifacts via API
-    # For public access, we'll try the nightly release approach
-    warning "GitHub API requires authentication for artifact downloads."
-    warning "Attempting nightly release download..."
-    download_from_nightly "$artifact_name" "$dest_dir"
-}
-
-download_from_nightly() {
-    local artifact_name="$1"
-    local dest_dir="$2"
-    
-    # Try to download from nightly releases
-    local release_url="https://github.com/AngelAuraMC/openjdk-build-multiarch/releases/download/nightly/$artifact_name.zip"
-    local alt_url="https://github.com/$JRE_REPO/releases/download/nightly/$artifact_name.zip"
-    
-    local temp_zip="/tmp/$artifact_name.zip"
-    
-    info "Trying to download from nightly release..."
-    
-    if curl -L -f -o "$temp_zip" "$release_url" 2>/dev/null; then
-        success "Downloaded $artifact_name from openjdk-build-multiarch"
-    elif curl -L -f -o "$temp_zip" "$alt_url" 2>/dev/null; then
-        success "Downloaded $artifact_name from $JRE_REPO"
+    if [[ -f "$jre_arm" && -f "$jre_arm64" ]]; then
+        success "JRE 8 component found."
     else
-        warning "Could not download $artifact_name automatically."
-        warning "Please manually download from: https://github.com/AngelAuraMC/openjdk-build-multiarch/actions"
-        warning "Extract to: $dest_dir"
-        return 1
-    fi
-    
-    # Extract the artifact
-    info "Extracting $artifact_name..."
-    unzip -o "$temp_zip" -d "$dest_dir"
-    rm -f "$temp_zip"
-    success "Extracted $artifact_name to $dest_dir"
-}
+        echo ""
+        error "JRE 8 component is missing!
 
-download_jre() {
-    info "Setting up JRE 8 component..."
-    
-    # Create directory
-    mkdir -p "$ASSETS_DIR/jre"
-    
-    # Note: JRE 17/21 are disabled as Spiral Knights only uses JRE 8
-    # The jre-new and jre-21 directories are not needed
-    
-    # Check if JRE 8 already exists
-    if [[ -d "$ASSETS_DIR/jre" && $(ls -A "$ASSETS_DIR/jre" 2>/dev/null) ]]; then
-        warning "JRE 8 directory already exists. Skipping download."
-    else
-        download_github_artifact "$JRE_REPO" "$JRE8_BRANCH" "jre8-pojav" "$ASSETS_DIR/jre" || true
+Required files:
+    - bin-arm.tar.xz
+    - bin-arm64.tar.xz
+
+Please manually download jre8-pojav from:
+    https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre8
+
+After downloading, extract the contents to:
+    $ASSETS_DIR
+
+Then run this script again."
     fi
 }
 
@@ -168,6 +129,12 @@ update_language_list() {
 
 patch_mobileglues() {
     info "Patching MobileGlues for ARM-only build..."
+    
+    # Check if already patched
+    if grep -q "abiFilters" MobileGlues/build.gradle.kts 2>/dev/null; then
+        info "MobileGlues already patched for ARM-only build. Skipping."
+        return 0
+    fi
     
     # Skip x86/x86_64 builds (only ARM devices are supported)
     sed -i 's/ndkVersion = "27.3.13750724"/ndkVersion = "27.3.13750724"\n        ndk {\n            \/\/ Only build for ARM architectures (skip x86\/x86_64 which are for emulators)\n            abiFilters += listOf("arm64-v8a", "armeabi-v7a")\n        }/' MobileGlues/build.gradle.kts
@@ -207,7 +174,7 @@ main() {
     echo ""
     
     check_requirements
-    download_jre
+    check_jre
     update_language_list
     patch_mobileglues
     build_glfw_stub

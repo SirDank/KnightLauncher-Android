@@ -13,14 +13,14 @@ setlocal EnableDelayedExpansion
 :: =============================================================================
 
 title KnightLauncher Android Build
+cls
 
 :: Get script directory and navigate there
 set "SCRIPT_DIR=%~dp0"
 cd /d "%SCRIPT_DIR%"
 
 :: Configuration
-set "JRE_REPO=AngelAuraMC/angelauramc-openjdk-build"
-set "ASSETS_DIR=app_pojavlauncher\src\main\assets\components"
+set "ASSETS_DIR=app_pojavlauncher\src\main\assets\components\jre"
 
 echo.
 echo ==============================================
@@ -34,16 +34,47 @@ echo.
 
 echo [INFO] Checking requirements...
 
+:: Check JAVA_HOME first (prefer explicit JDK 21 path)
+if defined JAVA_HOME (
+    echo [INFO] JAVA_HOME is set to: %JAVA_HOME%
+    set "PATH=%JAVA_HOME%\bin;%PATH%"
+)
+
 :: Check Java
 where java >nul 2>&1
 if errorlevel 1 (
     echo [ERROR] Java is not installed. Please install JDK 21 Temurin.
+    echo [INFO]  Download from: https://adoptium.net/temurin/releases/?version=21
     goto :error_exit
 )
 
-:: Simple Java version display
-echo [INFO] Java found:
-java -version 2>&1 | findstr /i "version"
+:: Check Java version - require Java 21
+echo [INFO] Checking Java version...
+for /f "tokens=3" %%v in ('java -version 2^>^&1 ^| findstr /i "version"') do (
+    set "JAVA_VER_STRING=%%~v"
+)
+:: Extract major version (handles "21.0.x" format)
+for /f "tokens=1 delims=." %%m in ("!JAVA_VER_STRING!") do (
+    set "JAVA_MAJOR=%%m"
+)
+
+echo [INFO] Java version detected: !JAVA_VER_STRING! (major: !JAVA_MAJOR!)
+
+if not "!JAVA_MAJOR!"=="21" (
+    echo.
+    echo [ERROR] JDK 21 is REQUIRED but found JDK !JAVA_MAJOR!.
+    echo [ERROR] Android Gradle Plugin 8.7.2 requires JDK 21.
+    echo.
+    echo [INFO] Solutions:
+    echo        1. Install JDK 21 Temurin from: https://adoptium.net/temurin/releases/?version=21
+    echo        2. Set JAVA_HOME to your JDK 21 installation:
+    echo           set JAVA_HOME=C:\path\to\jdk-21
+    echo        3. Or run this script from a shell with JDK 21 in PATH
+    echo.
+    goto :error_exit
+)
+
+echo [SUCCESS] JDK 21 detected.
 echo.
 
 :: Check PowerShell
@@ -57,21 +88,41 @@ echo [SUCCESS] All requirements met.
 echo.
 
 :: =============================================================================
-:: Download JRE Components
+:: Check JRE Components
 :: =============================================================================
 
-echo [INFO] Setting up JRE 8 component...
+echo [INFO] Checking JRE 8 component...
 
-:: Create directory (JRE 17/21 are disabled - Spiral Knights only uses JRE 8)
-if not exist "%ASSETS_DIR%\jre" mkdir "%ASSETS_DIR%\jre"
+:: Create directory if needed
+if not exist "%ASSETS_DIR%" mkdir "%ASSETS_DIR%"
 
-:: Check and download JRE 8 only
-call :check_and_download_jre jre jre8-pojav
+:: Check if both required JRE files exist
+set "JRE_ARM=%ASSETS_DIR%\bin-arm.tar.xz"
+set "JRE_ARM64=%ASSETS_DIR%\bin-arm64.tar.xz"
 
-:: Note: JRE 17/21 downloads are disabled as Spiral Knights only uses JRE 8
-:: call :check_and_download_jre jre-new jre17-pojav
-:: call :check_and_download_jre jre-21 jre21-pojav
+if exist "!JRE_ARM!" if exist "!JRE_ARM64!" (
+    echo [SUCCESS] JRE 8 component found.
+    goto :jre_ok
+)
 
+echo.
+echo [ERROR] JRE 8 component is missing!
+echo.
+echo [INFO] Required files:
+echo        - bin-arm.tar.xz
+echo        - bin-arm64.tar.xz
+echo.
+echo [INFO] Please manually download jre8-pojav from:
+echo        https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%%3Abuildjre8
+echo.
+echo [INFO] After downloading, extract the contents to:
+echo        %ASSETS_DIR%
+echo.
+echo [INFO] Then run this script again.
+echo.
+goto :error_exit
+
+:jre_ok
 echo.
 
 :: =============================================================================
@@ -99,10 +150,9 @@ echo.
 
 echo [INFO] Patching MobileGlues for ARM-only build...
 
-:: Skip x86/x86_64 builds (only ARM devices are supported)
-powershell -Command "$file = 'MobileGlues\build.gradle.kts'; $content = Get-Content $file -Raw; $newContent = $content -replace 'ndkVersion = \"27.3.13750724\"', ('ndkVersion = \"27.3.13750724\"' + \"`r`n        ndk {`r`n            // Only build for ARM architectures (skip x86/x86_64 which are for emulators)`r`n            abiFilters += listOf(\"arm64-v8a\", \"armeabi-v7a\")`r`n        }\"); Set-Content $file $newContent -NoNewline"
+:: Use external PowerShell script to avoid CMD escaping issues
+powershell -ExecutionPolicy Bypass -File "scripts\patch_mobileglues.ps1"
 
-echo [SUCCESS] MobileGlues patched for ARM-only build.
 echo.
 
 :: =============================================================================
@@ -147,55 +197,8 @@ echo.
 goto :success_exit
 
 :: =============================================================================
-:: Functions
+:: Exit handlers
 :: =============================================================================
-
-:check_and_download_jre
-:: %1 = JRE directory name (jre, jre-new, jre-21)
-:: %2 = JRE artifact name (jre8-pojav, jre17-pojav, jre21-pojav)
-set "JRE_DIR_NAME=%~1"
-set "JRE_ARTIFACT=%~2"
-set "FULL_PATH=%ASSETS_DIR%\%JRE_DIR_NAME%"
-
-:: Check if directory has any files
-dir /b "%FULL_PATH%\*" >nul 2>&1
-if not errorlevel 1 (
-    echo [WARNING] %JRE_ARTIFACT% directory already has files. Skipping download.
-    goto :eof
-)
-
-:: Download JRE
-echo [INFO] Downloading %JRE_ARTIFACT%...
-
-set "DOWNLOAD_URL=https://github.com/AngelAuraMC/openjdk-build-multiarch/releases/download/nightly/%JRE_ARTIFACT%.zip"
-set "ALT_URL=https://github.com/%JRE_REPO%/releases/download/nightly/%JRE_ARTIFACT%.zip"
-set "TEMP_ZIP=%TEMP%\%JRE_ARTIFACT%.zip"
-
-:: Try primary URL using PowerShell
-powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { Invoke-WebRequest -Uri '%DOWNLOAD_URL%' -OutFile '%TEMP_ZIP%' -ErrorAction Stop } catch { exit 1 }"
-if not errorlevel 1 (
-    echo [SUCCESS] Downloaded %JRE_ARTIFACT% from openjdk-build-multiarch
-    goto :do_extract
-)
-
-:: Try alternate URL
-powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { Invoke-WebRequest -Uri '%ALT_URL%' -OutFile '%TEMP_ZIP%' -ErrorAction Stop } catch { exit 1 }"
-if not errorlevel 1 (
-    echo [SUCCESS] Downloaded %JRE_ARTIFACT% from %JRE_REPO%
-    goto :do_extract
-)
-
-echo [WARNING] Could not download %JRE_ARTIFACT% automatically.
-echo [WARNING] Please manually download from: https://github.com/AngelAuraMC/openjdk-build-multiarch/actions
-echo [WARNING] Extract to: %FULL_PATH%
-goto :eof
-
-:do_extract
-echo [INFO] Extracting %JRE_ARTIFACT%...
-powershell -Command "$ProgressPreference = 'SilentlyContinue'; Expand-Archive -Path '%TEMP_ZIP%' -DestinationPath '%FULL_PATH%' -Force"
-if exist "%TEMP_ZIP%" del /q "%TEMP_ZIP%"
-echo [SUCCESS] Extracted %JRE_ARTIFACT% to %FULL_PATH%
-goto :eof
 
 :error_exit
 echo.
