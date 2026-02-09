@@ -105,6 +105,12 @@ public class MainMenuFragment extends Fragment {
             });
         }
 
+        // Set version text
+        android.widget.TextView mVersionText = view.findViewById(R.id.app_version_text);
+        if (mVersionText != null) {
+            mVersionText.setText("v" + net.kdt.pojavlaunch.BuildConfig.VERSION_NAME);
+        }
+
         Button mResetGameFilesButton = view.findViewById(R.id.reset_game_files_button);
         if (mResetGameFilesButton != null) {
             mResetGameFilesButton.setOnClickListener(v -> {

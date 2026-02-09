@@ -4,86 +4,6 @@ plugins {
 
 static def getDate() { return new Date().format('yyyyMMdd') }
 
-def getVersionName = {
-    // Check for VERSION_OVERRIDE environment variable (used by release workflow)
-    String versionOverride = System.getenv("VERSION_OVERRIDE")
-    if (versionOverride != null && !versionOverride.trim().isEmpty()) {
-        println "Using VERSION_OVERRIDE: " + versionOverride
-        return versionOverride.trim()
-    }
-    
-    // Get the last version tag, as well as the short head of the last commit
-    ByteArrayOutputStream TAG = new ByteArrayOutputStream()
-    ByteArrayOutputStream BRANCH = new ByteArrayOutputStream()
-    // Used by the fallback for github actions
-    ByteArrayOutputStream TAG_PART_COMMIT = new ByteArrayOutputStream()
-    ByteArrayOutputStream LATEST_TAG = new ByteArrayOutputStream()
-    String TAG_STRING
-
-    exec {
-        try {
-            commandLine 'git', 'describe', '--tags'
-            ignoreExitValue true
-            standardOutput = TAG
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    if (TAG.toString() == "") {
-        exec {
-            // Fallback for action builds
-            try {
-                commandLine 'git', 'describe', '--always', '--tags'
-                ignoreExitValue true
-                standardOutput = TAG_PART_COMMIT
-            } catch (Exception e) {
-            }
-        }
-        
-        // Also get the latest tag for version info
-        exec {
-            try {
-                commandLine 'git', 'describe', '--tags', '--abbrev=0'
-                ignoreExitValue true
-                standardOutput = LATEST_TAG
-            } catch (Exception e) {
-            }
-        }
-    }
-
-
-    if(TAG.toString() != ""){
-        TAG_STRING = TAG.toString()
-    }else {
-        if(TAG_PART_COMMIT.toString().trim() == ""){
-             //Fallback no repo
-            return ("LOCAL-" + "${getDate()}")
-        }else {
-            // Used by github actions - include the version tag for update checking
-            // Format: knightlauncher-v0.3.4-20260119-commit
-            String latestTag = LATEST_TAG.toString().trim()
-            if (latestTag == "") {
-                latestTag = "v0.0.0"  // Fallback if no tags exist
-            }
-            TAG_STRING =  'knightlauncher-' + latestTag + "-" + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
-        }
-
-    }
-
-    exec {
-        try {
-            commandLine 'git', 'branch', '--show-current'
-            ignoreExitValue true
-            standardOutput = BRANCH
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    return TAG_STRING.trim().replace("-g", "-") + "-" + BRANCH.toString().trim()
-}
-
 configurations {
     instrumentedClasspath {
         canBeConsumed = false
@@ -121,7 +41,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 10000000
-        versionName getVersionName()
+        versionName "0.4.1"
         multiDexEnabled true //important
         ndk {
             // Only build for ARM architectures (skip x86/x86_64 which are for emulators)
