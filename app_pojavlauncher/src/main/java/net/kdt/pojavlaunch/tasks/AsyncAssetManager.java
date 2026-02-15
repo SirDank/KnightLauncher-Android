@@ -34,11 +34,11 @@ public class AsyncAssetManager {
         String rt_version = null;
         String current_rt_version = MultiRTUtils.readInternalRuntimeVersion("Internal");
         try {
-            rt_version = Tools.read(am.open("components/jre/version"));
+            rt_version = Tools.read(am.open("components/jre-21/version"));
         } catch (IOException e) {
             Log.e("JREAuto", "JRE was not included on this APK.", e);
         }
-        String exactJREName = MultiRTUtils.getExactJreName(8);
+        String exactJREName = MultiRTUtils.getExactJreName(21);
         if (current_rt_version == null && exactJREName != null && !exactJREName.equals("Internal")/*
                                                                                                    * this clause is for
                                                                                                    * when the internal
@@ -56,8 +56,8 @@ public class AsyncAssetManager {
 
             try {
                 MultiRTUtils.installRuntimeNamedBinpack(
-                        am.open("components/jre/universal.tar.xz"),
-                        am.open("components/jre/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
+                        am.open("components/jre-21/universal.tar.xz"),
+                        am.open("components/jre-21/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
                         "Internal", finalRt_version);
                 MultiRTUtils.postPrepare("Internal");
             } catch (IOException e) {
@@ -91,12 +91,9 @@ public class AsyncAssetManager {
         ProgressLayout.setProgress(ProgressLayout.EXTRACT_COMPONENTS, 0);
         sExecutorService.execute(() -> {
             try {
-                unpackComponent(ctx, "caciocavallo", false);
-                // Temporarily disabled - Spiral Knights only uses JRE8
-                // unpackComponent(ctx, "caciocavallo17", false);
-                // Since the Java module system doesn't allow multiple JARs to declare the same
-                // module,
-                // we repack them to a single file here
+                // Temporarily disabled - Spiral Knights now uses JRE21
+                // unpackComponent(ctx, "caciocavallo", false);
+                unpackComponent(ctx, "caciocavallo17", false);
                 unpackComponent(ctx, "lwjgl3", false);
                 unpackComponent(ctx, "security", true);
                 unpackComponent(ctx, "arc_dns_injector", true);

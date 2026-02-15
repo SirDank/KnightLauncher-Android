@@ -34,7 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Configuration
-ASSETS_DIR="app_pojavlauncher/src/main/assets/components/jre"
+ASSETS_DIR="app_pojavlauncher/src/main/assets/components/jre-21"
 
 # =============================================================================
 # Functions
@@ -86,7 +86,7 @@ check_requirements() {
 }
 
 check_jre() {
-    info "Checking JRE 8 component..."
+    info "Checking JRE 21 component..."
     
     # Create directory if needed
     mkdir -p "$ASSETS_DIR"
@@ -96,17 +96,17 @@ check_jre() {
     local jre_arm64="$ASSETS_DIR/bin-arm64.tar.xz"
     
     if [[ -f "$jre_arm" && -f "$jre_arm64" ]]; then
-        success "JRE 8 component found."
+        success "JRE 21 component found."
     else
         echo ""
-        error "JRE 8 component is missing!
+        error "JRE 21 component is missing!
 
 Required files:
     - bin-arm.tar.xz
     - bin-arm64.tar.xz
 
-Please manually download jre8-pojav from:
-    https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre8
+Please manually download jre21-pojav from:
+    https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre17-21
 
 After downloading, extract the contents to:
     $ASSETS_DIR

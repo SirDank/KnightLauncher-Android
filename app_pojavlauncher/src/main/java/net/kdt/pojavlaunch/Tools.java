@@ -799,7 +799,7 @@ public final class Tools {
         version.arguments = args;
 
         JMinecraftVersionList.JavaVersionInfo javaVer = new JMinecraftVersionList.JavaVersionInfo();
-        javaVer.majorVersion = 8;
+        javaVer.majorVersion = 21;
         version.javaVersion = javaVer;
 
         return version;

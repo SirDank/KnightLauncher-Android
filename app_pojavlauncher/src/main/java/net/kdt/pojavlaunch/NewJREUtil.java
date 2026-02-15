@@ -21,54 +21,60 @@ public class NewJREUtil {
         String launcher_runtime_version;
         String installed_runtime_version = MultiRTUtils.readInternalRuntimeVersion(internalRuntime.name);
         try {
-            launcher_runtime_version = Tools.read(assetManager.open(internalRuntime.path+"/version"));
-        }catch (IOException exc) {
-            //we don't have a runtime included!
-            //if we have one installed -> return true -> proceed (no updates but the current one should be functional)
-            //if we don't -> return false -> Cannot find compatible Java runtime
+            launcher_runtime_version = Tools.read(assetManager.open(internalRuntime.path + "/version"));
+        } catch (IOException exc) {
+            // we don't have a runtime included!
+            // if we have one installed -> return true -> proceed (no updates but the
+            // current one should be functional)
+            // if we don't -> return false -> Cannot find compatible Java runtime
             return installed_runtime_version != null;
         }
-        // this implicitly checks for null, so it will unpack the runtime even if we don't have one installed
-        if(!launcher_runtime_version.equals(installed_runtime_version))
+        // this implicitly checks for null, so it will unpack the runtime even if we
+        // don't have one installed
+        if (!launcher_runtime_version.equals(installed_runtime_version))
             return unpackInternalRuntime(assetManager, internalRuntime, launcher_runtime_version);
-        else return true;
+        else
+            return true;
     }
 
-    private static boolean unpackInternalRuntime(AssetManager assetManager, InternalRuntime internalRuntime, String version) {
+    private static boolean unpackInternalRuntime(AssetManager assetManager, InternalRuntime internalRuntime,
+            String version) {
         try {
             MultiRTUtils.installRuntimeNamedBinpack(
-                    assetManager.open(internalRuntime.path+"/universal.tar.xz"),
-                    assetManager.open(internalRuntime.path+"/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
+                    assetManager.open(internalRuntime.path + "/universal.tar.xz"),
+                    assetManager
+                            .open(internalRuntime.path + "/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
                     internalRuntime.name, version);
             MultiRTUtils.postPrepare(internalRuntime.name);
             return true;
-        }catch (IOException e) {
+        } catch (IOException e) {
             Log.e("NewJREAuto", "Internal JRE unpack failed", e);
             return false;
         }
     }
 
     private static InternalRuntime getInternalRuntime(Runtime runtime) {
-        for(InternalRuntime internalRuntime : InternalRuntime.values()) {
-            if(internalRuntime.name.equals(runtime.name)) return internalRuntime;
+        for (InternalRuntime internalRuntime : InternalRuntime.values()) {
+            if (internalRuntime.name.equals(runtime.name))
+                return internalRuntime;
         }
         return null;
     }
 
     private static MathUtils.RankedValue<Runtime> getNearestInstalledRuntime(int targetVersion) {
         List<Runtime> runtimes = MultiRTUtils.getRuntimes();
-        return MathUtils.findNearestPositive(targetVersion, runtimes, (runtime)->runtime.javaVersion);
+        return MathUtils.findNearestPositive(targetVersion, runtimes, (runtime) -> runtime.javaVersion);
     }
 
     private static MathUtils.RankedValue<InternalRuntime> getNearestInternalRuntime(int targetVersion) {
         List<InternalRuntime> runtimeList = Arrays.asList(InternalRuntime.values());
-        return MathUtils.findNearestPositive(targetVersion, runtimeList, (runtime)->runtime.majorVersion);
+        return MathUtils.findNearestPositive(targetVersion, runtimeList, (runtime) -> runtime.majorVersion);
     }
 
-
-    /** @return true if everything is good, false otherwise.  */
+    /** @return true if everything is good, false otherwise. */
     public static boolean installNewJreIfNeeded(Activity activity, JMinecraftVersionList.Version versionInfo) {
-        //Now we have the reliable information to check if our runtime settings are good enough
+        // Now we have the reliable information to check if our runtime settings are
+        // good enough
         if (versionInfo.javaVersion == null || versionInfo.javaVersion.component.equalsIgnoreCase("jre-legacy"))
             return true;
 
@@ -79,29 +85,32 @@ public class NewJREUtil {
         MinecraftProfile minecraftProfile = LauncherProfiles.getCurrentProfile();
         String profileRuntime = Tools.getSelectedRuntime(minecraftProfile);
         Runtime runtime = MultiRTUtils.read(profileRuntime);
-        // Partly trust the user with his own selection, if the game can even try to run in this case
+        // Partly trust the user with his own selection, if the game can even try to run
+        // in this case
         if (runtime.javaVersion >= gameRequiredVersion) {
             // Check whether the selection is an internal runtime
             InternalRuntime internalRuntime = getInternalRuntime(runtime);
             // If it is, check if updates are available from the APK file
-            if(internalRuntime != null) {
-                // Not calling showRuntimeFail on failure here because we did, technically, find the compatible runtime
+            if (internalRuntime != null) {
+                // Not calling showRuntimeFail on failure here because we did, technically, find
+                // the compatible runtime
                 return checkInternalRuntime(assetManager, internalRuntime);
             }
             return true;
         }
 
-        // If the runtime version selected by the user is not appropriate for this version (which means the game won't run at all)
-        // automatically pick from either an already installed runtime, or a runtime packed with the launcher
+        // If the runtime version selected by the user is not appropriate for this
+        // version (which means the game won't run at all)
+        // automatically pick from either an already installed runtime, or a runtime
+        // packed with the launcher
         MathUtils.RankedValue<?> nearestInstalledRuntime = getNearestInstalledRuntime(gameRequiredVersion);
         MathUtils.RankedValue<?> nearestInternalRuntime = getNearestInternalRuntime(gameRequiredVersion);
 
         MathUtils.RankedValue<?> selectedRankedRuntime = MathUtils.objectMin(
-                nearestInternalRuntime, nearestInstalledRuntime, (value)->value.rank
-        );
+                nearestInternalRuntime, nearestInstalledRuntime, (value) -> value.rank);
 
         // No possible selections
-        if(selectedRankedRuntime == null) {
+        if (selectedRankedRuntime == null) {
             showRuntimeFail(activity, versionInfo);
             return false;
         }
@@ -111,7 +120,7 @@ public class NewJREUtil {
         InternalRuntime internalRuntime;
 
         // Perform checks on the picked runtime
-        if(selected instanceof Runtime) {
+        if (selected instanceof Runtime) {
             // If it's an already installed runtime, save its name and check if
             // it's actually an internal one (just in case)
             Runtime selectedRuntime = (Runtime) selected;
@@ -122,12 +131,14 @@ public class NewJREUtil {
             internalRuntime = (InternalRuntime) selected;
             appropriateRuntime = internalRuntime.name;
         } else {
-            throw new RuntimeException("Unexpected type of selected: "+selected.getClass().getName());
+            throw new RuntimeException("Unexpected type of selected: " + selected.getClass().getName());
         }
 
-        // If it turns out the selected runtime is actually an internal one, attempt automatic installation or update
-        if(internalRuntime != null && !checkInternalRuntime(assetManager, internalRuntime)) {
-            // Not calling showRuntimeFail here because we did, technically, find the compatible runtime
+        // If it turns out the selected runtime is actually an internal one, attempt
+        // automatic installation or update
+        if (internalRuntime != null && !checkInternalRuntime(assetManager, internalRuntime)) {
+            // Not calling showRuntimeFail here because we did, technically, find the
+            // compatible runtime
             return false;
         }
 
@@ -144,11 +155,12 @@ public class NewJREUtil {
     private enum InternalRuntime {
         // Temporarily disabled - Spiral Knights only uses JRE8
         // JRE_17(17, "Internal-17", "components/jre-new"),
-        // JRE_21(21, "Internal-21", "components/jre-21");
-        ;
+        JRE_21(21, "Internal-21", "components/jre-21");
+
         public final int majorVersion;
         public final String name;
         public final String path;
+
         InternalRuntime(int majorVersion, String name, String path) {
             this.majorVersion = majorVersion;
             this.name = name;
