@@ -781,7 +781,6 @@ public final class Tools {
         JMinecraftVersionList.Arguments args = new JMinecraftVersionList.Arguments();
         List<Object> jvmArgs = new ArrayList<>();
 
-        jvmArgs.add("-XX:+AggressiveOpts");
         jvmArgs.add("-XX:SoftRefLRUPolicyMSPerMB=10");
         jvmArgs.add("-Dorg.lwjgl.util.NoChecks=true");
         jvmArgs.add("-Dsun.java2d.d3d=false");
@@ -791,8 +790,10 @@ public final class Tools {
         jvmArgs.add("-Dorg.lwjgl.opengl.disableStaticInit=true");
         jvmArgs.add("-XX:+DisableExplicitGC");
         jvmArgs.add("-XX:+UseParallelGC");
-        jvmArgs.add("-XX:+UseParallelOldGC");
         jvmArgs.add("-Dorg.lwjgl.util.Debug=true");
+        jvmArgs.add("--add-opens=java.base/java.lang=ALL-UNNAMED");
+        jvmArgs.add("--add-opens=java.base/java.util=ALL-UNNAMED");
+        jvmArgs.add("--enable-native-access=ALL-UNNAMED");
 
         args.jvm = jvmArgs.toArray();
         args.game = new Object[0];

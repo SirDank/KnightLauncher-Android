@@ -41,7 +41,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 10000000
-        versionName "0.4.1"
+        versionName "0.4.2"
         multiDexEnabled true //important
         ndk {
             // Only build for ARM architectures (skip x86/x86_64 which are for emulators)

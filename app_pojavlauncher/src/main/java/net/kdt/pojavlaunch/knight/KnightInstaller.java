@@ -1,32 +1,31 @@
 package net.kdt.pojavlaunch.knight;
 
 import net.kdt.pojavlaunch.Tools;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
+import java.util.Map;
+import java.util.Set;
 
 public class KnightInstaller implements Runnable {
 
-    private static final String HEAD_N = "`head -n ";
     private static final String CODE_LINE = "code = ";
     private static final String ARG_LINE = "jvmarg = ";
     private static final String CLASS_LINE = "class = ";
+    private static final String GETDOWN_URL = "https://gamemedia2.spiralknights.com/spiral/client/getdown.txt";
+
     private final Progress pr;
     private final File destination;
     private final File spiral;
@@ -39,134 +38,13 @@ public class KnightInstaller implements Runnable {
 
     @Override
     public void run() {
-        // No SecurityManager on Android, so we can't intercept System.exit easily.
-        // We rely on getdown not calling it or us handling it differently if possible.
-        // For now, we proceed without the SecurityManager block that was in the desktop
-        // version.
-
         int progressStep = 0;
-        File getdown = new File(spiral, "getdown-pro.jar");
-        if (!getdown.exists()) {
-            pr.postMaxSteps(5);
-            byte[] installer;
-            try {
-                pr.postLogLine("Downloading Linux installer...", null);
-                installer = Utils.getFromWeb("https://gamemedia.spiralknights.com/spiral/client/spiral-install.bin",
-                        pr);
-                pr.postStepProgress(++progressStep);
-            } catch (IOException e) {
-                pr.postLogLine("Failed to download Linux installer", e);
-                pr.unlockExit();
-                return;
-            }
+        pr.postMaxSteps(3);
 
-            int gzStart;
-            int gzSize;
-            try {
-                pr.postLogLine("Processing installer...", null);
-                pr.postMaxPart(1);
-                pr.postPartProgress(0);
-                pr.setPartIndeterminate(true);
-                byte[] offsetEquals = "offset=`head".getBytes();
-                byte[] filesizesEquals = "filesizes=".getBytes();
-                int offsetAt = Utils.indexOf(installer, offsetEquals);
-                int sizeAt = Utils.indexOf(installer, filesizesEquals);
-                if (offsetAt == -1 || sizeAt == -1) {
-                    pr.postLogLine("Failed to find necessary data", null);
-                    pr.setPartIndeterminate(false);
-                    return;
-                }
-                int offsetSz = Utils.indexOf(installer, offsetAt, (byte) 0x0A);
-                int sizeSz = Utils.indexOf(installer, sizeAt, (byte) 0x0A);
-                offsetSz = offsetSz - offsetAt;
-                sizeSz = sizeSz - sizeAt;
-                String offset = new String(installer, offsetAt, offsetSz);
-                String size = new String(installer, sizeAt, sizeSz);
-                // System.out.println(offset);
-                // System.out.println(size);
-
-                int headNumStart = offset.indexOf(HEAD_N) + HEAD_N.length();
-                int headNumEnd = -1;
-                for (int i = headNumStart; i < offset.length(); i++) {
-                    if (offset.charAt(i) == ' ') {
-                        headNumEnd = i;
-                        break;
-                    }
-                }
-
-                if (headNumEnd == -1) {
-                    pr.postLogLine("Failed to find necessary data", null);
-                    pr.setPartIndeterminate(false);
-                    return;
-                }
-                gzStart = Integer.parseInt(offset.substring(headNumStart, headNumEnd));
-                gzSize = Integer.parseInt(size.substring(size.indexOf("\"") + 1, size.lastIndexOf(("\""))));
-                gzStart = Utils.findXth(installer, (byte) 0x0A, gzStart) + 1;
-                pr.postStepProgress(++progressStep);
-            } catch (Exception e) {
-                pr.postLogLine(
-                        "Failed to read necessary data via parsing (expected if variable substitution is used), trying fallback...",
-                        null);
-                // Fallback: Find the GZIP header (0x1F 0x8B 0x08)
-                // This is the standard GZIP magic number + DEFLATE compression method
-                byte[] gzipHeader = new byte[] { (byte) 0x1F, (byte) 0x8B, (byte) 0x08 };
-                int gzipIndex = Utils.indexOf(installer, gzipHeader);
-
-                if (gzipIndex != -1) {
-                    gzStart = gzipIndex;
-                    // Assume the rest of the file is the payload
-                    gzSize = installer.length - gzStart;
-                    pr.postLogLine("Fallback successful: Found GZIP header at " + gzStart, null);
-                    pr.postStepProgress(++progressStep);
-                } else {
-                    pr.postLogLine("Fallback failed: GZIP header not found", null);
-                    pr.setPartIndeterminate(false);
-                    pr.unlockExit();
-                    return;
-                }
-            }
-            try {
-                pr.postLogLine("Decompressing...", null);
-                pr.postMaxPart(1);
-                pr.postPartProgress(0);
-                pr.setPartIndeterminate(true);
-                try (TarArchiveInputStream tarIn = new TarArchiveInputStream(
-                        new GZIPInputStream(new ByteArrayInputStream(installer, gzStart, gzSize)))) {
-                    TarArchiveEntry entry = tarIn.getNextTarEntry();
-                    while (entry != null) {
-                        String entryName = entry.getName();
-                        pr.postLogLine("Decompressing " + entryName, null);
-                        File dest = new File(spiral, entry.getName());
-                        if (entry.isDirectory()) {
-                            dest.mkdirs();
-                        } else if (entry.isFile()) {
-                            dest.getParentFile().mkdirs();
-                            try (FileOutputStream fos = new FileOutputStream(dest)) {
-                                byte[] buf = new byte[65535];
-                                int i;
-                                while ((i = tarIn.read(buf)) != -1) {
-                                    fos.write(buf, 0, i);
-                                }
-                            }
-                        }
-                        entry = tarIn.getNextTarEntry();
-                    }
-                }
-                pr.postStepProgress(++progressStep);
-            } catch (Exception e) {
-                pr.postLogLine("Failed to decompress", e);
-                pr.setPartIndeterminate(false);
-                pr.unlockExit();
-                return;
-            }
-        } else {
-            pr.postMaxSteps(2);
-        }
-
-        // Replace getdown execution with custom download logic
+        // ── Step 1: Download game files via getdown.txt + digest.txt ──
         try {
-            downloadGameFiles(progressStep);
-            progressStep++; // Increment after successful download
+            downloadGameFiles();
+            pr.postStepProgress(++progressStep);
         } catch (Exception e) {
             pr.postLogLine("Failed to download game files", e);
             pr.setPartIndeterminate(false);
@@ -174,138 +52,14 @@ public class KnightInstaller implements Runnable {
             return;
         }
 
-        // Now generate JSON files and copy libraries
+        // ── Step 2: Unpack uresources (handled inside downloadGameFiles now) ──
+        // Unpacking is done within downloadGameFiles for resources that were
+        // downloaded.
+        pr.postStepProgress(++progressStep);
+
+        // ── Step 3: Generate JSON configuration ──
         try {
-            pr.postLogLine("Generating JSON...", null);
-            pr.postMaxPart(1);
-            pr.postPartProgress(0);
-            pr.setPartIndeterminate(true);
-
-            List<String> codeJars = new ArrayList<>();
-            List<String> jvmArgs = new ArrayList<>();
-            String mainClass = null;
-
-            File getdownTxt = new File(spiral, "getdown.txt");
-            if (!getdownTxt.exists()) {
-                pr.postLogLine("Can't find getdown.txt", null);
-                pr.setPartIndeterminate(false);
-                pr.unlockExit();
-                return;
-            }
-
-            // Parse getdown.txt
-            BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)));
-            String line;
-            while ((line = rdr.readLine()) != null) {
-                if (line.startsWith(CODE_LINE)) {
-                    String codeJar = line.substring(CODE_LINE.length());
-                    // Skip jinput and lwjgl as they're provided by PojavLauncher
-                    if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl")) {
-                        codeJars.add(codeJar);
-                    }
-                } else if (line.startsWith(ARG_LINE)) {
-                    String arg = line.substring(ARG_LINE.length());
-                    // Skip memory args, library path, and bracketed args
-                    if (!arg.startsWith("-Xm") && !arg.startsWith("-Djava.library.path") && !arg.startsWith("[")) {
-                        jvmArgs.add(arg);
-                    }
-                } else if (line.startsWith(CLASS_LINE)) {
-                    mainClass = line.substring(CLASS_LINE.length());
-                }
-            }
-            rdr.close();
-
-            // Add required LWJGL arg for Android
-            jvmArgs.add("-Dorg.lwjgl.opengl.disableStaticInit=true");
-
-            // Copy libraries and build JSON
-            JSONObject outputJson = new JSONObject();
-            outputJson.put("minecraftArguments", "");
-
-            for (String jarPath : codeJars) {
-                File source = new File(spiral, jarPath);
-                if (!source.exists()) {
-                    pr.postLogLine("Warning: " + jarPath + " not found, skipping", null);
-                    continue;
-                }
-
-                String fileName = source.getName();
-                String extension = fileName.substring(fileName.lastIndexOf("."));
-                String libName = fileName.substring(0, fileName.lastIndexOf("."));
-                String mavenName = "spiral:" + libName + ":0.0";
-
-                // Copy to libraries folder
-                File libDestination = new File(destination,
-                        "libraries/spiral/" + libName + "/0.0/" + libName + "-0.0" + extension);
-                libDestination.getParentFile().mkdirs();
-                Files.copy(source.toPath(), libDestination.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                // Add to JSON
-                JSONObject library = new JSONObject();
-                library.put("name", mavenName);
-                outputJson.append("libraries", library);
-            }
-
-            outputJson.put("id", "SpiralKnights");
-            outputJson.put("releaseTime", "2009-05-13T20:11:00+00:00");
-            outputJson.put("time", "2009-05-13T20:11:00+00:00");
-            outputJson.put("type", "release");
-            outputJson.put("mainClass", mainClass);
-
-            // Write SpiralKnights.json
-            File versionPath = new File(destination, "versions/SpiralKnights/SpiralKnights.json");
-            versionPath.getParentFile().mkdirs();
-            try (FileOutputStream fos = new FileOutputStream(versionPath)) {
-                fos.write(outputJson.toString().getBytes());
-            }
-
-            // Update launcher_profiles.json
-            String sprofiles = null;
-            String b64Default = null;
-
-            try {
-                byte[] bprofiles = Files.readAllBytes(new File(destination, "launcher_profiles.json").toPath());
-                sprofiles = new String(bprofiles, 0, bprofiles.length);
-            } catch (Exception ignored) {
-            }
-
-            try {
-                File iconFile = new File(spiral, "desktop.png");
-                if (iconFile.exists()) {
-                    b64Default = Base64.getEncoder().encodeToString(Files.readAllBytes(iconFile.toPath()));
-                }
-            } catch (Exception ignored) {
-            }
-
-            JSONObject profiles = sprofiles == null ? new JSONObject() : new JSONObject(sprofiles);
-            JSONObject spiralKnightsProfile = new JSONObject();
-
-            // Build JVM args string
-            StringBuilder sb = new StringBuilder();
-            int sz = jvmArgs.size();
-            for (int i = 0; i < sz; i++) {
-                sb.append(jvmArgs.get(i).replace("%APPDIR%", "./spiral/"));
-                if (i < sz - 1) {
-                    sb.append(" ");
-                }
-            }
-
-            spiralKnightsProfile.put("javaArgs", sb.toString());
-            spiralKnightsProfile.put("lastVersionId", "SpiralKnights");
-            spiralKnightsProfile.put("name", "Spiral Knights");
-            if (b64Default != null) {
-                spiralKnightsProfile.put("icon", "data:image/png;base64," + b64Default);
-            }
-
-            if (profiles.has("profiles")) {
-                profiles.getJSONObject("profiles").put("SpiralKnights", spiralKnightsProfile);
-            } else {
-                JSONObject newProfiles = new JSONObject();
-                newProfiles.put("SpiralKnights", spiralKnightsProfile);
-                profiles.put("profiles", newProfiles);
-            }
-
-            Files.write(new File(destination, "launcher_profiles.json").toPath(), profiles.toString().getBytes());
+            generateJsonConfig();
             pr.postStepProgress(++progressStep);
             pr.postLogLine("All done!", null);
             pr.setPartIndeterminate(false);
@@ -318,21 +72,27 @@ public class KnightInstaller implements Runnable {
         pr.unlockExit();
     }
 
-    private void downloadGameFiles(int progressStep) throws Exception {
+    /**
+     * Downloads all game files using getdown.txt manifest and digest.txt for
+     * smart re-download (only files with changed MD5 hashes are re-downloaded).
+     */
+    private void downloadGameFiles() throws Exception {
         pr.postLogLine("Downloading game files...", null);
         pr.setPartIndeterminate(true);
 
-        File getdownTxt = new File(spiral, "getdown.txt");
+        spiral.mkdirs();
 
+        // ── Fetch latest getdown.txt ──
+        pr.postLogLine("Fetching latest getdown.txt from server...", null);
+        File getdownTxt = new File(spiral, "getdown.txt");
+        Utils.downloadFile(GETDOWN_URL, getdownTxt, pr);
+
+        // ── Parse getdown.txt ──
         String appbase = null;
         String version = null;
-        List<String> resources = new ArrayList<>();
-        List<String> uresources = new ArrayList<>();
-
-        // Always fetch the full getdown.txt from the correct URL
-        pr.postLogLine("Fetching latest getdown.txt from server...", null);
-        String getdownUrl = "https://gamemedia2.spiralknights.com/spiral/client/getdown.txt";
-        Utils.downloadFile(getdownUrl, getdownTxt, pr);
+        List<String> codeEntries = new ArrayList<>();
+        List<String> resourceEntries = new ArrayList<>();
+        List<String> uresourceEntries = new ArrayList<>();
 
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)))) {
             String line;
@@ -342,15 +102,20 @@ public class KnightInstaller implements Runnable {
                     appbase = line.substring("appbase = ".length()).trim();
                 } else if (line.startsWith("version = ")) {
                     version = line.substring("version = ".length()).trim();
-                } else if (line.startsWith("code = ") || line.startsWith("resource = ")) {
-                    String res = line.substring(line.indexOf(" = ") + 3).trim();
+                } else if (line.startsWith("code = ")) {
+                    String res = line.substring("code = ".length()).trim();
                     if (!res.startsWith("[")) {
-                        resources.add(res);
+                        codeEntries.add(res);
+                    }
+                } else if (line.startsWith("resource = ")) {
+                    String res = line.substring("resource = ".length()).trim();
+                    if (!res.startsWith("[")) {
+                        resourceEntries.add(res);
                     }
                 } else if (line.startsWith("uresource = ") || line.startsWith("full.uresource = ")) {
                     String res = line.substring(line.indexOf(" = ") + 3).trim();
                     if (!res.startsWith("[")) {
-                        uresources.add(res);
+                        uresourceEntries.add(res);
                     }
                 }
             }
@@ -364,45 +129,328 @@ public class KnightInstaller implements Runnable {
         if (!baseUrl.endsWith("/"))
             baseUrl += "/";
 
-        int totalDownloads = resources.size() + uresources.size();
-        int totalUnpacks = uresources.size();
-        int currentFile = 0;
-        pr.postMaxPart(totalDownloads + totalUnpacks);
-        pr.setPartIndeterminate(false);
+        // ── Fetch remote digest.txt ──
+        pr.postLogLine("Fetching digest.txt from server...", null);
+        String digestUrl = baseUrl + "digest.txt";
+        String remoteDigestContent = Utils.downloadString(digestUrl);
+        Map<String, String> remoteDigest = parseDigest(remoteDigestContent);
 
-        // Download resources
-        for (String res : resources) {
-            pr.postLogLine("Downloading " + res, null);
-            pr.postPartProgress(currentFile++);
-            File dest = new File(spiral, res);
-            if (dest.exists())
-                continue;
-            Utils.downloadFile(baseUrl + res, dest, pr);
-        }
-
-        // Download uresources
-        for (String res : uresources) {
-            pr.postLogLine("Downloading " + res, null);
-            pr.postPartProgress(currentFile++);
-            File dest = new File(spiral, res);
-            Utils.downloadFile(baseUrl + res, dest, pr);
-        }
-
-        // Unpack all uresources
-        for (String res : uresources) {
-            File dest = new File(spiral, res);
-            if (dest.exists()) {
-                pr.postLogLine("Unpacking " + res, null);
-                pr.postPartProgress(currentFile++);
-                File unpackTarget = spiral;
-                if (res.startsWith("rsrc/")) {
-                    unpackTarget = new File(spiral, "rsrc");
-                }
-                unpack(dest, unpackTarget);
+        // ── Load local digest.txt (if exists) ──
+        File localDigestFile = new File(spiral, "digest.txt");
+        Map<String, String> localDigest = new HashMap<>();
+        if (localDigestFile.exists()) {
+            try {
+                String localContent = new String(Files.readAllBytes(localDigestFile.toPath()));
+                localDigest = parseDigest(localContent);
+            } catch (Exception e) {
+                pr.postLogLine("Warning: Failed to read local digest, will re-download all", null);
             }
         }
 
-        pr.postLogLine("Download complete.", null);
+        // ── Build complete file list and determine what needs downloading ──
+        // Combine all file entries
+        List<String> allFiles = new ArrayList<>();
+        allFiles.addAll(codeEntries);
+        allFiles.addAll(resourceEntries);
+        allFiles.addAll(uresourceEntries);
+
+        // Track which uresources were actually downloaded (for selective unpacking)
+        Set<String> downloadedUresources = new HashSet<>();
+
+        // Count files that need downloading
+        int totalFiles = allFiles.size();
+        int downloadedCount = 0;
+        int skippedCount = 0;
+
+        pr.postMaxPart(totalFiles);
+        pr.setPartIndeterminate(false);
+        int currentFile = 0;
+
+        for (String filePath : allFiles) {
+            pr.postPartProgress(currentFile++);
+
+            File localFile = new File(spiral, filePath);
+            String remoteHash = remoteDigest.get(filePath);
+            String localHash = localDigest.get(filePath);
+
+            // Smart re-download: skip if file exists AND hash matches remote digest
+            if (localFile.exists() && remoteHash != null && remoteHash.equals(localHash)) {
+                pr.postLogLine("Skipping (unchanged): " + filePath, null);
+                skippedCount++;
+                continue;
+            }
+
+            // Download the file
+            pr.postLogLine("Downloading " + filePath, null);
+            Utils.downloadFile(baseUrl + filePath, localFile, pr);
+            downloadedCount++;
+
+            // Track if this was a uresource that was downloaded
+            if (uresourceEntries.contains(filePath)) {
+                downloadedUresources.add(filePath);
+            }
+        }
+
+        // ── Handle getdown-pro-new.jar → getdown-pro.jar rename ──
+        File getdownNew = new File(spiral, "code/getdown-pro-new.jar");
+        File getdownPro = new File(spiral, "getdown-pro.jar");
+        if (getdownNew.exists()) {
+            Files.copy(getdownNew.toPath(), getdownPro.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            pr.postLogLine("Copied getdown-pro-new.jar → getdown-pro.jar", null);
+        } else if (!getdownPro.exists()) {
+            // getdown-pro-new.jar is listed as a resource, download it directly
+            String getdownNewUrl = baseUrl + "code/getdown-pro-new.jar";
+            pr.postLogLine("Downloading getdown-pro-new.jar...", null);
+            try {
+                Utils.downloadFile(getdownNewUrl, getdownNew, pr);
+                Files.copy(getdownNew.toPath(), getdownPro.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                pr.postLogLine("Warning: Could not download getdown-pro-new.jar: " + e.getMessage(), null);
+            }
+        }
+
+        // ── Unpack uresources that were downloaded (changed) ──
+        if (!downloadedUresources.isEmpty()) {
+            pr.postLogLine("Unpacking updated resources...", null);
+            pr.postMaxPart(downloadedUresources.size());
+            int unpackIdx = 0;
+            for (String res : downloadedUresources) {
+                File dest = new File(spiral, res);
+                if (dest.exists()) {
+                    pr.postLogLine("Unpacking " + res, null);
+                    pr.postPartProgress(unpackIdx++);
+                    File unpackTarget = spiral;
+                    if (res.startsWith("rsrc/")) {
+                        unpackTarget = new File(spiral, "rsrc");
+                    }
+                    unpack(dest, unpackTarget);
+                }
+            }
+        } else {
+            // Even if nothing was downloaded, ensure uresources are unpacked
+            // (e.g., on first install after rsrc dirs were deleted during update)
+            boolean needsUnpack = false;
+            for (String res : uresourceEntries) {
+                File dest = new File(spiral, res);
+                if (dest.exists()) {
+                    // Check if the unpack target has content
+                    File checkDir = new File(spiral, "rsrc");
+                    if (!checkDir.exists() || checkDir.list() == null ||
+                            countNonJarFiles(checkDir) == 0) {
+                        needsUnpack = true;
+                        break;
+                    }
+                }
+            }
+            if (needsUnpack) {
+                pr.postLogLine("Unpacking all resources...", null);
+                pr.postMaxPart(uresourceEntries.size());
+                int unpackIdx = 0;
+                for (String res : uresourceEntries) {
+                    File dest = new File(spiral, res);
+                    if (dest.exists()) {
+                        pr.postLogLine("Unpacking " + res, null);
+                        pr.postPartProgress(unpackIdx++);
+                        File unpackTarget = spiral;
+                        if (res.startsWith("rsrc/")) {
+                            unpackTarget = new File(spiral, "rsrc");
+                        }
+                        unpack(dest, unpackTarget);
+                    }
+                }
+            }
+        }
+
+        // ── Save remote digest.txt locally for future comparison ──
+        try (FileOutputStream fos = new FileOutputStream(localDigestFile)) {
+            fos.write(remoteDigestContent.getBytes());
+        }
+
+        pr.postLogLine("Download complete. (" + downloadedCount + " downloaded, " + skippedCount + " skipped)", null);
+    }
+
+    /**
+     * Count non-jar files in a directory (used to check if uresources need
+     * unpacking).
+     */
+    private int countNonJarFiles(File dir) {
+        int count = 0;
+        File[] files = dir.listFiles();
+        if (files == null)
+            return 0;
+        for (File f : files) {
+            if (f.isFile() && !f.getName().endsWith(".jar")) {
+                count++;
+            } else if (f.isDirectory()) {
+                count += countNonJarFiles(f);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Parse digest.txt content into a map of filename → md5hash.
+     * Format: "filename = md5hash" per line.
+     */
+    private Map<String, String> parseDigest(String content) {
+        Map<String, String> digest = new HashMap<>();
+        if (content == null)
+            return digest;
+        String[] lines = content.split("\n");
+        for (String line : lines) {
+            line = line.trim();
+            if (line.isEmpty() || line.startsWith("#"))
+                continue;
+            int eqIdx = line.indexOf(" = ");
+            if (eqIdx > 0) {
+                String fileName = line.substring(0, eqIdx).trim();
+                String hash = line.substring(eqIdx + 3).trim();
+                digest.put(fileName, hash);
+            }
+        }
+        return digest;
+    }
+
+    /**
+     * Generate JSON configuration files for the launcher.
+     * Parses getdown.txt to build SpiralKnights.json and launcher_profiles.json.
+     */
+    private void generateJsonConfig() throws Exception {
+        pr.postLogLine("Generating JSON...", null);
+        pr.postMaxPart(1);
+        pr.postPartProgress(0);
+        pr.setPartIndeterminate(true);
+
+        List<String> codeJars = new ArrayList<>();
+        List<String> jvmArgs = new ArrayList<>();
+        String mainClass = null;
+
+        File getdownTxt = new File(spiral, "getdown.txt");
+        if (!getdownTxt.exists()) {
+            pr.postLogLine("Can't find getdown.txt", null);
+            pr.setPartIndeterminate(false);
+            pr.unlockExit();
+            return;
+        }
+
+        // Parse getdown.txt
+        BufferedReader rdr = new BufferedReader(new InputStreamReader(new FileInputStream(getdownTxt)));
+        String line;
+        while ((line = rdr.readLine()) != null) {
+            if (line.startsWith(CODE_LINE)) {
+                String codeJar = line.substring(CODE_LINE.length());
+                // Skip jinput and lwjgl as they're provided by PojavLauncher
+                if (!codeJar.contains("jinput") && !codeJar.contains("lwjgl")) {
+                    codeJars.add(codeJar);
+                }
+            } else if (line.startsWith(ARG_LINE)) {
+                String arg = line.substring(ARG_LINE.length());
+                // Skip memory args, library path, bracketed args, module-system flags (we add
+                // our own),
+                // and deprecated JRE flags
+                if (!arg.startsWith("-Xm") && !arg.startsWith("-Djava.library.path") && !arg.startsWith("[")
+                        && !arg.startsWith("--add-opens") && !arg.startsWith("--enable-native-access")
+                        && !arg.contains("AggressiveOpts") && !arg.contains("UseParallelOldGC")) {
+                    jvmArgs.add(arg);
+                }
+            } else if (line.startsWith(CLASS_LINE)) {
+                mainClass = line.substring(CLASS_LINE.length());
+            }
+        }
+        rdr.close();
+
+        // Add required LWJGL arg for Android
+        jvmArgs.add("-Dorg.lwjgl.opengl.disableStaticInit=true");
+
+        // Copy libraries and build JSON
+        JSONObject outputJson = new JSONObject();
+        outputJson.put("minecraftArguments", "");
+
+        for (String jarPath : codeJars) {
+            File source = new File(spiral, jarPath);
+            if (!source.exists()) {
+                pr.postLogLine("Warning: " + jarPath + " not found, skipping", null);
+                continue;
+            }
+
+            String fileName = source.getName();
+            String extension = fileName.substring(fileName.lastIndexOf("."));
+            String libName = fileName.substring(0, fileName.lastIndexOf("."));
+            String mavenName = "spiral:" + libName + ":0.0";
+
+            // Copy to libraries folder
+            File libDestination = new File(destination,
+                    "libraries/spiral/" + libName + "/0.0/" + libName + "-0.0" + extension);
+            libDestination.getParentFile().mkdirs();
+            Files.copy(source.toPath(), libDestination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Add to JSON
+            JSONObject library = new JSONObject();
+            library.put("name", mavenName);
+            outputJson.append("libraries", library);
+        }
+
+        outputJson.put("id", "SpiralKnights");
+        outputJson.put("releaseTime", "2009-05-13T20:11:00+00:00");
+        outputJson.put("time", "2009-05-13T20:11:00+00:00");
+        outputJson.put("type", "release");
+        outputJson.put("mainClass", mainClass);
+
+        // Write SpiralKnights.json
+        File versionPath = new File(destination, "versions/SpiralKnights/SpiralKnights.json");
+        versionPath.getParentFile().mkdirs();
+        try (FileOutputStream fos = new FileOutputStream(versionPath)) {
+            fos.write(outputJson.toString().getBytes());
+        }
+
+        // Update launcher_profiles.json
+        String sprofiles = null;
+        String b64Default = null;
+
+        try {
+            byte[] bprofiles = Files.readAllBytes(new File(destination, "launcher_profiles.json").toPath());
+            sprofiles = new String(bprofiles, 0, bprofiles.length);
+        } catch (Exception ignored) {
+        }
+
+        try {
+            File iconFile = new File(spiral, "desktop.png");
+            if (iconFile.exists()) {
+                b64Default = Base64.getEncoder().encodeToString(Files.readAllBytes(iconFile.toPath()));
+            }
+        } catch (Exception ignored) {
+        }
+
+        JSONObject profiles = sprofiles == null ? new JSONObject() : new JSONObject(sprofiles);
+        JSONObject spiralKnightsProfile = new JSONObject();
+
+        // Build JVM args string
+        StringBuilder sb = new StringBuilder();
+        int sz = jvmArgs.size();
+        for (int i = 0; i < sz; i++) {
+            sb.append(jvmArgs.get(i).replace("%APPDIR%", "./spiral/"));
+            if (i < sz - 1) {
+                sb.append(" ");
+            }
+        }
+
+        spiralKnightsProfile.put("javaArgs", sb.toString());
+        spiralKnightsProfile.put("lastVersionId", "SpiralKnights");
+        spiralKnightsProfile.put("name", "Spiral Knights");
+        if (b64Default != null) {
+            spiralKnightsProfile.put("icon", "data:image/png;base64," + b64Default);
+        }
+
+        if (profiles.has("profiles")) {
+            profiles.getJSONObject("profiles").put("SpiralKnights", spiralKnightsProfile);
+        } else {
+            JSONObject newProfiles = new JSONObject();
+            newProfiles.put("SpiralKnights", spiralKnightsProfile);
+            profiles.put("profiles", newProfiles);
+        }
+
+        Files.write(new File(destination, "launcher_profiles.json").toPath(), profiles.toString().getBytes());
+        pr.setPartIndeterminate(false);
     }
 
     private void unpack(File zipFile, File targetDir) throws IOException {
@@ -436,7 +484,8 @@ public class KnightInstaller implements Runnable {
      * This is used for the reinstall functionality.
      * 
      * Unpacks:
-     * - spiral/rsrc/*.jar files (full-music-bundle.jar, full-rest-bundle.jar, intro-bundle.jar) -> spiral/rsrc/
+     * - spiral/rsrc/*.jar files (full-music-bundle.jar, full-rest-bundle.jar,
+     * intro-bundle.jar) -> spiral/rsrc/
      * - spiral/crucible.jar -> spiral/
      */
     public static void unpackResources(Progress pr) throws IOException {
@@ -452,7 +501,8 @@ public class KnightInstaller implements Runnable {
 
         // Count jars to unpack
         File crucibleJar = new File(spiral, "crucible.jar");
-        if (crucibleJar.exists()) totalJars++;
+        if (crucibleJar.exists())
+            totalJars++;
 
         if (rsrcDir.exists() && rsrcDir.isDirectory()) {
             File[] rsrcFiles = rsrcDir.listFiles((dir, name) -> name.endsWith(".jar"));
