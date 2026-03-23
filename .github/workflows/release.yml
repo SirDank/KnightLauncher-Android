@@ -82,7 +82,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk build/KnightLauncher-${{ steps.version.outputs.version }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -91,7 +91,7 @@ jobs:
           name: KnightLauncher Android ${{ steps.version.outputs.version }}
           body: "🎮 Play Spiral Knights on Android!"
           files: |
-            out/KnightLauncher-${{ steps.version.outputs.version }}.apk
+            build/KnightLauncher-${{ steps.version.outputs.version }}.apk
           draft: false
           prerelease: true
           generate_release_notes: true

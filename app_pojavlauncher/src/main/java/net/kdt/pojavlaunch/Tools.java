@@ -283,12 +283,6 @@ public final class Tools {
         javaArgList.addAll(Arrays.asList(getMinecraftJVMArgs(versionId, gamedir)));
         javaArgList.add("-cp"); javaArgList.add(launchClasspath);
 
-        // Forge 1.6.4 crash mitigation
-        // https://github.com/MinecraftForge/FML/blob/f1b3381e61fac1a0ae90f521223c6bc613eb4888/common/cpw/mods/fml/common/asm/FMLSanityChecker.java#L192-L208
-        // It for some reason fails certification and crashes because it thinks Minecraft is corrupted.
-        // This also has no loading screen as a result.
-        javaArgList.add("-Dfml.ignoreInvalidMinecraftCertificates=true");
-
         // imgui-java set library name to use. This because Axiom uses a fork with different library naming
         // logic that doesn't seem to appear in the main repository. I'm not gonna work with that.
         javaArgList.add("-Dimgui.library.name=imgui-java");

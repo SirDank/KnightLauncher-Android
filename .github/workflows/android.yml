@@ -59,10 +59,10 @@ jobs:
         run: |
           # Build the launcher
           gradle :app_pojavlauncher:assembleRelease
-          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
+          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk build/KnightLauncher.apk
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
           name: KnightLauncher
-          path: out/KnightLauncher.*
+          path: build/KnightLauncher.*

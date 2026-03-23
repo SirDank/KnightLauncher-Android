@@ -183,7 +183,7 @@ if errorlevel 1 (
 
 :: Create output directory and copy APK
 if not exist "out" mkdir "out"
-copy /y "app_pojavlauncher\build\outputs\apk\release\app_pojavlauncher-release.apk" "out\KnightLauncher.apk" >nul
+copy /y "app_pojavlauncher\build\outputs\apk\release\app_pojavlauncher-release.apk" "build\KnightLauncher.apk" >nul
 
 echo [SUCCESS] APK built successfully!
 echo.
@@ -191,7 +191,7 @@ echo ==============================================
 echo   Build completed successfully!
 echo ==============================================
 echo.
-echo The APK is located at: %SCRIPT_DIR%out\KnightLauncher.apk
+echo The APK is located at: %SCRIPT_DIR%build\KnightLauncher.apk
 echo.
 
 goto :success_exit

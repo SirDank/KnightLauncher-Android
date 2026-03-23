@@ -128,7 +128,7 @@ The build scripts will:
 5. 🏗️ Build the GLFW stub
 6. 📦 Build the signed release APK
 
-**Output:** `out/KnightLauncher.apk`
+**Output:** `build/KnightLauncher.apk`
 
 ### Manual Build
 

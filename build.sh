@@ -156,10 +156,10 @@ build_apk() {
     
     # Create output directory and copy APK
     mkdir -p out
-    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
+    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk build/KnightLauncher.apk
     
     success "APK built successfully!"
-    success "Output: $(realpath out/KnightLauncher.apk)"
+    success "Output: $(realpath build/KnightLauncher.apk)"
 }
 
 # =============================================================================
@@ -183,7 +183,7 @@ main() {
     echo ""
     success "Build completed successfully!"
     echo ""
-    echo "The APK is located at: out/KnightLauncher.apk"
+    echo "The APK is located at: build/KnightLauncher.apk"
     echo ""
 }
 
