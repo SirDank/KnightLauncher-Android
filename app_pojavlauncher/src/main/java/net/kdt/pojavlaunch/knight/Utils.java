@@ -1,12 +1,17 @@
 package net.kdt.pojavlaunch.knight;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Utils {
     public static byte[] getFromWeb(String url, Progress pr) throws IOException {
@@ -122,5 +127,45 @@ public class Utils {
             }
         }
         return -1;
+    }
+
+    /**
+     * Compute the MD5 hash of a file and return it as a lowercase hex string.
+     */
+    public static String computeMD5(File file) throws IOException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            try (FileInputStream fis = new FileInputStream(file)) {
+                byte[] buf = new byte[8192];
+                int len;
+                while ((len = fis.read(buf)) != -1) {
+                    md.update(buf, 0, len);
+                }
+            }
+            byte[] digest = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IOException("MD5 algorithm not available", e);
+        }
+    }
+
+    /**
+     * Download a URL's content as a String.
+     */
+    public static String downloadString(String url) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.connect();
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader rdr = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            String line;
+            while ((line = rdr.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        }
+        return sb.toString();
     }
 }

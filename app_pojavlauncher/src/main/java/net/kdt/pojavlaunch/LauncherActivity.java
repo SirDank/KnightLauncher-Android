@@ -180,7 +180,7 @@ public class LauncherActivity extends BaseActivity {
         ExtraCore.addExtraListener(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.addExtraListener(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
 
-        if (savedInstanceState == null && !new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
+        if (savedInstanceState == null && !new File(Tools.DIR_GAME_HOME, "spiral/getdown.txt").exists()) {
             installSpiralKnights();
         }
 
@@ -317,26 +317,37 @@ public class LauncherActivity extends BaseActivity {
     public void updateGame() {
         File spiralDir = new File(Tools.DIR_GAME_HOME, "spiral");
 
-        // Delete the entire spiral directory for a clean reinstall
+        // Smart update: delete only extracted resources and local digest
+        // so the installer will re-check hashes and re-download changed files
         if (spiralDir.exists()) {
-            try {
-                org.apache.commons.io.FileUtils.deleteDirectory(spiralDir);
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to delete spiral folder", Toast.LENGTH_SHORT).show();
-                return;
+            // Delete extracted subdirectories inside rsrc/, keep .jar bundles
+            File rsrcDir = new File(spiralDir, "rsrc");
+            if (rsrcDir.exists()) {
+                File[] rsrcContents = rsrcDir.listFiles();
+                if (rsrcContents != null) {
+                    for (File f : rsrcContents) {
+                        if (f.isDirectory()) {
+                            try {
+                                org.apache.commons.io.FileUtils.deleteDirectory(f);
+                            } catch (java.io.IOException ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Delete local digest.txt to force re-validation of all files
+            File localDigest = new File(spiralDir, "digest.txt");
+            if (localDigest.exists()) {
+                localDigest.delete();
             }
         }
 
-        // Install fresh
+        // Run installer with smart re-download
         installSpiralKnights();
     }
 
     public void installSpiralKnights() {
-        // Skip if already installed
-        if (new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists()) {
-            return;
-        }
 
         mWakeLockUtils.acquire(this, "KnightLauncher:InstallWakeLock");
 
@@ -419,7 +430,7 @@ public class LauncherActivity extends BaseActivity {
                     // Release wake lock when installation is complete
                     mWakeLockUtils.release();
                     pd.dismiss();
-                    boolean getdownExists = new File(Tools.DIR_GAME_HOME, "spiral/getdown-pro.jar").exists();
+                    boolean getdownExists = new File(Tools.DIR_GAME_HOME, "spiral/getdown.txt").exists();
                     boolean jsonExists = new File(Tools.DIR_GAME_HOME, "versions/SpiralKnights/SpiralKnights.json")
                             .exists();
 
@@ -433,7 +444,7 @@ public class LauncherActivity extends BaseActivity {
                         // missing:
                         String missingFiles = "";
                         if (!getdownExists)
-                            missingFiles += "getdown-pro.jar ";
+                            missingFiles += "getdown.txt ";
                         if (!jsonExists)
                             missingFiles += "SpiralKnights.json";
 
@@ -496,15 +507,15 @@ public class LauncherActivity extends BaseActivity {
      * Show a dialog prompting the user to update.
      */
     private void showUpdateDialog(UpdateChecker.ReleaseInfo release) {
-        String message = getString(R.string.update_available_message, 
-            BuildConfig.VERSION_NAME, release.versionName);
-        
+        String message = getString(R.string.update_available_message,
+                BuildConfig.VERSION_NAME, release.versionName);
+
         new AlertDialog.Builder(this)
-            .setTitle(R.string.update_available_title)
-            .setMessage(message)
-            .setPositiveButton(R.string.update_now, (d, w) -> downloadAndInstallUpdate(release))
-            .setNegativeButton(R.string.update_later, null)
-            .show();
+                .setTitle(R.string.update_available_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.update_now, (d, w) -> downloadAndInstallUpdate(release))
+                .setNegativeButton(R.string.update_later, null)
+                .show();
     }
 
     /**
@@ -526,7 +537,7 @@ public class LauncherActivity extends BaseActivity {
             try {
                 // Save APK to app's external files directory
                 File apkFile = new File(getExternalFilesDir(null), "KnightLauncher-update.apk");
-                
+
                 // Delete old update file if exists
                 if (apkFile.exists()) {
                     apkFile.delete();
@@ -534,14 +545,13 @@ public class LauncherActivity extends BaseActivity {
 
                 // Download with progress monitoring
                 DownloadUtils.downloadFileMonitored(
-                    release.apkUrl,
-                    apkFile,
-                    null,
-                    (downloaded, total) -> {
-                        int percent = total > 0 ? (int) ((downloaded * 100L) / total) : 0;
-                        runOnUiThread(() -> pd.setProgress(percent));
-                    }
-                );
+                        release.apkUrl,
+                        apkFile,
+                        null,
+                        (downloaded, total) -> {
+                            int percent = total > 0 ? (int) ((downloaded * 100L) / total) : 0;
+                            runOnUiThread(() -> pd.setProgress(percent));
+                        });
 
                 runOnUiThread(() -> {
                     pd.dismiss();
@@ -554,8 +564,8 @@ public class LauncherActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     pd.dismiss();
                     mWakeLockUtils.release();
-                    Toast.makeText(LauncherActivity.this, 
-                        R.string.update_download_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(LauncherActivity.this,
+                            R.string.update_download_failed, Toast.LENGTH_LONG).show();
                 });
             }
         }).start();
@@ -568,15 +578,15 @@ public class LauncherActivity extends BaseActivity {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             Uri apkUri = FileProvider.getUriForFile(this,
-                getString(R.string.shareProviderAuthority), apkFile);
+                    getString(R.string.shareProviderAuthority), apkFile);
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } catch (Exception e) {
             Log.e("UpdateChecker", "Failed to start install intent", e);
-            Toast.makeText(this, "Failed to open installer: " + e.getMessage(), 
-                Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Failed to open installer: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

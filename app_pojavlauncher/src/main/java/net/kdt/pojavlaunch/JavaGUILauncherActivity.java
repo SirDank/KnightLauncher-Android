@@ -165,11 +165,11 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
             if (extras.getBoolean("openLogOutput", false))
                 openLogOutput(null);
             if (javaArgs != null) {
-                startModInstaller(null, javaArgs);
+                // startModInstaller(null, javaArgs);
             } else if (resourceUri != null) {
                 ProgressDialog barrierDialog = Tools.getWaitingDialog(this, R.string.multirt_progress_caching);
                 PojavApplication.sExecutorService.execute(() -> {
-                    startModInstallerWithUri(resourceUri);
+                    // startModInstallerWithUri(resourceUri);
                     runOnUiThread(barrierDialog::dismiss);
                 });
             }
@@ -183,87 +183,6 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
                 Tools.dialogForceClose(JavaGUILauncherActivity.this);
             }
         });
-    }
-
-    private void startModInstallerWithUri(Uri uri) {
-        try {
-            File cacheFile = new File(getCacheDir(), "mod-installer-temp");
-            InputStream contentStream = getContentResolver().openInputStream(uri);
-            if (contentStream == null)
-                throw new IOException("Failed to open content stream");
-            try (FileOutputStream fileOutputStream = new FileOutputStream(cacheFile)) {
-                IOUtils.copy(contentStream, fileOutputStream);
-            }
-            contentStream.close();
-            startModInstaller(cacheFile, null);
-        } catch (IOException e) {
-            Tools.showError(this, e, true);
-        }
-    }
-
-    public Runtime selectRuntime(File modFile) {
-        int javaVersion = getJavaVersion(modFile);
-        if (javaVersion == -1) {
-            finalErrorDialog(getString(R.string.execute_jar_failed_to_read_file));
-            return null;
-        }
-        String nearestRuntime = MultiRTUtils.getNearestJreName(javaVersion);
-        if (nearestRuntime == null) {
-            finalErrorDialog(getString(R.string.multirt_nocompatiblert, javaVersion));
-            return null;
-        }
-        Runtime selectedRuntime = MultiRTUtils.forceReread(nearestRuntime);
-        int selectedJavaVersion = Math.max(javaVersion, selectedRuntime.javaVersion);
-        // Don't allow versions higher than Java 17 because our caciocavallo
-        // implementation does not allow for it
-        if (selectedJavaVersion > 17) {
-            finalErrorDialog(getString(R.string.execute_jar_incompatible_runtime, selectedJavaVersion));
-            return null;
-        }
-        return selectedRuntime;
-    }
-
-    private File findModPath(List<String> argList) {
-        int argsSize = argList.size();
-        for (int i = 0; i < argsSize; i++) {
-            // Look for the -jar argument
-            if (!argList.get(i).equals("-jar"))
-                continue;
-            int pathIndex = i + 1;
-            // Check if the supposed path is out of the argument bounds
-            if (pathIndex >= argsSize)
-                return null;
-            // Use the path as a file
-            return new File(argList.get(pathIndex));
-        }
-        return null;
-    }
-
-    private void startModInstaller(File modFile, String javaArgs) {
-        new Thread(() -> {
-            // Maybe replace with more advanced arg parsing logic later
-            List<String> argList = javaArgs != null ? Arrays.asList(javaArgs.split(" ")) : null;
-            File selectedMod = modFile;
-            if (selectedMod == null && argList != null) {
-                // If modFile is not specified directly, try to extract the -jar argument from
-                // the javaArgs
-                selectedMod = findModPath(argList);
-            }
-            Runtime selectedRuntime;
-            if (selectedMod == null || DEFAULT_PREF.getBoolean("disable_autojre_select", false)) {
-                // If we are unable to find out the path to the mod or the user explicitly
-                // desires so, we use the default runtime
-                selectedRuntime = MultiRTUtils.forceReread(LauncherPreferences.PREF_DEFAULT_RUNTIME);
-            } else {
-                // Autoselect it properly in the other case.
-                selectedRuntime = selectRuntime(selectedMod);
-                // If the selection failed, just return. The autoselect function has already
-                // shown the dialog.
-                if (selectedRuntime == null)
-                    return;
-            }
-            launchJavaRuntime(selectedRuntime, modFile, argList);
-        }, "JREMainThread").start();
     }
 
     private void finalErrorDialog(CharSequence msg) {

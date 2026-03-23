@@ -414,7 +414,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
         JREUtils.redirectAndPrintJRELog();
         LauncherProfiles.load();
-        int requiredJavaVersion = 8;
+        int requiredJavaVersion = 21;
         if (version.javaVersion != null)
             requiredJavaVersion = version.javaVersion.majorVersion;
         Tools.launchMinecraft(this, minecraftAccount, minecraftProfile, versionId, requiredJavaVersion);
