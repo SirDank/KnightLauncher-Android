@@ -18,6 +18,10 @@ public class startInjectors {
             String implVersion = asmPackage.getImplementationVersion();
             if (implVersion == null) implVersion = "not found";
             System.out.println("Amethyst-Android: Detected ASM version: " + implVersion);
+            System.out.println("KnightLauncher-Android: Suppressing LWJGL2 debug logs...");
+            
+            DebugLogSuppressor.premain(args, inst);
+            
             ALC10Injector.premain(args, inst);
             // This is the version we override old asm vers with. So we add the patches
             // so the older version bugs are ported.
