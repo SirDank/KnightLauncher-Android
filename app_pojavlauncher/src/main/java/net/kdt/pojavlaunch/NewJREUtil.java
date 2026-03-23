@@ -155,7 +155,6 @@ public class NewJREUtil {
     private enum InternalRuntime {
         // Temporarily disabled - Spiral Knights only uses JRE8
         JRE_21(21, "Internal-21", "components/jre-21");
-
         // JRE_25(25, "Internal-25", "components/jre-25");
         public final int majorVersion;
         public final String name;

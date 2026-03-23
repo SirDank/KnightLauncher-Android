@@ -519,7 +519,7 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
     private void updateGrabState(boolean isGrabbing) {
         // Always re-evaluate processor when grab state changes OR when called
         TouchEventProcessor newProcessor = pickEventProcessor(isGrabbing);
-        if (mCurrentTouchProcessor != newProcessor) {
+        if (mLastGrabState != isGrabbing || mCurrentTouchProcessor != newProcessor) {
             mCurrentTouchProcessor.cancelPendingActions();
             mCurrentTouchProcessor = newProcessor;
         }

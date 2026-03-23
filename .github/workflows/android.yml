@@ -51,7 +51,6 @@ jobs:
       - name: Build JRE JAR files
         run: |
           ./scripts/languagelist_updater.sh
-
           mkdir out
           # Build JRE JAR files (security manager, etc...)
           gradle :jre_lwjgl3glfw:build
@@ -62,7 +61,7 @@ jobs:
           gradle :app_pojavlauncher:assembleRelease
           mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
 
-      - name: Upload APK
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
           name: KnightLauncher

@@ -307,8 +307,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     @Override
     public void onResume() {
         super.onResume();
-        if (PREF_ENABLE_GYRO)
-            mGyroControl.enable();
+        if(PREF_ENABLE_GYRO) mGyroControl.enable();
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, 1);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
     }
 
@@ -321,6 +321,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         if (mQuickSettingSideDialog != null) {
             mQuickSettingSideDialog.cancel();
         }
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, 0);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 0);
 
         super.onPause();
@@ -648,6 +649,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             Tools.setFullscreen(this, setFullscreen());
         }
         super.onWindowFocusChanged(hasFocus);
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, hasFocus ? 1 : 0);
     }
 
     @Override

@@ -132,6 +132,8 @@ public final class Tools {
     public static String CTRLDEF_FILE;
     public static String PROJECTX_PREFS_FILE;
     private static RenderersList sCompatibleRenderers;
+    private static boolean isLwjgl3 = true;
+
 
     private static File getPojavStorageRoot(Context ctx) {
         if (SDK_INT >= 29) {
@@ -258,7 +260,7 @@ public final class Tools {
         OldVersionsUtils.selectOpenGlVersion(versionInfo);
 
         String[] launchArgs = getMinecraftClientArgs(minecraftAccount, versionInfo, gamedir);
-        String launchClassPath = generateLaunchClassPath(versionInfo, versionId);
+        String launchClasspath = generateLaunchClasspath(versionInfo, versionId);
 
         List<String> javaArgList = new ArrayList<>();
 
@@ -279,8 +281,19 @@ public final class Tools {
         javaArgList.add("-Dorg.lwjgl.librarypath=" + Tools.NATIVE_LIB_DIR);
 
         javaArgList.addAll(Arrays.asList(getMinecraftJVMArgs(versionId, gamedir)));
-        javaArgList.add("-cp");
-        javaArgList.add(getLWJGL3ClassPath() + ":" + launchClassPath);
+        javaArgList.add("-cp"); javaArgList.add(launchClasspath);
+
+        // Forge 1.6.4 crash mitigation
+        // https://github.com/MinecraftForge/FML/blob/f1b3381e61fac1a0ae90f521223c6bc613eb4888/common/cpw/mods/fml/common/asm/FMLSanityChecker.java#L192-L208
+        // It for some reason fails certification and crashes because it thinks Minecraft is corrupted.
+        // This also has no loading screen as a result.
+        javaArgList.add("-Dfml.ignoreInvalidMinecraftCertificates=true");
+
+        // imgui-java set library name to use. This because Axiom uses a fork with different library naming
+        // logic that doesn't seem to appear in the main repository. I'm not gonna work with that.
+        javaArgList.add("-Dimgui.library.name=imgui-java");
+        // We use an abomination to support all DH versions with a single library.
+        javaArgList.add("-DZstdNativePath="+Tools.NATIVE_LIB_DIR+"/libzstd-jni-1.5.7-6-dhcompat.so");
 
         javaArgList.add(versionInfo.mainClass);
         javaArgList.addAll(Arrays.asList(launchArgs));
@@ -448,41 +461,31 @@ public final class Tools {
                 + libInfos[2] + ".jar";
     }
 
+    private static String getLibClasspath(JMinecraftVersionList.Version info){
+        StringBuilder libClasspath = new StringBuilder();
+        String[] classpath = generateLibClasspath(info);
+        for (String jarFile : classpath) {
+            libClasspath.append(jarFile).append(":");
+        }
+        // Remove the ':' at the end
+        libClasspath.setLength(libClasspath.length() - 1);
+        return libClasspath.toString();
+    }
+
     public static String getClientClasspath(String version) {
         return DIR_HOME_VERSION + "/" + version + "/" + version + ".jar";
     }
+    public static String generateLaunchClasspath(JMinecraftVersionList.Version info, String actualname) {
+        StringBuilder launchClasspath = new StringBuilder(); //versnDir + "/" + version + "/" + version + ".jar:";
+        String lwjgl3Folder = new File(Tools.DIR_GAME_HOME, "lwjgl3").getAbsolutePath();
+        String lwjgl3File = lwjgl3Folder + "/lwjgl-glfw-classes.jar";
+        String lwjglxFile = lwjgl3Folder + "/lwjglx-classes.jar";
 
-    private static String getLWJGL3ClassPath() {
-        StringBuilder libStr = new StringBuilder();
-        File lwjgl3Folder = new File(Tools.DIR_GAME_HOME, "lwjgl3");
-        File[] lwjgl3Files = lwjgl3Folder.listFiles();
-        if (lwjgl3Files != null) {
-            for (File file : lwjgl3Files) {
-                if (file.getName().endsWith(".jar")) {
-                    libStr.append(file.getAbsolutePath()).append(":");
-                }
-            }
-        }
-        // Remove the ':' at the end
-        libStr.setLength(libStr.length() - 1);
-        return libStr.toString();
-    }
-
-    public static String generateLaunchClassPath(JMinecraftVersionList.Version info, String actualname) {
-        StringBuilder finalClasspath = new StringBuilder();
-
-        String[] classpath = generateLibClasspath(info);
-
-        for (String jarFile : classpath) {
-            if (!FileUtils.exists(jarFile)) {
-                Log.d(APP_NAME, "Ignored non-exists file: " + jarFile);
-                continue;
-            }
-            finalClasspath.append(jarFile).append(":");
-        }
-        finalClasspath.append(getClientClasspath(actualname));
-
-        return finalClasspath.toString();
+        launchClasspath.append(lwjgl3File).append(":");
+        launchClasspath.append(getLibClasspath(info)).append(":");
+        launchClasspath.append(getClientClasspath(actualname));
+        if (!isLwjgl3) launchClasspath.append(":").append(lwjglxFile);
+        return launchClasspath.toString();
     }
 
     public static DisplayMetrics getDisplayMetrics(Activity activity) {
@@ -741,10 +744,21 @@ public final class Tools {
 
     public static String[] generateLibClasspath(JMinecraftVersionList.Version info) {
         List<String> libDir = new ArrayList<>();
-        for (DependentLibrary libItem : info.libraries) {
-            if (!checkRules(libItem.rules))
+        for (DependentLibrary libItem: info.libraries) {
+            if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:2.")) isLwjgl3 = false;
+            String libPath = Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem);
+            if (!FileUtils.exists(libPath)) {
+                Log.d(APP_NAME, "Ignored non-exists file: " + libPath);
                 continue;
-            libDir.add(Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem));
+            }
+            if(!checkRules(libItem.rules)) continue;
+            libDir.add(libPath);
+            // Mitigation: Babric doesn't use asm-all for some reason so it does a classpath conflict
+            if (libItem.name.startsWith("org.ow2.asm:asm") && !libItem.name.startsWith("org.ow2.asm:asm-all:")){
+                libDir.remove(Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(new DependentLibrary(){{
+                    name = "org.ow2.asm:asm-all:5.0.4";
+                }} ));
+            }
         }
         return libDir.toArray(new String[0]);
     }
