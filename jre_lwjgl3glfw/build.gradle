@@ -34,6 +34,14 @@ jar {
     }
     // exclude 'net/java/openjdk/cacio/ctc/**'
     exclude 'META-INF/**'
+
+    doLast {
+        copy {
+            from "libs/${lwjglxJarName}"
+            into destinationDirectory
+            rename { lwjglxFinalJarName }
+        }
+    }
 }
 
 java {

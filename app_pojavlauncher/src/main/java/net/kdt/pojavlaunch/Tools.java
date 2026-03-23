@@ -739,7 +739,7 @@ public final class Tools {
     public static String[] generateLibClasspath(JMinecraftVersionList.Version info) {
         List<String> libDir = new ArrayList<>();
         for (DependentLibrary libItem: info.libraries) {
-            if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:2.")) isLwjgl3 = false;
+            if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:2.") || libItem.name.startsWith("spiral:lwjgl")) isLwjgl3 = false;
             String libPath = Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem);
             if (!FileUtils.exists(libPath)) {
                 Log.d(APP_NAME, "Ignored non-exists file: " + libPath);
