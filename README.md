@@ -188,7 +188,7 @@ If you prefer manual control over the build process:
 Both workflows:
 
 - Use JDK 21 and Gradle 8.11
-- Download JRE 8 from [AngelAuraMC/angelauramc-openjdk-build](https://github.com/AngelAuraMC/angelauramc-openjdk-build)
+- Download JRE 21 from [AngelAuraMC/angelauramc-openjdk-build](https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre17-21)
 - Patch MobileGlues for ARM-only builds
 - Build signed release APKs
 
