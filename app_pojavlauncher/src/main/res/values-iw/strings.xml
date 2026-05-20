@@ -75,8 +75,6 @@
     <string name="error_fatal">KnightLauncher קרס באופן בלתי צפוי</string>
     <string name="error_show_less">הצג פחות</string>
     <string name="error_show_more">הצג עוד</string>
-    <string name="execute_jar_failed_to_read_file">נכשלה קריאת קובץ ה-.jar</string>
-    <string name="execute_jar_incompatible_runtime">הפעלת .jar אינה תואמת ל-Java %d</string>
     <string name="folder_dialog_create">צור</string>
     <string name="folder_dialog_insert_name">הכנס שם תיקייה.</string>
     <string name="folder_fragment_create">צור תיקייה</string>

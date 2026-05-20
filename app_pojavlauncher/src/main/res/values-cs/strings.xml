@@ -84,8 +84,6 @@
     <string name="error_fatal">KnightLauncher neočekávaně spadl</string>
     <string name="error_show_less">Zobrazit méně</string>
     <string name="error_show_more">Zobrazit více</string>
-    <string name="execute_jar_failed_to_read_file">Selhalo čtení souboru .jar</string>
-    <string name="execute_jar_incompatible_runtime">Funkce spouštění .jar souboru není kompatibilní s Javou %d</string>
     <string name="folder_dialog_create">Vytvořit</string>
     <string name="folder_dialog_insert_name">Zadat název složky</string>
     <string name="folder_fragment_create">Vytvořit složku</string>

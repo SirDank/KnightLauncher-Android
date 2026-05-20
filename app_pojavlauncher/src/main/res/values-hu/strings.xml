@@ -82,8 +82,6 @@
     <string name="error_fatal">A KnightLauncher váratlanul kicrashelt</string>
     <string name="error_show_less">Mutass kevesebbet</string>
     <string name="error_show_more">Mutass többet</string>
-    <string name="execute_jar_failed_to_read_file">A .jar beolvasása sikertelen</string>
-    <string name="execute_jar_incompatible_runtime">A \".jar futtatása\" nem kompatibilis a Java %d-val/vel</string>
     <string name="folder_dialog_create">Létrehozás</string>
     <string name="folder_dialog_insert_name">Mappa nevének megadása</string>
     <string name="folder_fragment_create">Mappa létrehozása</string>

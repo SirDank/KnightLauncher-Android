@@ -84,11 +84,10 @@
     <string name="customctrl_visibility_title">Visibility</string>
     <string name="delete_account_and_login">Delete account and log in</string>
     <string name="discord_invite" translatable="false">https://sirdank.github.io/dankware-website/discord</string>
+    <string name="downloading_update">Downloading Update</string>
     <string name="error_fatal">KnightLauncher has unexpectedly crashed</string>
     <string name="error_show_less">Show less</string>
     <string name="error_show_more">Show more</string>
-    <string name="execute_jar_failed_to_read_file">Failed to read the .jar file</string>
-    <string name="execute_jar_incompatible_runtime">Execute .jar feature is not compatible with Java %d</string>
     <string name="folder_dialog_create">Create</string>
     <string name="folder_dialog_insert_name">Insert folder name</string>
     <string name="folder_fragment_create">Create folder</string>
@@ -128,11 +127,18 @@
     <string name="main_install_jar_file">Execute a .jar</string>
     <string name="main_play">Play</string>
     <string name="main_share_logs">SHARE LOG</string>
+    <string name="mcl_apply_mods_complete">Mods applied! Resources rebuilt: %1$d, Mods applied: %2$d</string>
+    <string name="mcl_apply_mods_confirmation">Apply mods to the game? This will rebuild original resources and overlay downloaded mods.</string>
+    <string name="mcl_apply_mods_failed">Failed to apply mods</string>
+    <string name="mcl_apply_mods_no_mods">No mods found. Download mods first before applying.</string>
+    <string name="mcl_apply_mods_progress">Applying mods: %1$d/%2$d</string>
+    <string name="mcl_button_apply_mods">Apply Mods</string>
     <string name="mcl_button_discord">Discord</string>
     <string name="mcl_button_download_mods">Download Mods</string>
     <string name="mcl_button_github">GitHub</string>
     <string name="mcl_button_open_directory">OPEN GAME DIR</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
+    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
     <string name="mcl_button_reset_game_files">UPDATE / RESET GAME</string>
     <string name="mcl_disable_gestures">Disable gestures</string>
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
@@ -142,12 +148,6 @@
     <string name="mcl_download_mods_confirmation">Sync mods with the latest version? This will download new/updated mods and remove deprecated ones.</string>
     <string name="mcl_download_mods_failed">Failed to download mods</string>
     <string name="mcl_download_mods_progress">Downloading mods: %1$d/%2$d</string>
-    <string name="mcl_button_apply_mods">Apply Mods</string>
-    <string name="mcl_apply_mods_confirmation">Apply mods to the game? This will rebuild original resources and overlay downloaded mods.</string>
-    <string name="mcl_apply_mods_no_mods">No mods found. Download mods first before applying.</string>
-    <string name="mcl_apply_mods_progress">Applying mods: %1$d/%2$d</string>
-    <string name="mcl_apply_mods_complete">Mods applied! Resources rebuilt: %1$d, Mods applied: %2$d</string>
-    <string name="mcl_apply_mods_failed">Failed to apply mods</string>
     <string name="mcl_gamepad_forcedSDL">Forcibly start SDL controller handling</string>
     <string name="mcl_gamepad_forcedSDL_subtitle">Can allow old versions of Legacy4J to use SDL backend</string>
     <string name="mcl_gamepad_SDL">Enable SDL controller backend</string>
@@ -155,10 +155,9 @@
     <string name="mcl_memory_allocation">Memory allocation</string>
     <string name="mcl_memory_allocation_subtitle">Controls how much memory is given to Minecraft.</string>
     <string name="mcl_option_customcontrol">Custom controls</string>
-    <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
-    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
-    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
     <string name="mcl_reset_controls_complete">Controls reset to default</string>
+    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
+    <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
     <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; only, fast)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ only</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ only, fast)</string>
@@ -299,13 +298,10 @@
     <string name="storage_required">PojavLauncher requires external storage to be attached. Please reconnect it and restart the app.</string>
     <string name="tasks_ongoing">Tasks are in progress, please wait</string>
     <string name="toast_permission_denied">The read/write to storage permission is required!</string>
-    <string name="warning_remove_account">This account will be removed!</string>
-
-    <!-- App Update -->
-    <string name="update_available_title">Update Available</string>
     <string name="update_available_message">A new version of KnightLauncher is available!\n\nCurrent: %1$s\nNew: %2$s\n\nWould you like to update now?</string>
-    <string name="update_now">Update Now</string>
-    <string name="update_later">Later</string>
-    <string name="downloading_update">Downloading Update</string>
+    <string name="update_available_title">Update Available</string>
     <string name="update_download_failed">Failed to download update. Please try again later.</string>
+    <string name="update_later">Later</string>
+    <string name="update_now">Update Now</string>
+    <string name="warning_remove_account">This account will be removed!</string>
 </resources>
