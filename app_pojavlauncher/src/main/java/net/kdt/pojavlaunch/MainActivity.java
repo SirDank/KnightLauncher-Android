@@ -360,6 +360,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mControlLayout.requestLayout();
         mControlLayout.post(() -> {
             // Child of mControlLayout, so refreshing size here is correct
+            Tools.setFullscreen(this, setFullscreen());
             minecraftGLView.refreshSize();
             Tools.updateWindowSize(this);
             mControlLayout.refreshControlButtonPositions();

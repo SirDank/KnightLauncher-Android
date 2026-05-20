@@ -4,6 +4,64 @@ plugins {
 
 static def getDate() { return new Date().format('yyyyMMdd') }
 
+def getVersionName = {
+    // Get the last version tag, as well as the short head of the last commit
+    ByteArrayOutputStream TAG = new ByteArrayOutputStream()
+    String semVer = "1.1.5"
+    // Used by the fallback for github actions
+    ByteArrayOutputStream TAG_PART_COMMIT = new ByteArrayOutputStream()
+    String TAG_STRING
+
+    exec {
+        try {
+            commandLine 'git', 'describe', '--tags'
+            ignoreExitValue true
+            standardOutput = TAG
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    if (TAG.toString() == "") {
+        exec {
+            // Fallback for action builds
+            try {
+                commandLine 'git', 'describe', '--always', '--tags'
+                ignoreExitValue true
+                standardOutput = TAG_PART_COMMIT
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+    if(TAG.toString() != ""){
+        TAG_STRING = TAG.toString()
+    }else {
+        if(TAG_PART_COMMIT.toString().trim() == ""){
+             //Fallback no repo
+            return ("LOCAL-" + "${getDate()}")
+        }else {
+            // Used by github actions
+            TAG_STRING =  'knightlauncher-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
+        }
+
+    }
+
+    return TAG_STRING.trim().replace("-g", "-") + "-" + semVer
+}
+
+def getCFApiKey = {
+    String key = System.getenv("CURSEFORGE_API_KEY");
+    if(key != null) return key;
+    File curseforgeKeyFile = new File("$projectDir/curseforge_key.txt");
+    if(curseforgeKeyFile.canRead() && curseforgeKeyFile.isFile()) {
+        return curseforgeKeyFile.text;
+    }
+    logger.warn('BUILD: You have no CurseForge key, the curseforge api will get disabled !');
+    return "DUMMY";
+}
+
 configurations {
     instrumentedClasspath {
         canBeConsumed = false
@@ -68,6 +126,8 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
+            resValue "string", "app_name", "KnightLauncher (Debug)"
+            resValue "string", "app_short_name", "KL (Debug)"
             resValue 'string', 'application_package', 'com.sirdank.knightlauncher.debug'
             resValue 'string', 'storageProviderAuthorities', 'com.sirdank.knightlauncher.scoped.gamefolder.debug'
             resValue 'string', 'shareProviderAuthority', 'com.sirdank.knightlauncher.scoped.controlfolder.debug'
@@ -88,6 +148,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // Sign with debug keystore so the APK can be installed
             signingConfig signingConfigs.customDebug
+            resValue "string", "app_name", "KnightLauncher"
+            resValue "string", "app_short_name", "KL"
             resValue 'string', 'storageProviderAuthorities', 'com.sirdank.knightlauncher.scoped.gamefolder'
             resValue 'string', 'application_package', 'com.sirdank.knightlauncher'
             resValue 'string', 'shareProviderAuthority', 'com.sirdank.knightlauncher.scoped.controlfolder'

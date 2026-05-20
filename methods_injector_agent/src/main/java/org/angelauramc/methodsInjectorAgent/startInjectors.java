@@ -2,6 +2,7 @@ package org.angelauramc.methodsInjectorAgent;
 
 import org.angelauramc.methodsInjectorAgent.lwjgl2_methods_injector.ALC10Injector;
 import org.angelauramc.methodsInjectorAgent.lwjgl2_methods_injector.ASM5OverrideInjector;
+import org.angelauramc.methodsInjectorAgent.mod_compatibility_injector.VeilImguiOverrideDisable;
 
 import java.lang.instrument.Instrumentation;
 
@@ -23,6 +24,7 @@ public class startInjectors {
             DebugLogSuppressor.premain(args, inst);
             
             ALC10Injector.premain(args, inst);
+            VeilImguiOverrideDisable.premain(args, inst);
             // This is the version we override old asm vers with. So we add the patches
             // so the older version bugs are ported.
             if (implVersion.equals("5.0.4")) ASM5OverrideInjector.premain(args, inst);
