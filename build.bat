@@ -6,7 +6,7 @@ setlocal EnableDelayedExpansion
 :: =============================================================================
 :: This script builds the KnightLauncher Android APK.
 :: Requirements:
-::   - JDK 21 (Temurin recommended)
+::   - JDK 21 or 25 (Temurin recommended)
 ::   - Git with submodules cloned
 ::   - Internet connection (for downloading JRE artifacts)
 ::   - PowerShell (for downloading files)
@@ -20,7 +20,7 @@ set "SCRIPT_DIR=%~dp0"
 cd /d "%SCRIPT_DIR%"
 
 :: Configuration
-set "ASSETS_DIR=app_pojavlauncher\src\main\assets\components\jre-21"
+set "ASSETS_DIR=app_pojavlauncher\src\main\assets\components\jre-25"
 
 echo.
 echo ==============================================
@@ -34,7 +34,7 @@ echo.
 
 echo [INFO] Checking requirements...
 
-:: Check JAVA_HOME first (prefer explicit JDK 21 path)
+:: Check JAVA_HOME first (prefer explicit JDK 21 or 25 path)
 if defined JAVA_HOME (
     echo [INFO] JAVA_HOME is set to: %JAVA_HOME%
     set "PATH=%JAVA_HOME%\bin;%PATH%"
@@ -43,38 +43,45 @@ if defined JAVA_HOME (
 :: Check Java
 where java >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Java is not installed. Please install JDK 21 Temurin.
-    echo [INFO]  Download from: https://adoptium.net/temurin/releases/?version=21
+    echo [ERROR] Java is not installed. Please install JDK 21 or 25 Temurin.
+    echo [INFO]  Download from: https://adoptium.net/temurin/releases/
     goto :error_exit
 )
 
-:: Check Java version - require Java 21
+:: Check Java version - require Java 21 or 25
 echo [INFO] Checking Java version...
 for /f "tokens=3" %%v in ('java -version 2^>^&1 ^| findstr /i "version"') do (
     set "JAVA_VER_STRING=%%~v"
 )
-:: Extract major version (handles "21.0.x" format)
+:: Extract major version (handles "21.0.x" or "25.0.x" format)
 for /f "tokens=1 delims=." %%m in ("!JAVA_VER_STRING!") do (
     set "JAVA_MAJOR=%%m"
 )
 
 echo [INFO] Java version detected: !JAVA_VER_STRING! (major: !JAVA_MAJOR!)
 
-if not "!JAVA_MAJOR!"=="21" (
+if not "!JAVA_MAJOR!"=="21" if not "!JAVA_MAJOR!"=="25" (
     echo.
-    echo [ERROR] JDK 21 is REQUIRED but found JDK !JAVA_MAJOR!.
-    echo [ERROR] Android Gradle Plugin 8.7.2 requires JDK 21.
+    echo [ERROR] JDK 21 or 25 is REQUIRED but found JDK !JAVA_MAJOR!.
+    echo [ERROR] KnightLauncher Android requires JDK 21 or 25 to build.
     echo.
     echo [INFO] Solutions:
-    echo        1. Install JDK 21 Temurin from: https://adoptium.net/temurin/releases/?version=21
-    echo        2. Set JAVA_HOME to your JDK 21 installation:
-    echo           set JAVA_HOME=C:\path\to\jdk-21
-    echo        3. Or run this script from a shell with JDK 21 in PATH
+    echo        1. Install JDK 21 or 25 Temurin from: https://adoptium.net/temurin/releases/
+    echo        2. Set JAVA_HOME to your JDK installation:
+    echo           set JAVA_HOME=C:\path\to\jdk-21  or  set JAVA_HOME=C:\path\to\jdk-25
+    echo        3. Or run this script from a shell with JDK 21 or 25 in PATH
     echo.
     goto :error_exit
 )
 
-echo [SUCCESS] JDK 21 detected.
+echo [SUCCESS] JDK !JAVA_MAJOR! detected.
+
+:: Enable native access for JDK 25+ (restricted methods are blocked by default)
+if !JAVA_MAJOR! GEQ 25 (
+    echo [INFO] JDK 25+ detected, enabling native access for Gradle and subprocesses...
+    set "GRADLE_OPTS=%GRADLE_OPTS% --enable-native-access=ALL-UNNAMED"
+    set "JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --enable-native-access=ALL-UNNAMED"
+)
 echo.
 
 :: Check PowerShell
@@ -91,7 +98,7 @@ echo.
 :: Check JRE Components
 :: =============================================================================
 
-echo [INFO] Checking JRE 21 component...
+echo [INFO] Checking JRE 25 component...
 
 :: Create directory if needed
 if not exist "%ASSETS_DIR%" mkdir "%ASSETS_DIR%"
@@ -101,19 +108,19 @@ set "JRE_ARM=%ASSETS_DIR%\bin-arm.tar.xz"
 set "JRE_ARM64=%ASSETS_DIR%\bin-arm64.tar.xz"
 
 if exist "!JRE_ARM!" if exist "!JRE_ARM64!" (
-    echo [SUCCESS] JRE 21 component found.
+    echo [SUCCESS] JRE 25 component found.
     goto :jre_ok
 )
 
 echo.
-echo [ERROR] JRE 21 component is missing!
+echo [ERROR] JRE 25 component is missing!
 echo.
 echo [INFO] Required files:
 echo        - bin-arm.tar.xz
 echo        - bin-arm64.tar.xz
 echo.
-echo [INFO] Please manually download jre21-pojav from:
-echo        https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%%3Abuildjre17-21
+echo [INFO] Please manually download jre25-multiarch from:
+echo        https://github.com/FCL-Team/Android-OpenJDK-Build/actions?query=branch%%3ABuild_JRE_25
 echo.
 echo [INFO] After downloading, extract the contents to:
 echo        %ASSETS_DIR%

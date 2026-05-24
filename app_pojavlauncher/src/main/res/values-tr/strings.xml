@@ -130,7 +130,6 @@
     <string name="mcl_memory_allocation">Bellek ayırma</string>
     <string name="mcl_memory_allocation_subtitle">Minecraft\'a ne kadar bellek verileceğini kontrol eder.</string>
     <string name="mcl_option_customcontrol">Özel kontroller</string>
-    <string name="mcl_setting_renderer_gles2_4">Kutsal GL4ES- (1.21.4&lt; sadece, Hızlı)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - sadece 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (sadece 1.17+, hızlı)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (tüm sürümler için, orta)</string>
@@ -164,13 +163,11 @@
     <string name="mg_renderer_multidraw">Multidraw emulasyon modu</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Sadece ANGLE\'ı etki eder, Performansa etkisi olabilir.</string>
     <string name="mg_renderer_summary_computeShaderext">Shader paketi bozulmalarına yardımcı olabilir. Ihtiyaç yoksa devre dışı bırakın, çökmelere sebep olabilir.</string>
-    <string name="mg_renderer_summary_gl43exts">Mod çökmelerine yardımcı olabilir. Ihtiyaç yoksa devre dışı bırakın, çökmelere sebep olabilir.</string>
     <string name="mg_renderer_summary_multidrawCompute">Çoklu çizim emülasyonu için hesaplama shader’larını kullanır</string>
     <string name="mg_renderer_summary_timerQueryExt">Bazı Mali Cihazlarda F3 menüsü açıldığında oluşan rastgele crash hatalarını düzeltir</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Elin ve Elde tutulan eşyaların blokların içerisinden geçmesini düzeltir</string>
     <string name="mg_renderer_title_computeShaderext">Deneysel Compute Shader uzantısını destekliyormuş gibi göster</string>
     <string name="mg_renderer_title_errorSetting">Hata filtreleme</string>
-    <string name="mg_renderer_title_gl43exts">Deneysel OpenGL 4.3 uzantılarını destekliyormuş gibi göster</string>
     <string name="mg_renderer_title_multidrawCompute">Hesaplama ile Çoklu Çizim Taklidi Kullan</string>
     <string name="mg_renderer_title_timerQueryExt">GPU kullanımını F3 menüsünde devre dışı bırak</string>
     <string name="multirt_config_add">Yeni ekle</string>

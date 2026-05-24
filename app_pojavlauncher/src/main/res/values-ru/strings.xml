@@ -161,13 +161,11 @@
     <string name="mg_renderer_multidraw">Режим эмуляции MultiDraw</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Влияет только на ANGLE, может повлиять на производительность.</string>
     <string name="mg_renderer_summary_computeShaderext">Может помочь при сбоях набора шейдеров. Отключите, если не требуется, может привести к сбоям.</string>
-    <string name="mg_renderer_summary_gl43exts">Может помочь при сбоях мода. Отключите, если не требуется, может привести к сбоям.</string>
     <string name="mg_renderer_summary_multidrawCompute">Использует вычислительные шейдеры для эмуляции MultiDraw</string>
     <string name="mg_renderer_summary_timerQueryExt">Исправляет случайные вылеты когда F3 открыто на некоторых устройствах Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Исправление прохождения предметов в руке и руки через блоки</string>
     <string name="mg_renderer_title_computeShaderext">Извещать экспериментальное расширение вычислительного шейдера</string>
     <string name="mg_renderer_title_errorSetting">Ошибка фильтрации</string>
-    <string name="mg_renderer_title_gl43exts">Извещать экспериментальные расширения OpenGL 4.3</string>
     <string name="mg_renderer_title_multidrawCompute">Использовать вычислительную эмуляцию MultiDraw</string>
     <string name="mg_renderer_title_timerQueryExt">Отключить использование графического процессора в меню F3</string>
     <string name="multirt_config_add">Добавить новую</string>

@@ -37,11 +37,11 @@ public class AsyncAssetManager {
         String rt_version = null;
         String current_rt_version = MultiRTUtils.readInternalRuntimeVersion("Internal");
         try {
-            rt_version = Tools.read(am.open("components/jre-21/version"));
+            rt_version = Tools.read(am.open("components/jre-25/version"));
         } catch (IOException e) {
             Log.e("JREAuto", "JRE was not included on this APK.", e);
         }
-        String exactJREName = MultiRTUtils.getExactJreName(21);
+        String exactJREName = MultiRTUtils.getExactJreName(25);
         if (current_rt_version == null && exactJREName != null && !exactJREName.equals("Internal")/*
                                                                                                    * this clause is for
                                                                                                    * when the internal
@@ -59,8 +59,8 @@ public class AsyncAssetManager {
 
             try {
                 MultiRTUtils.installRuntimeNamedBinpack(
-                        am.open("components/jre-21/universal.tar.xz"),
-                        am.open("components/jre-21/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
+                        am.open("components/jre-25/universal.tar.xz"),
+                        am.open("components/jre-25/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"),
                         "Internal", finalRt_version);
                 MultiRTUtils.postPrepare("Internal");
             } catch (IOException e) {
@@ -94,10 +94,11 @@ public class AsyncAssetManager {
         ProgressLayout.setProgress(ProgressLayout.EXTRACT_COMPONENTS, 0);
         sExecutorService.execute(() -> {
             try {
-                // Temporarily disabled - Spiral Knights now uses JRE21
+                // Temporarily disabled - Spiral Knights now uses JRE25
                 // unpackComponent(ctx, "caciocavallo", false);
                 unpackComponent(ctx, "caciocavallo17", false);
-                // Since the Java module system doesn't allow multiple JARs to declare the same module,
+                // Since the Java module system doesn't allow multiple JARs to declare the same
+                // module,
                 // we repack them to a single file here
                 unpackLwjglNatives(ctx);
                 unpackComponent(ctx, "lwjgl3/3.3.3", false);
@@ -111,14 +112,16 @@ public class AsyncAssetManager {
             ProgressLayout.clearProgress(ProgressLayout.EXTRACT_COMPONENTS);
         });
     }
-    // Piggybacks off of the java modules extracting later to use their version files for update checks
+
+    // Piggybacks off of the java modules extracting later to use their version
+    // files for update checks
     // This is indeed prone to breaking.
     private static void unpackLwjglNatives(Context ctx) throws IOException {
         AssetManager am = ctx.getAssets();
         String rootDir = Tools.DIR_DATA;
         String sArch = archAsStringAndroid(getDeviceArchitecture());
 
-        String[] lwjglVersions = {"3.3.3", "3.4.1"};
+        String[] lwjglVersions = { "3.3.3", "3.4.1" };
         for (String lwjglVer : lwjglVersions) {
             File versionFile = new File(Tools.DIR_GAME_HOME + String.format("/lwjgl3/%s/version", lwjglVer));
             InputStream is = am.open("components/lwjgl3/" + lwjglVer + "/version");
@@ -137,7 +140,8 @@ public class AsyncAssetManager {
                 Log.i("UnpackLwjgl", lwjglVer + " was installed manually, or does not exist, unpacking new...");
                 String[] fileList = am.list("components/" + pathToLwjglNatives);
                 for (String fileName : fileList) {
-                    Tools.copyAssetFile(ctx, "components/" + pathToLwjglNatives + "/" + fileName, rootDir + "/" + pathToLwjglNatives, true);
+                    Tools.copyAssetFile(ctx, "components/" + pathToLwjglNatives + "/" + fileName,
+                            rootDir + "/" + pathToLwjglNatives, true);
                 }
             } else {
                 Log.i("UnpackLwjgl", lwjglVer + " is up-to-date with the launcher, continuing...");

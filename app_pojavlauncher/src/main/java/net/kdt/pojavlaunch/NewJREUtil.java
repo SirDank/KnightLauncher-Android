@@ -123,13 +123,14 @@ public class NewJREUtil {
         // If it isn't InternalRuntime then it wasn't in the apk in the first place!
         if (selectedRankedRuntime.value instanceof InternalRuntime)
             if (!checkInternalRuntime(assetManager, (InternalRuntime) selectedRankedRuntime.value)) {
-                if (nearestInstalledRuntime == null) // If this was non-null then it would be a valid runtime and we can leave it be
+                if (nearestInstalledRuntime == null) // If this was non-null then it would be a valid runtime and we can
+                                                     // leave it be
                     tryDownloadRuntime(activity, gameRequiredVersion);
                 // This means the internal runtime didn't extract so let's use installed instead
-                // This also refreshes it so after the runtime download, it can find the new runtime
+                // This also refreshes it so after the runtime download, it can find the new
+                // runtime
                 selectedRankedRuntime = getNearestInstalledRuntime(gameRequiredVersion);
             }
-
 
         // No possible selections
         if (selectedRankedRuntime == null) {
@@ -183,18 +184,24 @@ public class NewJREUtil {
         return false;
     }
 
-    private static String getJreSource(int javaVersion, String arch){
-        return String.format("https://github.com/AngelAuraMC/angelauramc-openjdk-build/releases/download/download_jre%1$s/jre%1$s-android-%2$s.tar.xz", javaVersion, arch);
+    private static String getJreSource(int javaVersion, String arch) {
+        return String.format(
+                "https://github.com/AngelAuraMC/angelauramc-openjdk-build/releases/download/download_jre%1$s/jre%1$s-android-%2$s.tar.xz",
+                javaVersion, arch);
     }
+
     /**
      * @return whether installation was successful or not
      */
-    private static void tryDownloadRuntime(Context activity, int javaVersion){
-        if (!isOnline(activity)) throw new RuntimeException(activity.getString(R.string.multirt_no_internet));
+    private static void tryDownloadRuntime(Context activity, int javaVersion) {
+        if (!isOnline(activity))
+            throw new RuntimeException(activity.getString(R.string.multirt_no_internet));
         String arch = archAsString(getDeviceArchitecture());
         // Checks for using this method
-        if (!isJavaVersionAvailableForDownload(javaVersion)) throw new RuntimeException("This is not an available JRE version");
-        if ((getDeviceArchitecture() == Architecture.ARCH_X86 && javaVersion >= 21)) throw new RuntimeException("x86 is not supported on Java"+javaVersion);
+        if (!isJavaVersionAvailableForDownload(javaVersion))
+            throw new RuntimeException("This is not an available JRE version");
+        if ((getDeviceArchitecture() == Architecture.ARCH_X86 && javaVersion >= 21))
+            throw new RuntimeException("x86 is not supported on Java" + javaVersion);
         try {
             File outputFile = new File(Tools.DIR_CACHE, String.format("jre%s-android-%s.tar.xz", javaVersion, arch));
             DownloaderProgressWrapper monitor = new DownloaderProgressWrapper(R.string.newdl_downloading_jre_runtime,
@@ -204,21 +211,19 @@ public class NewJREUtil {
                     getJreSource(javaVersion, arch),
                     outputFile,
                     null,
-                    monitor
-            );
+                    monitor);
             String jreName = "External-" + javaVersion;
             MultiRTUtils.installRuntimeNamed(NATIVE_LIB_DIR, new FileInputStream(outputFile), jreName);
             MultiRTUtils.postPrepare(jreName);
             outputFile.delete();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to download Java "+javaVersion+" for "+arch, e);
+            throw new RuntimeException("Failed to download Java " + javaVersion + " for " + arch, e);
         }
     }
 
     private enum InternalRuntime {
-        // Temporarily disabled - Spiral Knights only uses JRE8
-        JRE_21(21, "Internal-21", "components/jre-21");
-        // JRE_25(25, "Internal-25", "components/jre-25");
+        JRE_25(25, "Internal-25", "components/jre-25");
+
         public final int majorVersion;
         public final String name;
         public final String path;
@@ -231,10 +236,8 @@ public class NewJREUtil {
     }
 
     public enum ExternalRuntime {
-        JRE_8(8, "External-8"),
-        JRE_17(17, "External-17"),
-        JRE_21(21, "External-21"),
         JRE_25(25, "External-25");
+
         public final int majorVersion;
         public final String name;
         public final String downloadLink;
@@ -245,7 +248,8 @@ public class NewJREUtil {
             this.name = name;
             this.downloadLink = getJreSource(majorVersion, archAsString(getDeviceArchitecture()));
         }
-        public void downloadRuntime(Context activity){
+
+        public void downloadRuntime(Context activity) {
             tryDownloadRuntime(activity, majorVersion);
         }
     }

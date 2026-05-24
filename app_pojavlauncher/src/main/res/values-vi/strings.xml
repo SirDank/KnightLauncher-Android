@@ -130,7 +130,6 @@
     <string name="mcl_memory_allocation">Dung lượng phân bổ</string>
     <string name="mcl_memory_allocation_subtitle">Kiểm soát dung lượng bộ nhớ được cấp phát cho Minecraft.</string>
     <string name="mcl_option_customcontrol">Tùy chỉnh bố cục</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (chỉ 1.21.4 trở xuống, nhanh)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - chỉ 1.17 trở lên</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (chỉ 1.17 trở lên, nhanh)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (tất cả phiên bản, trung bình)</string>
@@ -164,13 +163,11 @@
     <string name="mg_renderer_multidraw">Chế độ giả lập Multidraw</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Chỉ áp dụng cho ANGLE, có thể ảnh hưởng đến hiệu năng.</string>
     <string name="mg_renderer_summary_computeShaderext">Có thể giúp giảm hiện tượng lỗi trên các gói shader. Tính năng cũng có thể gây thoát đột ngột, hãy tắt nếu không cần thiết.</string>
-    <string name="mg_renderer_summary_gl43exts">Có thể giúp giảm tình trạng lỗi mod. Tính năng cũng có thể gây thoát đột ngột, hãy tắt nếu không cần thiết.</string>
     <string name="mg_renderer_summary_multidrawCompute">Dùng shader tính toán để mô phỏng Multidraw</string>
     <string name="mg_renderer_summary_timerQueryExt">Sửa lỗi thoát đột ngột khi mở menu F3 trên một số thiết bị Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Sửa lỗi tay và vật phẩm cầm trên tay xuyên qua khối</string>
     <string name="mg_renderer_title_computeShaderext">Truyền phần mở rộng tính toán shader thử nghiệm</string>
     <string name="mg_renderer_title_errorSetting">Lọc lỗi</string>
-    <string name="mg_renderer_title_gl43exts">Truyền phần mở rộng OpenGL 4.3 thử nghiệm</string>
     <string name="mg_renderer_title_multidrawCompute">Mô phỏng tính toán Multidraw</string>
     <string name="mg_renderer_title_timerQueryExt">Không dùng GPU trong menu F3</string>
     <string name="multirt_config_add">Thêm mới</string>

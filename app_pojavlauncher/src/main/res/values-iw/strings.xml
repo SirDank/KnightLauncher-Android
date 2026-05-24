@@ -151,10 +151,8 @@
     <string name="mg_renderer_glsl_cache">גודל מטמון GLSL מקסימלי</string>
     <string name="mg_renderer_multidraw">מצב אמולציה multidraw</string>
     <string name="mg_renderer_summary_computeShaderext">עשוי לעזור עם תקלות ב-shaderpack. השבת אם אין צורך בכך, עלול לגרום לקריסות.</string>
-    <string name="mg_renderer_summary_gl43exts">עשוי לעזור עם תקלות ב-shaderpack. השבת אם אין צורך בכך, עלול לגרום לקריסות.</string>
     <string name="mg_renderer_title_computeShaderext">פרסם את הרחבת Shader החישוב הניסיונית</string>
     <string name="mg_renderer_title_errorSetting">סינון שגיאות</string>
-    <string name="mg_renderer_title_gl43exts">פרסום הרחבות ניסיוניות של OpenGL 4.3</string>
     <string name="multirt_config_add">הוסף חדש</string>
     <string name="multirt_config_removeerror_last">עליך שהיה לפחות Java Runtime אחד מותקן.</string>
     <string name="multirt_config_setdefault">הגדר כברירת מחדל</string>

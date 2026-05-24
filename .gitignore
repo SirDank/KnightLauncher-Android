@@ -4,6 +4,7 @@
 app_pojavlauncher/src/main/assets/components/jre
 /app_pojavlauncher/src/main/assets/components/jre-new/
 /app_pojavlauncher/src/main/assets/components/jre-21/
+/app_pojavlauncher/src/main/assets/components/jre-25
 local.properties
 .idea/
 app_pojavlauncher/.cxx/

@@ -130,7 +130,6 @@
     <string name="mcl_memory_allocation">Přidělení paměti</string>
     <string name="mcl_memory_allocation_subtitle">Určuje množství paměti přidělené Minecraftu.</string>
     <string name="mcl_option_customcontrol">Vlastní ovládací prvky</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (pouze 1.21.4&lt;, rychlé)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - jen 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (pouze 1.17+, rychlé)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (všechny verze, střední)</string>
@@ -164,13 +163,11 @@
     <string name="mg_renderer_multidraw">Režim vícenásobné emulace</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Ovlivňuje pouze ANGLE, může ovlivnit výkon.</string>
     <string name="mg_renderer_summary_computeShaderext">Může pomoci s chybami shaderpacků. Zakažte, pokud to není třeba, může samo způsobovat pády.</string>
-    <string name="mg_renderer_summary_gl43exts">Může pomoci s pády módu. Zakažte, pokud to není třeba, může samo způsobovat pády.</string>
     <string name="mg_renderer_summary_multidrawCompute">Používá výpočty stínů pro mnohonásobnou emulaci</string>
     <string name="mg_renderer_summary_timerQueryExt">Opraví náhodné pády při otevření F3 na některých zařízeních Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Opravit ruku a držené předměty od procházení skrz bloky</string>
     <string name="mg_renderer_title_computeShaderext">Inzerovat experimentální rozšíření výpočtů stínů</string>
     <string name="mg_renderer_title_errorSetting">Chyba filtrování</string>
-    <string name="mg_renderer_title_gl43exts">Inzerovat experimentální OpenGL 4.3 rozšíření</string>
     <string name="mg_renderer_title_multidrawCompute">Použít výpočty mnohonásobnou emulace</string>
     <string name="mg_renderer_title_timerQueryExt">Zakázat využití GPU v nabídce F3</string>
     <string name="multirt_config_add">Přidat</string>

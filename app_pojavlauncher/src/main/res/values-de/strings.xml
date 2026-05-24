@@ -128,7 +128,6 @@
     <string name="mcl_memory_allocation">Zugewiesener RAM</string>
     <string name="mcl_memory_allocation_subtitle">Legt fest, wie viel Arbeitsspeicher Minecraft zugewiesen wird.</string>
     <string name="mcl_option_customcontrol">Benutzerdefinierte Steuerung</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; nur, schnell)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - nur 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (nur 1.17+, schnell)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (alle Versionen, mittel)</string>
@@ -162,13 +161,11 @@
     <string name="mg_renderer_multidraw">Multidraw-Emulationsmodus</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Betrifft nur ANGLE, kann die Leistung beeinträchtigen.</string>
     <string name="mg_renderer_summary_computeShaderext">Kann bei Shaderpack-Problemen helfen. Deaktivieren, wenn nicht benötigt, kann Abstürze verursachen.</string>
-    <string name="mg_renderer_summary_gl43exts">Kann bei Abstürzen von Mods helfen. Deaktivieren, wenn nicht nötig, kann Abstürze verursachen.</string>
     <string name="mg_renderer_summary_multidrawCompute">Verwendet den Compute-Shader Shader für die Multidraw-Emulation</string>
     <string name="mg_renderer_summary_timerQueryExt">Behebt zufällige Abstürze, wenn F3 auf einigen Mali Geräten geöffnet ist</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Behebt, dass die Hand und gehaltene Items durch Blöcke hindurchgehen</string>
     <string name="mg_renderer_title_computeShaderext">Experimentelle Rechen-Shader-Erweiterung anzeigen</string>
     <string name="mg_renderer_title_errorSetting">Filterung von Fehlern</string>
-    <string name="mg_renderer_title_gl43exts">Experimentelle OpenGL 4.3 Erweiterungen anzeigen</string>
     <string name="mg_renderer_title_multidrawCompute">Nutze die Compute Multidraw-Emulation</string>
     <string name="mg_renderer_title_timerQueryExt">GPU-Nutzung im F3-Menü deaktivieren</string>
     <string name="multirt_config_add">Hinzufügen</string>

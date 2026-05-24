@@ -232,8 +232,8 @@ public final class Tools {
     public static boolean shouldUseUBWC() {
         try {
             boolean isSamsung = Build.MANUFACTURER.equalsIgnoreCase("samsung");
-            boolean isOneUI = !systemPropertiesGet("ro.build.version.oneui").isBlank();
-            return isOneUI && isSamsung && isAdreno740();
+            // systemPropertiesGet and isAdreno740 are not available in this fork
+            return false;
         } catch (Exception e) {
             return false;
         }
@@ -337,9 +337,8 @@ public final class Tools {
 
         int renderDistance;
         try {
-            MCOptionUtils.load();
-            String renderDistanceString = MCOptionUtils.get("renderDistance");
-            renderDistance = Integer.parseInt(renderDistanceString);
+            // MCOptionUtils is not available in this fork - use default
+            renderDistance = 12; // Assume Minecraft's default render distance
         }catch (Exception e) {
             Log.e("Tools", "Failed to check render distance", e);
             renderDistance = 12; // Assume Minecraft's default render distance
@@ -541,6 +540,7 @@ public final class Tools {
         JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionName, true);
         if (versionInfo.arguments == null || versionInfo.arguments.jvm == null) {
             return new String[0];
+        }
 
         Map<String, String> varArgMap = new ArrayMap<>();
         varArgMap.put("classpath_separator", ":");
@@ -923,7 +923,13 @@ public final class Tools {
     public static String[] generateLibClasspath(JMinecraftVersionList.Version info) {
         List<String> libDir = new ArrayList<>();
         for (DependentLibrary libItem: info.libraries) {
-            if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:2.") || libItem.name.startsWith("spiral:lwjgl")) isLwjgl3 = false;
+            // Spiral Knights uses LWJGL 2 via spiral:lwjgl — set a valid LWJGL 2 version
+            // so the version check passes and the LWJGL2 compatibility path is used
+            if (libItem.name.startsWith("spiral:lwjgl")) {
+                if (iLwjglVersion < 200 || iLwjglVersion > 999) {
+                    iLwjglVersion = 290; // Treat as LWJGL 2.9.0
+                }
+            }
             // Look for LWJGL version
             int libItemVersionStringOffset = 0;
             if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:")) {
@@ -1018,7 +1024,7 @@ public final class Tools {
         version.arguments = args;
 
         JMinecraftVersionList.JavaVersionInfo javaVer = new JMinecraftVersionList.JavaVersionInfo();
-        javaVer.majorVersion = 21;
+        javaVer.majorVersion = 25;
         version.javaVersion = javaVer;
 
         return version;
