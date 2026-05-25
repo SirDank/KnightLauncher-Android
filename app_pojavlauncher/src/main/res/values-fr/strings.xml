@@ -74,8 +74,6 @@
     <string name="error_fatal">KnightLauncher a cessé de fonctionner de façon inattendue</string>
     <string name="error_show_less">Afficher moins</string>
     <string name="error_show_more">Afficher plus</string>
-    <string name="execute_jar_failed_to_read_file">Impossible de lire le fichier .jar</string>
-    <string name="execute_jar_incompatible_runtime">La fonction \"Exécuter le fichier .jar\" n\'est pas compatible avec Java%d</string>
     <string name="folder_dialog_create">Créer</string>
     <string name="folder_dialog_insert_name">Insérer le nom du dossier</string>
     <string name="folder_fragment_create">Créer un dossier</string>
@@ -122,7 +120,6 @@
     <string name="mcl_memory_allocation">Allocation de mémoire</string>
     <string name="mcl_memory_allocation_subtitle">Contrôle la quantité de mémoire donnée à Minecraft.</string>
     <string name="mcl_option_customcontrol">Contrôles personnalisés</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES (1.21.4&lt; seulement, rapide)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ uniquement</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ seulement, rapide)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (toutes les versions, mid)</string>
@@ -156,13 +153,11 @@
     <string name="mg_renderer_multidraw">Mode d\'émulation multidessin</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">N\'affecte que ANGLE, peut affecter les performances.</string>
     <string name="mg_renderer_summary_computeShaderext">Peut aider pour des bugs de shaders. À désactiver si ce n\'est pas nécessaire, peut causer des plantages.</string>
-    <string name="mg_renderer_summary_gl43exts">Peut aider pour des plantages de mods. À désactiver si ce n\'est pas nécessaire, peut aussi en causer.</string>
     <string name="mg_renderer_summary_multidrawCompute">Utilise les nuanceurs de calcul pour l\'émulation multidessin</string>
     <string name="mg_renderer_summary_timerQueryExt">Corrige des plantages aléatoires lorsque F3 est ouvert sur certains appareils Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Empêche les objets tenus de passer dans les blocs</string>
     <string name="mg_renderer_title_computeShaderext">Activer les extension de nuanceurs de calcul expérimentals</string>
     <string name="mg_renderer_title_errorSetting">Filtrage d\'erreurs</string>
-    <string name="mg_renderer_title_gl43exts">Autoriser les extensions expérimentales OpenGL 4.3</string>
     <string name="mg_renderer_title_multidrawCompute">Utiliser l\'émulation de calcul multidessin</string>
     <string name="mg_renderer_title_timerQueryExt">Désactiver l\'indicateur d\'utilisation du GPU dans le menu F3</string>
     <string name="multirt_config_add">Ajouter un nouveau</string>

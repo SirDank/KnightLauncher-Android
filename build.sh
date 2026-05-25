@@ -5,7 +5,7 @@
 # =============================================================================
 # This script builds the KnightLauncher Android APK.
 # Requirements:
-#   - JDK 21 (Temurin recommended)
+#   - JDK 21 or 25 (Temurin recommended)
 #   - Git with submodules cloned
 #   - Internet connection (for downloading JRE artifacts)
 #   - curl, unzip
@@ -34,7 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Configuration
-ASSETS_DIR="app_pojavlauncher/src/main/assets/components/jre-21"
+ASSETS_DIR="app_pojavlauncher/src/main/assets/components/jre-25"
 
 # =============================================================================
 # Functions
@@ -51,26 +51,33 @@ check_requirements() {
     
     # Check Java version
     if ! command -v java &> /dev/null; then
-        error "Java is not installed. Please install JDK 21 (Temurin recommended).
-        Download from: https://adoptium.net/temurin/releases/?version=21"
+        error "Java is not installed. Please install JDK 21 or 25 (Temurin recommended).
+        Download from: https://adoptium.net/temurin/releases/"
     fi
     
     JAVA_VERSION=$(java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1)
     info "Java version detected: $JAVA_VERSION"
     
-    if [[ "$JAVA_VERSION" != "21" ]]; then
+    if [[ "$JAVA_VERSION" != "21" && "$JAVA_VERSION" != "25" ]]; then
         echo ""
-        error "JDK 21 is REQUIRED but found JDK $JAVA_VERSION.
-        Android Gradle Plugin 8.7.2 requires JDK 21.
+        error "JDK 21 or 25 is REQUIRED but found JDK $JAVA_VERSION.
+        KnightLauncher Android requires JDK 21 or 25 to build.
         
         Solutions:
-        1. Install JDK 21 Temurin from: https://adoptium.net/temurin/releases/?version=21
-        2. Set JAVA_HOME to your JDK 21 installation:
-           export JAVA_HOME=/path/to/jdk-21
-        3. Or run this script from a shell with JDK 21 in PATH"
+        1. Install JDK 21 or 25 Temurin from: https://adoptium.net/temurin/releases/
+        2. Set JAVA_HOME to your JDK installation:
+           export JAVA_HOME=/path/to/jdk-21  or  export JAVA_HOME=/path/to/jdk-25
+        3. Or run this script from a shell with JDK 21 or 25 in PATH"
     fi
     
-    success "JDK 21 detected."
+    success "JDK $JAVA_VERSION detected."
+    
+    # Enable native access for JDK 25+ (restricted methods are blocked by default)
+    if [[ "$JAVA_VERSION" -ge 25 ]]; then
+        info "JDK 25+ detected, enabling native access for Gradle and subprocesses..."
+        export GRADLE_OPTS="${GRADLE_OPTS} --enable-native-access=ALL-UNNAMED"
+        export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} --enable-native-access=ALL-UNNAMED"
+    fi
     
     # Check curl
     if ! command -v curl &> /dev/null; then
@@ -86,7 +93,7 @@ check_requirements() {
 }
 
 check_jre() {
-    info "Checking JRE 21 component..."
+    info "Checking JRE 25 component..."
     
     # Create directory if needed
     mkdir -p "$ASSETS_DIR"
@@ -96,17 +103,17 @@ check_jre() {
     local jre_arm64="$ASSETS_DIR/bin-arm64.tar.xz"
     
     if [[ -f "$jre_arm" && -f "$jre_arm64" ]]; then
-        success "JRE 21 component found."
+        success "JRE 25 component found."
     else
         echo ""
-        error "JRE 21 component is missing!
+        error "JRE 25 component is missing!
 
 Required files:
     - bin-arm.tar.xz
     - bin-arm64.tar.xz
 
-Please manually download jre21-pojav from:
-    https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre17-21
+Please manually download jre25-multiarch from:
+    https://github.com/FCL-Team/Android-OpenJDK-Build/actions?query=branch%3ABuild_JRE_25
 
 After downloading, extract the contents to:
     $ASSETS_DIR
@@ -156,10 +163,10 @@ build_apk() {
     
     # Create output directory and copy APK
     mkdir -p out
-    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/KnightLauncher.apk
+    cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk build/KnightLauncher.apk
     
     success "APK built successfully!"
-    success "Output: $(realpath out/KnightLauncher.apk)"
+    success "Output: $(realpath build/KnightLauncher.apk)"
 }
 
 # =============================================================================
@@ -183,7 +190,7 @@ main() {
     echo ""
     success "Build completed successfully!"
     echo ""
-    echo "The APK is located at: out/KnightLauncher.apk"
+    echo "The APK is located at: build/KnightLauncher.apk"
     echo ""
 }
 

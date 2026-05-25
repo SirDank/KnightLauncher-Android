@@ -2,6 +2,8 @@ package net.kdt.pojavlaunch;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.P;
+import static net.kdt.pojavlaunch.Architecture.archAsStringAndroid;
+import static net.kdt.pojavlaunch.Architecture.getDeviceArchitecture;
 import static net.kdt.pojavlaunch.PojavApplication.sExecutorService;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_IGNORE_NOTCH;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_NOTCH_SIZE;
@@ -132,6 +134,10 @@ public final class Tools {
     public static String CTRLDEF_FILE;
     public static String PROJECTX_PREFS_FILE;
     private static RenderersList sCompatibleRenderers;
+    public static int iLwjglVersion = 0;
+    public static String sLwjglVersion = null;
+    public static String lwjglNativesDir = null;
+
 
     private static File getPojavStorageRoot(Context ctx) {
         if (SDK_INT >= 29) {
@@ -213,14 +219,133 @@ public final class Tools {
     }
 
     /**
-     * Search for TouchController mod to automatically enable TouchController mod
-     * support.
+     * Detects whether or not you are on OneUI and using Adreno 740
+     * <a href="https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/freedreno/common/freedreno_devices.py?ref_type=heads#L1007-L1009">
+     *     Mesa sets it to 0 by default due to vendor quirks
+     * </a>
+     * It is possible that OneUI simply deviates from this commonality, hence why
+     * <a href="https://github.com/K11MCH1/AdrenoToolsDrivers/releases/tag/v26.0.0-rc07">
+     *     this is a common fix
+     * </a>
+     * @return Whether or not to export FD_DEV_FEATURES=enable_ubwc_flag_hint=1
+     */
+    public static boolean shouldUseUBWC() {
+        try {
+            boolean isSamsung = Build.MANUFACTURER.equalsIgnoreCase("samsung");
+            // systemPropertiesGet and isAdreno740 are not available in this fork
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * @return The selected "Custom path" of the current profile
+     */
+    @NonNull
+    private static File getGameDir() {
+        return getGameDirPath(LauncherProfiles.getCurrentProfile());
+    }
+
+    /**
+     * Searches for mod in mods directory of current selected profile
+     * Not case-sensitive
+     * @param filenames Filename(s) of the .jar mod(s)
+     * @return Whether or not the .jar is found
+     */
+    public static boolean hasMods(String... filenames) {
+        File gameDir = getGameDir();
+        File modsDir = new File(gameDir, "mods");
+        File[] modFiles = modsDir.listFiles(file -> file.isFile() && file.getName().endsWith(".jar"));
+        if (modFiles == null) return false;
+        for (File file : modFiles) {
+            for (String filename : filenames)
+                if (file.getName().toLowerCase().contains(filename.toLowerCase())) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Tries to delete any sodium related mods of the currently selected profile via string matching
+     * the files in the mods folder.
+     */
+    public static void deleteSodiumMods() {
+        File modsDir = new File(getGameDir(), "mods");
+        File[] mods = modsDir.listFiles(file -> file.isFile() && file.getName().endsWith(".jar"));
+        if(mods == null) ;
+        for(File file : mods) {
+            String name = file.getName().toLowerCase();
+            if(name.contains("sodium") ||
+                    name.contains("beddium")    || // Also covers embeddium
+                    name.contains("rubidium")   ||
+                    name.contains("xenon")      || // Name conflicts with another mod
+                    name.contains("celeritas")  ||
+                    name.contains("relictium")  ||
+                    name.contains("vintagium")  ||
+                    name.contains("podium")     ||
+                    name.contains("indium")     ||
+                    name.contains("lazurite")   ||
+                    name.contains("iris")       ||
+                    name.contains("monocle")    ||
+                    name.contains("voxy")       ||
+                    name.contains("nvidium")    ||
+                    name.contains("chloride")   ||
+                    name.contains("bedrodium")  ||
+                    name.contains("substrate")  || // Name conflicts with another mod
+                    name.contains("blendium")   ||
+                    name.contains("ryoamium")
+                // The name conflicts are for pretty dead mods so we ignore them.
+                // I doubt they're using some mod with less than 5k downloads with sodium.
+            ) if(!file.delete())
+                throw new RuntimeException("Failed to delete Sodium and related mods!");
+        }
+    }
+
+    /**
+     * Search for TouchController mod to automatically enable TouchController mod support.
      *
      * @param gameDir current game directory
      * @return whether TouchController is found
      */
     public static boolean hasTouchController(File gameDir) {
-        return false; // Removed mod check
+        return false; // Removed mod check - not relevant for Spiral Knights
+    }
+
+    /**
+     * Initialize OpenGL and do checks to see if the GPU of the device is affected by the render
+     * distance issue.
+
+     * Currently only checks whether the user has an Adreno GPU capable of OpenGL ES 3.
+
+     * This issue is caused by a very severe limit on the amount of GL buffer names that could be allocated
+     * by the Adreno properietary GLES driver.
+
+     * @return whether the GPU is affected by the Large Thin Wrapper render distance issue on vanilla
+     */
+    private static boolean affectedByRenderDistanceIssue() {
+        GLInfoUtils.GLInfo info = GLInfoUtils.getGlInfo();
+        return info.isAdreno() && info.glesMajorVersion >= 3;
+    }
+
+    private static String[] sodiumMods = {"sodium", "embeddium", "rubidium", "xenon"};
+
+    private static boolean affectedByLTWRenderDistanceIssue() {
+        if(!"opengles3_ltw".equals(Tools.LOCAL_RENDERER)) return false;
+        if(!affectedByRenderDistanceIssue()) return false;
+        if(hasMods(sodiumMods)) return false;
+
+        int renderDistance;
+        try {
+            // MCOptionUtils is not available in this fork - use default
+            renderDistance = 12; // Assume Minecraft's default render distance
+        }catch (Exception e) {
+            Log.e("Tools", "Failed to check render distance", e);
+            renderDistance = 12; // Assume Minecraft's default render distance
+        }
+        // 7 is the render distance "magic number" above which MC creates too many buffers
+        // for Adreno's OpenGL ES implementation
+        return renderDistance > 7;
     }
 
     public static void launchMinecraft(final AppCompatActivity activity, MinecraftAccount minecraftAccount,
@@ -258,30 +383,78 @@ public final class Tools {
         OldVersionsUtils.selectOpenGlVersion(versionInfo);
 
         String[] launchArgs = getMinecraftClientArgs(minecraftAccount, versionInfo, gamedir);
-        String launchClassPath = generateLaunchClassPath(versionInfo, versionId);
+        String launchClasspath = generateLaunchClasspath(versionInfo, versionId);
 
         List<String> javaArgList = new ArrayList<>();
 
         getCacioJavaArgs(javaArgList, runtime.javaVersion == 8);
 
-        File versionSpecificNativesDir = new File(Tools.DIR_CACHE, "natives/" + versionId);
-        if (versionSpecificNativesDir.exists()) {
-            String dirPath = versionSpecificNativesDir.getAbsolutePath();
-            javaArgList.add("-Djava.library.path=" + dirPath + ":" + Tools.NATIVE_LIB_DIR);
-            javaArgList.add("-Djna.boot.library.path=" + dirPath);
-        } else {
-            // Always set library paths to include NATIVE_LIB_DIR for LWJGL to find native
-            // libraries
-            javaArgList.add("-Djava.library.path=" + Tools.NATIVE_LIB_DIR);
-            javaArgList.add("-Djna.boot.library.path=" + Tools.NATIVE_LIB_DIR);
+        if (versionInfo.logging != null) {
+            String configFile = Tools.DIR_DATA + "/security/" + versionInfo.logging.client.file.id.replace("client", "log4j-rce-patch");
+            if (!new File(configFile).exists()) {
+                configFile = Tools.DIR_GAME_NEW + "/" + versionInfo.logging.client.file.id;
+            }
+            javaArgList.add("-Dlog4j.configurationFile=" + configFile);
         }
-        // Also set org.lwjgl.librarypath as an alternative for LWJGL3
-        javaArgList.add("-Dorg.lwjgl.librarypath=" + Tools.NATIVE_LIB_DIR);
+
+        File versionSpecificNativesDir = new File(Tools.DIR_CACHE, "natives/"+versionId);
+        StringBuilder javaLibraryPath = new StringBuilder();
+
+        // Add which lwjgl natives to use into classpath
+        javaLibraryPath.append(lwjglNativesDir).append(":");
+
+        // Add JNA native if needed
+        javaLibraryPath.append(Tools.NATIVE_LIB_DIR).append(":");
+        if(versionSpecificNativesDir.exists()) {
+            String dirPath = versionSpecificNativesDir.getAbsolutePath();
+            javaLibraryPath.append(dirPath).append(":");
+            javaArgList.add("-Djna.boot.library.path="+dirPath);
+        }
+        javaArgList.add("-Djava.library.path="+javaLibraryPath);
 
         javaArgList.addAll(Arrays.asList(getMinecraftJVMArgs(versionId, gamedir)));
-        javaArgList.add("-cp");
-        javaArgList.add(getLWJGL3ClassPath() + ":" + launchClassPath);
+        javaArgList.add("-cp"); javaArgList.add(launchClasspath);
 
+        // Some modloaders (babric) don't fully respect java.libary.path and only use the native lib dir
+        // This arg makes them use it. LWJGL prioritizes this path during native loading as well.
+        javaArgList.add("-Dorg.lwjgl.librarypath="+lwjglNativesDir);
+
+        // imgui-java set library name to use. This because Axiom uses a fork with different library naming
+        // logic that doesn't seem to appear in the main repository. I'm not gonna work with that.
+        javaArgList.add("-Dimgui.library.name=imgui-java");
+        // We use an abomination to support all DH versions with a single library.
+        javaArgList.add("-DZstdNativePath="+Tools.NATIVE_LIB_DIR+"/libzstd-jni-1.5.7-6-dhcompat.so");
+        // We only ever reach this point when user has already used the force run switch
+        boolean hasSodiumMod = false;
+        for (String modName : sodiumMods) {
+            if (hasMods(sodiumMods)) {
+                hasSodiumMod = true;
+                File mixinPropertiesConfigFile = new File(getGameDir(), "config/" + modName + "-mixins.properties");
+                // Write mixin configs to somewhat help stability. We don't want more people complaining.
+                String[] propertiesToAdd = {
+                        "mixin.features.buffer_builder.intrinsics=false",
+                        "mixin.features.chunk_rendering=false"
+                };
+                List<String> mixinPropertiesConfigStrings = null;
+                try {
+                    mixinPropertiesConfigStrings = org.apache.commons.io.FileUtils.readLines(mixinPropertiesConfigFile, "UTF-8");
+                } catch (IOException ignored) {}
+                if (mixinPropertiesConfigStrings == null) {
+                    mixinPropertiesConfigStrings = new ArrayList<>();
+                }
+                for (String newLine : propertiesToAdd) {
+                    if (!mixinPropertiesConfigStrings.contains(newLine)) {
+                        mixinPropertiesConfigStrings.add(newLine);
+                    }
+                }
+                try {
+                    org.apache.commons.io.FileUtils.writeLines(mixinPropertiesConfigFile, mixinPropertiesConfigStrings);
+                } catch (IOException ignored) {} // If we can't write it, we tried our best.
+
+            }
+        }
+        // We use a janky lwjgl setup. We don't want more people complaining it crashes.
+        if (hasSodiumMod) javaArgList.add("-Dsodium.checks.issue2561=false");
         javaArgList.add(versionInfo.mainClass);
         javaArgList.addAll(Arrays.asList(launchArgs));
         // ctx.appendlnToLog("full args: "+javaArgList.toString());
@@ -373,7 +546,7 @@ public final class Tools {
         varArgMap.put("classpath_separator", ":");
         varArgMap.put("library_directory", DIR_HOME_LIBRARY);
         varArgMap.put("version_name", versionInfo.id);
-        varArgMap.put("natives_directory", Tools.NATIVE_LIB_DIR);
+        varArgMap.put("natives_directory", Tools.DIR_CACHE.getAbsolutePath());
 
         List<String> minecraftArgs = new ArrayList<>();
         if (versionInfo.arguments != null) {
@@ -444,45 +617,53 @@ public final class Tools {
                 library.downloads.artifact.path != null)
             return library.downloads.artifact.path;
         String[] libInfos = library.name.split(":");
-        return libInfos[0].replaceAll("\\.", "/") + "/" + libInfos[1] + "/" + libInfos[2] + "/" + libInfos[1] + "-"
-                + libInfos[2] + ".jar";
+        return libInfos[0].replaceAll("\\.", "/") + "/" + libInfos[1] + "/" + libInfos[2] + "/" + libInfos[1] + "-" + libInfos[2] + (libInfos.length == 4 ? "-" + libInfos[3] : "") + ".jar";
+    }
+
+    private static String getLibClasspath(JMinecraftVersionList.Version info){
+        StringBuilder libClasspath = new StringBuilder();
+        String[] classpath = generateLibClasspath(info);
+        for (String jarFile : classpath) {
+            libClasspath.append(jarFile).append(":");
+        }
+        // Remove the ':' at the end
+        libClasspath.setLength(libClasspath.length() - 1);
+        return libClasspath.toString();
     }
 
     public static String getClientClasspath(String version) {
         return DIR_HOME_VERSION + "/" + version + "/" + version + ".jar";
     }
+    public static String generateLaunchClasspath(JMinecraftVersionList.Version info, String actualname) {
+        StringBuilder launchClasspath = new StringBuilder(); //versnDir + "/" + version + "/" + version + ".jar:";
+        String libClasspath = getLibClasspath(info); // Sets lwjglVersion, janky, but we can't get it any simpler
+        String internalLwjglVersion = iLwjglVersion >= 341 ? "3.4.1" : "3.3.3";
+        File lwjgl3Folder = new File(Tools.DIR_GAME_HOME, "lwjgl3/"+internalLwjglVersion);
+        String lwjglCore = lwjgl3Folder.getAbsolutePath() + "/lwjgl.jar";
+        String lwjglMerged = lwjgl3Folder.getAbsolutePath() + "/lwjgl-"+internalLwjglVersion+"-merged-modules";
+        String lwjglxFile = lwjgl3Folder + "/lwjgl-lwjglx.jar";
 
-    private static String getLWJGL3ClassPath() {
-        StringBuilder libStr = new StringBuilder();
-        File lwjgl3Folder = new File(Tools.DIR_GAME_HOME, "lwjgl3");
-        File[] lwjgl3Files = lwjgl3Folder.listFiles();
-        if (lwjgl3Files != null) {
-            for (File file : lwjgl3Files) {
-                if (file.getName().endsWith(".jar")) {
-                    libStr.append(file.getAbsolutePath()).append(":");
-                }
-            }
-        }
-        // Remove the ':' at the end
-        libStr.setLength(libStr.length() - 1);
-        return libStr.toString();
-    }
 
-    public static String generateLaunchClassPath(JMinecraftVersionList.Version info, String actualname) {
-        StringBuilder finalClasspath = new StringBuilder();
+        launchClasspath.append(lwjglCore).append(":");
+        // 2nd in priority in case we need to merge lwjgl.jar again for testing
+        launchClasspath.append(lwjglMerged).append(":");
 
-        String[] classpath = generateLibClasspath(info);
+        File[] lwjglModules = lwjgl3Folder.listFiles(pathname ->
+                pathname.getName().endsWith(".jar") &&
+            // Exclude our two special jars which goes first and last
+                !pathname.getName().equals("lwjgl.jar") &&
+                !pathname.getName().endsWith("lwjglx.jar"));
 
-        for (String jarFile : classpath) {
-            if (!FileUtils.exists(jarFile)) {
-                Log.d(APP_NAME, "Ignored non-exists file: " + jarFile);
-                continue;
-            }
-            finalClasspath.append(jarFile).append(":");
-        }
-        finalClasspath.append(getClientClasspath(actualname));
+        if (lwjglModules != null) {
+            for (File lwjglModule : lwjglModules)
+                launchClasspath.append(lwjglModule.getAbsolutePath()).append(":");
+        } else Log.e("generateLaunchClasspath", "lwjgl modules are missing from components!");
 
-        return finalClasspath.toString();
+        launchClasspath.append(libClasspath).append(":");
+        launchClasspath.append(getClientClasspath(actualname));
+        // Anything LWJGL2 gets LWJGLX
+        if (iLwjglVersion <= 299) launchClasspath.append(":").append(lwjglxFile);
+        return launchClasspath.toString();
     }
 
     public static DisplayMetrics getDisplayMetrics(Activity activity) {
@@ -741,11 +922,54 @@ public final class Tools {
 
     public static String[] generateLibClasspath(JMinecraftVersionList.Version info) {
         List<String> libDir = new ArrayList<>();
-        for (DependentLibrary libItem : info.libraries) {
-            if (!checkRules(libItem.rules))
+        for (DependentLibrary libItem: info.libraries) {
+            // Spiral Knights uses LWJGL 2 via spiral:lwjgl — set a valid LWJGL 2 version
+            // so the version check passes and the LWJGL2 compatibility path is used
+            if (libItem.name.startsWith("spiral:lwjgl")) {
+                if (iLwjglVersion < 200 || iLwjglVersion > 999) {
+                    iLwjglVersion = 290; // Treat as LWJGL 2.9.0
+                }
+            }
+            // Look for LWJGL version
+            int libItemVersionStringOffset = 0;
+            if(libItem.name.startsWith("org.lwjgl.lwjgl:lwjgl:")) {
+                libItemVersionStringOffset = "org.lwjgl.lwjgl:lwjgl:".length();
+            } else if (libItem.name.startsWith("org.lwjgl:lwjgl:")) {
+                libItemVersionStringOffset = "org.lwjgl:lwjgl:".length();
+            }
+            // If we already have a valid LWJGL version, skip this block
+            if (libItemVersionStringOffset != 0 && (iLwjglVersion < 200 || iLwjglVersion > 999)) {
+                while (libItemVersionStringOffset < libItem.name.length()) {
+                    char c = libItem.name.charAt(libItemVersionStringOffset);
+                    if (c >= '0' && c <= '9') {
+                        iLwjglVersion = iLwjglVersion * 10 + (c - '0');
+                    } else if (c == '.') {
+                        // skip dots
+                    } else {
+                        break; // If the dots and numbers stop then its time to finish
+                    }
+                    libItemVersionStringOffset++;
+                }
+            }
+
+            String libPath = Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem);
+            if (!FileUtils.exists(libPath)) {
+                Log.d(APP_NAME, "Ignored non-exists file: " + libPath);
                 continue;
-            libDir.add(Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem));
+            }
+            if(!checkRules(libItem.rules)) continue;
+            libDir.add(libPath);
+            // Mitigation: Babric doesn't use asm-all for some reason so it does a classpath conflict
+            if (libItem.name.startsWith("org.ow2.asm:asm") && !libItem.name.startsWith("org.ow2.asm:asm-all:")){
+                libDir.remove(Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(new DependentLibrary(){{
+                    name = "org.ow2.asm:asm-all:5.0.4";
+                }} ));
+            }
         }
+        // Scary message, but we aren't getting LWJGL 1.9.9 or 3.10.100 any time soon
+        if (iLwjglVersion < 200 || iLwjglVersion > 999) throw new RuntimeException("Unable to determine LWJGL version, JSON may be corrupt.");
+        sLwjglVersion = iLwjglVersion >= 341 ? "3.4.1" : "3.3.3";
+        lwjglNativesDir = String.format("%s/lwjgl-%s-natives/%s", Tools.DIR_DATA, sLwjglVersion, archAsStringAndroid(getDeviceArchitecture()));
         return libDir.toArray(new String[0]);
     }
 
@@ -800,7 +1024,7 @@ public final class Tools {
         version.arguments = args;
 
         JMinecraftVersionList.JavaVersionInfo javaVer = new JMinecraftVersionList.JavaVersionInfo();
-        javaVer.majorVersion = 21;
+        javaVer.majorVersion = 25;
         version.javaVersion = javaVer;
 
         return version;

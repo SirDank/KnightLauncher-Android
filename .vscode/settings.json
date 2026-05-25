@@ -2,5 +2,6 @@
   "java.compile.nullAnalysis.mode": "automatic",
   "[xml]": {
     "editor.formatOnSave": false
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

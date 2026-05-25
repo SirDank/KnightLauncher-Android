@@ -76,8 +76,6 @@
     <string name="error_fatal">KnightLauncher에 예기치 못한 충돌이 발생했어요</string>
     <string name="error_show_less">간략히 보기</string>
     <string name="error_show_more">더 보기</string>
-    <string name="execute_jar_failed_to_read_file">.jar 파일을 읽지 못했습니다</string>
-    <string name="execute_jar_incompatible_runtime">Java %d는 .jar 실행 기능과 호환되지 않습니다</string>
     <string name="folder_dialog_create">생성</string>
     <string name="folder_dialog_insert_name">폴더 이름 입력</string>
     <string name="folder_fragment_create">폴더 생성</string>
@@ -124,7 +122,6 @@
     <string name="mcl_memory_allocation">메모리 할당</string>
     <string name="mcl_memory_allocation_subtitle">마인크래프트 메모리 할당량을 조절합니다.</string>
     <string name="mcl_option_customcontrol">사용자 지정 조작</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; 전용, 빠름)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ 전용</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ 전용, 빠름)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (모든 버전 호환, 중간)</string>
@@ -158,13 +155,11 @@
     <string name="mg_renderer_multidraw">멀티드로우 에뮬레이션 모드</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">ANGLE에서만 유효합니다. 성능에 영향을 줄 수 있습니다.</string>
     <string name="mg_renderer_summary_computeShaderext">쉐이더팩 버그 현상에 도움이 될 수 있습니다. 충돌을 유발할 수 있으므로 필요하지 않다면 비활성화하세요.</string>
-    <string name="mg_renderer_summary_gl43exts">모드 충돌 현상에 도움이 될 수 있습니다. 충돌을 유발할 수 있으므로 필요하지 않다면 비활성화하세요.</string>
     <string name="mg_renderer_summary_multidrawCompute">Multidraw 에뮬레이션에 Compute 쉐이더를 사용합니다</string>
     <string name="mg_renderer_summary_timerQueryExt">Mali GPU를 사용하는 기기에서 F3 메뉴를 열 경우 무작위로 발생하는 충돌을 해결합니다</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">블록을 통과해 갈 때 손에 든 아이템과 손 수정</string>
     <string name="mg_renderer_title_computeShaderext">실험적 Compute Shader 확장 기능 표시</string>
     <string name="mg_renderer_title_errorSetting">오류 필터링</string>
-    <string name="mg_renderer_title_gl43exts">OpenGL 4.3 실험적 확장 기능 표시</string>
     <string name="mg_renderer_title_multidrawCompute">Compute 기반 Multidraw 에뮬레이션 사용</string>
     <string name="mg_renderer_title_timerQueryExt">F3 메뉴에서 GPU 사용률 비활성화</string>
     <string name="multirt_config_add">추가</string>

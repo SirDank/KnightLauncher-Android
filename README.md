@@ -51,7 +51,7 @@ KnightLauncher for Android is currently in **public beta**. You may encounter bu
 ### Core Features
 
 - 🎮 **Dedicated Spiral Knights Launcher**
-- ☕ **OpenJDK 8 Support**
+- ☕ **OpenJDK 25 Support**
 - 🕹️ **Virtual Controls**
 
 ### Mods & Customization
@@ -128,7 +128,7 @@ The build scripts will:
 5. 🏗️ Build the GLFW stub
 6. 📦 Build the signed release APK
 
-**Output:** `out/KnightLauncher.apk`
+**Output:** `build/KnightLauncher.apk`
 
 ### Manual Build
 
@@ -141,8 +141,8 @@ If you prefer manual control over the build process:
    cd KnightLauncher-Android
    ```
 
-2. **Download JRE 8:**
-   Download the `jre8-pojav` artifact from [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) and extract to `app_pojavlauncher/src/main/assets/components/jre/`
+2. **Download JRE 25:**
+   Download the `jre25-multiarch` artifact from [Android-OpenJDK-Build](https://github.com/FCL-Team/Android-OpenJDK-Build/actions?query=branch%3ABuild_JRE_25) and extract to `app_pojavlauncher/src/main/assets/components/jre-25/`
 
 3. **Update language list:**
 
@@ -188,7 +188,7 @@ If you prefer manual control over the build process:
 Both workflows:
 
 - Use JDK 21 and Gradle 8.11
-- Download JRE 21 from [AngelAuraMC/angelauramc-openjdk-build](https://github.com/AngelAuraMC/angelauramc-openjdk-build/actions?query=branch%3Abuildjre17-21)
+- Download JRE 25 from [FCL-Team/Android-OpenJDK-Build](https://github.com/FCL-Team/Android-OpenJDK-Build/actions?query=branch%3ABuild_JRE_25)
 - Patch MobileGlues for ARM-only builds
 - Build signed release APKs
 

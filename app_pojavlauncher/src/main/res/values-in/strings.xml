@@ -84,8 +84,6 @@
     <string name="error_fatal">KnightLauncher tiba-tiba crash tanpa diduga</string>
     <string name="error_show_less">Tampilkan Sedikit</string>
     <string name="error_show_more">Selengkapnya</string>
-    <string name="execute_jar_failed_to_read_file">Gagal membaca dokumen .jar</string>
-    <string name="execute_jar_incompatible_runtime">Fitur eksekusi .jar tidak kompatibel dengan Java %d</string>
     <string name="folder_dialog_create">Buat</string>
     <string name="folder_dialog_insert_name">Masukkan nama folder</string>
     <string name="folder_fragment_create">Buat direktori</string>
@@ -132,7 +130,6 @@
     <string name="mcl_memory_allocation">Alokasi Memori</string>
     <string name="mcl_memory_allocation_subtitle">Kontrol seberapa banyak memori yang diberikan untuk Minecraft.</string>
     <string name="mcl_option_customcontrol">Kontrol kustom</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (Mendukung semua versi, Cepat)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - hanya untuk 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (Hanya mendukung 1.17+ , Cepat)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (Mendukung semua versi, Lambat)</string>
@@ -166,13 +163,11 @@
     <string name="mg_renderer_multidraw">Mode Emulasi Multidraw</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Hanya memengaruhi ANGLE, bisa memengaruhi performa.</string>
     <string name="mg_renderer_summary_computeShaderext">Mungkin membantu mengatasi glitch pada shaderpack. Nonaktifkan jika tidak diperlukan, karena bisa menyebabkan crash.</string>
-    <string name="mg_renderer_summary_gl43exts">Dapat membantu menghindari crash karena mod. Matikan jika tidak diperlukan, karena bisa menyebabkan crash.</string>
     <string name="mg_renderer_summary_multidrawCompute">Menggunakan compute shaders untuk emulasi multidraw</string>
     <string name="mg_renderer_summary_timerQueryExt">Memperbaiki crash acak saat F3 dibuka di beberapa perangkat Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Memperbaiki tangan dan item yang dipegang agar tidak menembus blok</string>
     <string name="mg_renderer_title_computeShaderext">Gunakan Ekstensi Compute Shader Eksperimental</string>
     <string name="mg_renderer_title_errorSetting">Error Filtering</string>
-    <string name="mg_renderer_title_gl43exts">Gunakan Ekstensi Eksperimental OpenGL 4.3</string>
     <string name="mg_renderer_title_multidrawCompute">Gunakan Emulasi Multidraw Compute</string>
     <string name="mg_renderer_title_timerQueryExt">Nonaktifkan Penggunaan GPU di menu F3</string>
     <string name="multirt_config_add">Tambah baru</string>

@@ -84,11 +84,10 @@
     <string name="customctrl_visibility_title">Visibility</string>
     <string name="delete_account_and_login">Delete account and log in</string>
     <string name="discord_invite" translatable="false">https://sirdank.github.io/dankware-website/discord</string>
+    <string name="downloading_update">Downloading Update</string>
     <string name="error_fatal">KnightLauncher has unexpectedly crashed</string>
     <string name="error_show_less">Show less</string>
     <string name="error_show_more">Show more</string>
-    <string name="execute_jar_failed_to_read_file">Failed to read the .jar file</string>
-    <string name="execute_jar_incompatible_runtime">Execute .jar feature is not compatible with Java %d</string>
     <string name="folder_dialog_create">Create</string>
     <string name="folder_dialog_insert_name">Insert folder name</string>
     <string name="folder_fragment_create">Create folder</string>
@@ -98,12 +97,15 @@
     <string name="global_clone">Clone</string>
     <string name="global_default">Default</string>
     <string name="global_delete">Delete</string>
+    <string name="global_download">Download</string>
     <string name="global_edit">Edit</string>
     <string name="global_error">Error</string>
     <string name="global_error_field_empty">This field can\'t be empty</string>
+    <string name="global_installing">Installing…</string>
     <string name="global_load">Load</string>
     <string name="global_name">Name</string>
     <string name="global_no">No</string>
+    <string name="global_not_installed">Not Installed</string>
     <string name="global_off">Off</string>
     <string name="global_remove">Remove</string>
     <string name="global_restart">Restart</string>
@@ -128,11 +130,18 @@
     <string name="main_install_jar_file">Execute a .jar</string>
     <string name="main_play">Play</string>
     <string name="main_share_logs">SHARE LOG</string>
+    <string name="mcl_apply_mods_complete">Mods applied! Resources rebuilt: %1$d, Mods applied: %2$d</string>
+    <string name="mcl_apply_mods_confirmation">Apply mods to the game? This will rebuild original resources and overlay downloaded mods.</string>
+    <string name="mcl_apply_mods_failed">Failed to apply mods</string>
+    <string name="mcl_apply_mods_no_mods">No mods found. Download mods first before applying.</string>
+    <string name="mcl_apply_mods_progress">Applying mods: %1$d/%2$d</string>
+    <string name="mcl_button_apply_mods">Apply Mods</string>
     <string name="mcl_button_discord">Discord</string>
     <string name="mcl_button_download_mods">Download Mods</string>
     <string name="mcl_button_github">GitHub</string>
     <string name="mcl_button_open_directory">OPEN GAME DIR</string>
     <string name="mcl_button_player_count">Player Count: 0</string>
+    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
     <string name="mcl_button_reset_game_files">UPDATE / RESET GAME</string>
     <string name="mcl_disable_gestures">Disable gestures</string>
     <string name="mcl_disable_gestures_subtitle">Disables gestures, such as hold to break block, and tap to place a block.</string>
@@ -142,12 +151,6 @@
     <string name="mcl_download_mods_confirmation">Sync mods with the latest version? This will download new/updated mods and remove deprecated ones.</string>
     <string name="mcl_download_mods_failed">Failed to download mods</string>
     <string name="mcl_download_mods_progress">Downloading mods: %1$d/%2$d</string>
-    <string name="mcl_button_apply_mods">Apply Mods</string>
-    <string name="mcl_apply_mods_confirmation">Apply mods to the game? This will rebuild original resources and overlay downloaded mods.</string>
-    <string name="mcl_apply_mods_no_mods">No mods found. Download mods first before applying.</string>
-    <string name="mcl_apply_mods_progress">Applying mods: %1$d/%2$d</string>
-    <string name="mcl_apply_mods_complete">Mods applied! Resources rebuilt: %1$d, Mods applied: %2$d</string>
-    <string name="mcl_apply_mods_failed">Failed to apply mods</string>
     <string name="mcl_gamepad_forcedSDL">Forcibly start SDL controller handling</string>
     <string name="mcl_gamepad_forcedSDL_subtitle">Can allow old versions of Legacy4J to use SDL backend</string>
     <string name="mcl_gamepad_SDL">Enable SDL controller backend</string>
@@ -155,13 +158,12 @@
     <string name="mcl_memory_allocation">Memory allocation</string>
     <string name="mcl_memory_allocation_subtitle">Controls how much memory is given to Minecraft.</string>
     <string name="mcl_option_customcontrol">Custom controls</string>
-    <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
-    <string name="mcl_button_reset_controls">RESET CONTROLS</string>
-    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
     <string name="mcl_reset_controls_complete">Controls reset to default</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; only, fast)</string>
+    <string name="mcl_reset_controls_confirmation">Reset custom controls to default? This will overwrite your current control configuration.</string>
+    <string name="mcl_reset_game_files_confirmation">Are you sure you want to delete the spiral folder? This will delete the current installation and re-download the game.</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ only</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ only, fast)</string>
+    <string name="mcl_setting_renderer_ng_gl4es">Krypton Wrapper - (all versions, fast)</string>
     <string name="mcl_setting_renderer_vulkan_kopper_zink">Kopper Zink (Vulkan) - (all versions, mid)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (all versions, mid)</string>
     <string name="mcl_setting_subtitle_buttonallcaps">Disable this if you want to use lowercase letters in your controls.</string>
@@ -195,7 +197,6 @@
     <string name="mg_renderer_summary_angleDepthClearFixMode">Only affects ANGLE, can affect performance.</string>
     <string name="mg_renderer_summary_computeShaderext">May help with shaderpack glitches. Disable if not needed, can cause crashes.</string>
     <string name="mg_renderer_summary_dsaExt">May help with Iris shaderpacks, required for AcceleratedRendering mod</string>
-    <string name="mg_renderer_summary_gl43exts">May help with mod crashes. Disable if not needed, can cause crashes.</string>
     <string name="mg_renderer_summary_multidrawCompute">Uses compute shaders for multidraw emulation</string>
     <string name="mg_renderer_summary_timerQueryExt">Fixes random crashes when F3 is open on some Mali devices</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Fix hand and held items from going through blocks</string>
@@ -203,7 +204,6 @@
     <string name="mg_renderer_title_dsaExt">Advertise Experimental Direct State Access extension</string>
     <string name="mg_renderer_title_errorSetting">Error Filtering</string>
     <string name="mg_renderer_title_fsr">AMD FSR 1 Upscaling</string>
-    <string name="mg_renderer_title_gl43exts">Advertise Experimental OpenGL 4.3 extensions</string>
     <string name="mg_renderer_title_multidrawCompute">Use Compute Multidraw Emulation</string>
     <string name="mg_renderer_title_timerQueryExt">Disable GPU Utilization in F3 menu</string>
     <string name="multirt_config_add">Add new</string>
@@ -212,12 +212,14 @@
     <string name="multirt_config_setdefault_already">Default</string>
     <string name="multirt_config_title">Java Runtimes</string>
     <string name="multirt_delete_runtime">Delete runtime</string>
+    <string name="multirt_no_internet">Failed to download, check your internet connection.</string>
     <string name="multirt_nocompatiblert">Can\'t find any compatible Java Runtime. This version requires Java %d or newer.</string>
     <string name="multirt_progress_caching">Caching...</string>
     <string name="multirt_runtime_corrupt">Corrupted Java Runtime</string>
     <string name="multirt_runtime_incompatiblearch">Incompatible architecture: %s</string>
     <string name="multirt_subtitle">Manage installed Java Runtimes.</string>
     <string name="multirt_title">Runtime Manager</string>
+    <string name="newdl_downloading_jre_runtime">Downloading Java %s runtime (%.2f/%.2f MB)</string>
     <string name="notif_channel_id" translatable="false">channel_id</string>
     <string name="notif_channel_name">General</string>
     <string name="notif_error_occured">An error has occurred</string>
@@ -296,16 +298,17 @@
     <string name="pvc_gameDirectory">Game directory</string>
     <string name="pvc_jvmArgs">JVM arguments</string>
     <string name="quick_setting_title">Quick settings</string>
+    <string name="sodium_math_warning_message" translatable="false">
+    Sodium is unsupported, you are on your own. No support will be given in the discord server.\nUsing sodium may result in bugs, glitches, and crashes. No help will be given even if you lose any of your worlds or saves.\n\nNow what\'s %1$s multiplied by %2$s plus %3$s minus %4$s?
+    </string>
+    <string name="sodium_math_warning_title" translatable="false">Solve the math question to enable</string>
     <string name="storage_required">PojavLauncher requires external storage to be attached. Please reconnect it and restart the app.</string>
     <string name="tasks_ongoing">Tasks are in progress, please wait</string>
     <string name="toast_permission_denied">The read/write to storage permission is required!</string>
-    <string name="warning_remove_account">This account will be removed!</string>
-
-    <!-- App Update -->
-    <string name="update_available_title">Update Available</string>
     <string name="update_available_message">A new version of KnightLauncher is available!\n\nCurrent: %1$s\nNew: %2$s\n\nWould you like to update now?</string>
-    <string name="update_now">Update Now</string>
-    <string name="update_later">Later</string>
-    <string name="downloading_update">Downloading Update</string>
+    <string name="update_available_title">Update Available</string>
     <string name="update_download_failed">Failed to download update. Please try again later.</string>
+    <string name="update_later">Later</string>
+    <string name="update_now">Update Now</string>
+    <string name="warning_remove_account">This account will be removed!</string>
 </resources>

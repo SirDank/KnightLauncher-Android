@@ -82,8 +82,6 @@
     <string name="error_fatal">A KnightLauncher váratlanul kicrashelt</string>
     <string name="error_show_less">Mutass kevesebbet</string>
     <string name="error_show_more">Mutass többet</string>
-    <string name="execute_jar_failed_to_read_file">A .jar beolvasása sikertelen</string>
-    <string name="execute_jar_incompatible_runtime">A \".jar futtatása\" nem kompatibilis a Java %d-val/vel</string>
     <string name="folder_dialog_create">Létrehozás</string>
     <string name="folder_dialog_insert_name">Mappa nevének megadása</string>
     <string name="folder_fragment_create">Mappa létrehozása</string>
@@ -130,7 +128,6 @@
     <string name="mcl_memory_allocation">Memória kiosztás</string>
     <string name="mcl_memory_allocation_subtitle">Szabályozza mennyi memória legyen kiosztva a Minecraft nak.</string>
     <string name="mcl_option_customcontrol">Egyedi kezelőszervek</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL3ES - (csak 1.21.4&lt;, gyors)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - 1.17+ vagy újabb</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - 1.17+ vagy újabb, gyors</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (összes verzió, közepes)</string>
@@ -162,10 +159,8 @@
     <string name="mg_renderer_glsl_cache">Maximum GLSL cache méret</string>
     <string name="mg_renderer_multidraw">Multidraw emulációs mód</string>
     <string name="mg_renderer_summary_computeShaderext">Ez segíthet a shaderpackok összeomlásain ellen. Kikapcsolható, ha nem szükséges.</string>
-    <string name="mg_renderer_summary_gl43exts">Ez segíthet a modok összeomlásai ellen. Kikapcsolható, ha nem szükséges.</string>
     <string name="mg_renderer_title_computeShaderext">Kísérleti Compute Shader bővítmény reklámozása</string>
     <string name="mg_renderer_title_errorSetting">Szűrési hiba</string>
-    <string name="mg_renderer_title_gl43exts">Kísérleti OpenGL 4.3-bővítmények reklámozása</string>
     <string name="multirt_config_add">Új hozzáadása</string>
     <string name="multirt_config_removeerror_last">Legalább egy Java Runtime-nak kell hogy letelepítve legyen.</string>
     <string name="multirt_config_setdefault">Alapértelmezett beállítása</string>

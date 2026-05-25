@@ -307,8 +307,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     @Override
     public void onResume() {
         super.onResume();
-        if (PREF_ENABLE_GYRO)
-            mGyroControl.enable();
+        if(PREF_ENABLE_GYRO) mGyroControl.enable();
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, 1);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
     }
 
@@ -321,6 +321,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         if (mQuickSettingSideDialog != null) {
             mQuickSettingSideDialog.cancel();
         }
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, 0);
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 0);
 
         super.onPause();
@@ -359,6 +360,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mControlLayout.requestLayout();
         mControlLayout.post(() -> {
             // Child of mControlLayout, so refreshing size here is correct
+            Tools.setFullscreen(this, setFullscreen());
             minecraftGLView.refreshSize();
             Tools.updateWindowSize(this);
             mControlLayout.refreshControlButtonPositions();
@@ -648,6 +650,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             Tools.setFullscreen(this, setFullscreen());
         }
         super.onWindowFocusChanged(hasFocus);
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_FOCUSED, hasFocus ? 1 : 0);
     }
 
     @Override

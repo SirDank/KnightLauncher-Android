@@ -84,8 +84,6 @@
     <string name="error_fatal">KnightLauncher 意外崩溃</string>
     <string name="error_show_less">隐藏详情</string>
     <string name="error_show_more">显示详情</string>
-    <string name="execute_jar_failed_to_read_file">.jar 文件读取失败</string>
-    <string name="execute_jar_incompatible_runtime">执行 .jar 功能与 Java %d 不兼容</string>
     <string name="folder_dialog_create">新建</string>
     <string name="folder_dialog_insert_name">输入文件夹名称</string>
     <string name="folder_fragment_create">新建文件夹</string>
@@ -136,7 +134,6 @@
     <string name="mcl_memory_allocation">内存分配</string>
     <string name="mcl_memory_allocation_subtitle">控制分配给 Minecraft 的内存。</string>
     <string name="mcl_option_customcontrol">自定义控制键</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES—（仅 &lt;1.21.4，速度较快）</string>
     <string name="mcl_setting_renderer_ltw">LTW（OpenGL ES 3）—仅 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues（OpenGL ES）—（仅 1.17+，速度快）</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink（Vulkan）—（可用于所有版本，速度中等）</string>
@@ -170,13 +167,11 @@
     <string name="mg_renderer_multidraw">MultiDraw 模拟方案</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">仅影响 ANGLE，可能影响性能。</string>
     <string name="mg_renderer_summary_computeShaderext">可能有助于解决光影渲染异常。非必要请禁用，可能会导致错误。</string>
-    <string name="mg_renderer_summary_gl43exts">可能有助于解决模组导致的崩溃。非必要请禁用，可能会导致错误。</string>
     <string name="mg_renderer_summary_multidrawCompute">使用计算着色器进行多重绘制模拟</string>
     <string name="mg_renderer_summary_timerQueryExt">修复了在某些 Mali 设备上打开 F3 时随机崩溃的问题</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">修复手臂和手持物品穿过方块的问题</string>
     <string name="mg_renderer_title_computeShaderext">启用实验性的 Compute Shader 扩展</string>
     <string name="mg_renderer_title_errorSetting">OpenGL 报错设置</string>
-    <string name="mg_renderer_title_gl43exts">启用不完整的 OpenGL 4.3 扩展</string>
     <string name="mg_renderer_title_multidrawCompute">使用计算多重绘制模拟</string>
     <string name="mg_renderer_title_timerQueryExt">禁用 F3 菜单中的 GPU 利用率</string>
     <string name="multirt_config_add">新建</string>

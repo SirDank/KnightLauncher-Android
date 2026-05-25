@@ -79,8 +79,6 @@
     <string name="error_fatal">KnightLauncher è crashato inaspettatamente</string>
     <string name="error_show_less">Mostra meno</string>
     <string name="error_show_more">Mostra altro</string>
-    <string name="execute_jar_failed_to_read_file">Impossibile leggere il file .jar</string>
-    <string name="execute_jar_incompatible_runtime">La funzione Esegui .jar non è compatibile con Java %d</string>
     <string name="folder_dialog_create">Crea</string>
     <string name="folder_dialog_insert_name">Inserisci il nome della cartella</string>
     <string name="folder_fragment_create">Crea cartella</string>
@@ -127,7 +125,6 @@
     <string name="mcl_memory_allocation">Memoria allocata</string>
     <string name="mcl_memory_allocation_subtitle">Controlla quanta memoria dedicare a Minecraft.</string>
     <string name="mcl_option_customcontrol">Controlli personalizzati</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES - (1.21.4&lt; solo, veloce)</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) - solo 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - (1.17+ only, fast)</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - (tutte le persone, med)</string>
@@ -161,13 +158,11 @@
     <string name="mg_renderer_multidraw">Modalità di emulazione multidraw</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Ha effetto solo con ANGLE, può influenzare le prestazioni.</string>
     <string name="mg_renderer_summary_computeShaderext">Può aiutare con glich dei shaderpack. Disabilitare se non necessario, può causare crash.</string>
-    <string name="mg_renderer_summary_gl43exts">Può aiutare con i crash delle mod. Disabilitare se non necessario, può causare crash.</string>
     <string name="mg_renderer_summary_multidrawCompute">Usa i compute shaders per l\'emulazione multidraw</string>
     <string name="mg_renderer_summary_timerQueryExt">Corregge alcuni crash casuali quando F3 è aperto su alcuni dispositivi Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Sistema gli oggetti selezionati e la mano dall\'attraversare i blocchi</string>
     <string name="mg_renderer_title_computeShaderext">Pubblicizza estensioni Compute Sheder Sperimentali</string>
     <string name="mg_renderer_title_errorSetting">Filtro Errori</string>
-    <string name="mg_renderer_title_gl43exts">Pubblicizza estensioni OpenGL 4.3 Sperimentali</string>
     <string name="mg_renderer_title_multidrawCompute">Utilizza Calcola Emulazione Multidraw</string>
     <string name="mg_renderer_title_timerQueryExt">Disabilita l\'utilizzo della GPU nel menu F3</string>
     <string name="multirt_config_add">Aggiungi</string>

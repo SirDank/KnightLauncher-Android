@@ -84,8 +84,6 @@
     <string name="error_fatal">KnightLauncher був зупинений у результаті збою</string>
     <string name="error_show_less">Звернути</string>
     <string name="error_show_more">Розвернути</string>
-    <string name="execute_jar_failed_to_read_file">Помилка зчитування файлу .jar</string>
-    <string name="execute_jar_incompatible_runtime">Функція виконання .jar не сумісна з Java %d</string>
     <string name="folder_dialog_create">Створити</string>
     <string name="folder_dialog_insert_name">Уведіть назву теки</string>
     <string name="folder_fragment_create">Створити теку</string>
@@ -136,7 +134,6 @@
     <string name="mcl_memory_allocation">Виділення пам\'яті</string>
     <string name="mcl_memory_allocation_subtitle">Контролює, скільки пам’яті надається Minecraft.</string>
     <string name="mcl_option_customcontrol">Користувацьке керування</string>
-    <string name="mcl_setting_renderer_gles2_4">Holy GL4ES — лише 1.21.4&lt;, швидко</string>
     <string name="mcl_setting_renderer_ltw">LTW (OpenGL ES 3) — лише 1.17+</string>
     <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) — лише 1.17+, швидкий</string>
     <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) — усі версії, посередній</string>
@@ -170,13 +167,11 @@
     <string name="mg_renderer_multidraw">Режим емуляції Multidraw</string>
     <string name="mg_renderer_summary_angleDepthClearFixMode">Упливає лише на ANGLE, може вплинути на продуктивність.</string>
     <string name="mg_renderer_summary_computeShaderext">Може допомогти у вирішенні збоїв у пакеті шейдерів. Вимкніть, якщо не потрібно, це може призвести до збоїв.</string>
-    <string name="mg_renderer_summary_gl43exts">Може допомогти зі збоями мода. Вимкніть, якщо не потрібно, це може призвести до збоїв.</string>
     <string name="mg_renderer_summary_multidrawCompute">Використовує обчислювальні шейдери для емуляції Multidraw</string>
     <string name="mg_renderer_summary_timerQueryExt">Виправляє випадкові збої, коли F3 відкрито на деяких пристроях Mali</string>
     <string name="mg_renderer_title_angleDepthClearFixMode">Виправити проходження через блоки предмети</string>
     <string name="mg_renderer_title_computeShaderext">Сповіщення експериментів розширення обчислення шейдерів</string>
     <string name="mg_renderer_title_errorSetting">Помилка фільтрації</string>
-    <string name="mg_renderer_title_gl43exts">Сповіщення експериментів розширення OpenGL 4.3</string>
     <string name="mg_renderer_title_multidrawCompute">Викор. емуляцію обчислення Multidraw</string>
     <string name="mg_renderer_title_timerQueryExt">Вимкнути використання GPU в меню F3</string>
     <string name="multirt_config_add">Додати нову</string>
